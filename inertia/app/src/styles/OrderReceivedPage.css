@@ -1,0 +1,19 @@
+/* Cart Contents */
+.woocommerce-order-details {
+    display: none;
+}
+
+/* Addresses */
+.woocommerce-customer-details {
+    display: none;
+}
+
+/* Order Overview */
+.woocommerce-order-overview {
+    display: none;
+}
+
+/* Order Success */
+.woocommerce-notice--success {
+    display: none;
+}

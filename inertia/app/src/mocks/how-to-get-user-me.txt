@@ -1,0 +1,55 @@
+https://helios.nsmyers.com/wp-json/wp/v2/users/me?_wpnonce=605a5cd33e
+
+{
+    "id": 2,
+    "name": "ccc4d02cfe02da10fbc7e141b2cdea17",
+    "url": "",
+    "description": "",
+    "link": "https://helios.nsmyers.com/author/ccc4d02cfe02da10fbc7e141b2cdea17/",
+    "slug": "ccc4d02cfe02da10fbc7e141b2cdea17",
+    "avatar_urls": {
+        "24": "https://secure.gravatar.com/avatar/1addcf8322f2b3b0bc0d87cb0eb06d21?s=24&d=mm&r=g",
+        "48": "https://secure.gravatar.com/avatar/1addcf8322f2b3b0bc0d87cb0eb06d21?s=48&d=mm&r=g",
+        "96": "https://secure.gravatar.com/avatar/1addcf8322f2b3b0bc0d87cb0eb06d21?s=96&d=mm&r=g"
+    },
+    "meta": [],
+    "acf": [],
+    "is_super_admin": false,
+    "woocommerce_meta": {
+        "variable_product_tour_shown": "",
+        "wc_payments_overview_inbox_last_read": "",
+        "activity_panel_inbox_last_read": "",
+        "activity_panel_reviews_last_read": "",
+        "categories_report_columns": "",
+        "coupons_report_columns": "",
+        "customers_report_columns": "",
+        "orders_report_columns": "",
+        "products_report_columns": "",
+        "revenue_report_columns": "",
+        "taxes_report_columns": "",
+        "variations_report_columns": "",
+        "dashboard_sections": "",
+        "dashboard_chart_type": "",
+        "dashboard_chart_interval": "",
+        "dashboard_leaderboard_rows": "",
+        "homepage_layout": "",
+        "homepage_stats": "",
+        "task_list_tracked_started_tasks": "",
+        "help_panel_highlight_shown": "",
+        "android_app_banner_dismissed": "",
+        "launch_your_store_tour_hidden": "",
+        "coming_soon_banner_dismissed": ""
+    },
+    "_links": {
+        "self": [
+            {
+                "href": "https://helios.nsmyers.com/wp-json/wp/v2/users/2"
+            }
+        ],
+        "collection": [
+            {
+                "href": "https://helios.nsmyers.com/wp-json/wp/v2/users"
+            }
+        ]
+    }
+}

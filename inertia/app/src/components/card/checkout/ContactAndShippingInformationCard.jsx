@@ -1,0 +1,85 @@
+import React, { useEffect, useState } from "react";
+import CheckoutCard from "./CheckoutCard";
+import { useDispatch, useSelector } from "react-redux";
+import { getCountryFromCode, parseAddressIntoCityStateZip, parseAddressIntoFullName, parseAddressIntoStreetAddress } from "../../../modules/serialization";
+import { FormInputColumnSpacer } from "../../../styles/Form";
+import { updateOrderFormField } from "../../../actions/orderFormActions";
+import styled from "styled-components";
+import { valueIsEmpty } from "../../../modules/validation";
+
+const Title = styled.p`
+  font-size: 1.2rem;
+  font-weight: bold;
+`;
+
+const AddressLine = styled.p`
+  margin-top: 0.15rem;
+  margin-bottom: 0rem;
+  padding-left: 1rem;
+`;
+
+const OneLine = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+`;
+
+const OrderContactCard = ({
+  className = "",
+  disabled = false,
+  isEditable = false,
+  orderNumber = null
+}) => {
+  const customer = useSelector((state) => state.customer);
+  const orders = useSelector((state) => state.orders);
+  const dispatch = useDispatch();
+  let [billing, setBilling] = useState({});
+  let [shipping, setShipping] = useState({});
+
+  useEffect(() => {
+    let order = orders?.orders[orderNumber];
+    if (valueIsEmpty(order)) {
+      if (customer && !customer.fetching && customer.billing?.length > 0 && valueIsEmpty(order)) {
+        dispatch(updateOrderFormField("billing", customer.billing[0]));
+        setBilling(customer.billing[0]);
+      }
+      if (customer && !customer.fetching && customer.shipping?.length > 0 && valueIsEmpty(order)) {
+        dispatch(updateOrderFormField("shipping", customer.shipping[0]));
+        setShipping(customer.shipping[0]);
+      }
+    } else {
+      if (!valueIsEmpty(order.billing)) {
+        setBilling(order.billing);
+      }
+      if (!valueIsEmpty(order.shipping)) {
+        setShipping(order.shipping);
+      }
+    }
+  }, [customer, dispatch, orders, orderNumber]);
+
+  return (
+    <CheckoutCard
+      className={className}
+      disabled={disabled}
+      title="Contact and Shipping Information"
+    >
+      { billing?.company && <OneLine><Title>Company Name:</Title><AddressLine>{billing.company}</AddressLine></OneLine> }
+      <Title>Billing Address: { isEditable && <a href="/account/billing-address">(Edit)</a> }</Title>
+      <AddressLine>{billing && parseAddressIntoFullName(billing)}</AddressLine>
+      <AddressLine>{billing && parseAddressIntoStreetAddress(billing)}</AddressLine>
+      <AddressLine>{billing && parseAddressIntoCityStateZip(billing)}</AddressLine>
+      { billing && billing.country && <AddressLine>{getCountryFromCode(billing.country)}</AddressLine> }
+      <FormInputColumnSpacer />
+      <Title>Shipping Address: { isEditable && <a href="/account/shipping-address">(Edit)</a> }</Title>
+      <AddressLine>{shipping && parseAddressIntoFullName(shipping)}</AddressLine>
+      <AddressLine>{shipping && parseAddressIntoStreetAddress(shipping)}</AddressLine>
+      <AddressLine>{shipping && parseAddressIntoCityStateZip(shipping)}</AddressLine>
+      { shipping && shipping.country && <AddressLine>{getCountryFromCode(shipping.country)}</AddressLine> }
+      <FormInputColumnSpacer />
+      { billing?.phone && <OneLine><Title>Phone number:</Title><AddressLine>{billing.phone}</AddressLine></OneLine> }
+    </CheckoutCard>
+  );
+};
+
+export default OrderContactCard;

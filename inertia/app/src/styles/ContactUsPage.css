@@ -1,0 +1,61 @@
+:root {
+    --button-bg-color: #000000;
+    --button-text-color: #ffffff;
+    --button-disabled-bg-color: #cccccc;
+    --button-disabled-text-color: #666666;
+    --input-background-color: #ffffff;
+    --input-text-color: #000000;
+}
+
+.dark-mode {
+    --button-bg-color: #cdd40a;
+    --button-text-color: #000000;
+    --button-disabled-bg-color: #cccccc;
+    --button-disabled-text-color: #666666;
+    --input-background-color: #1e1e1e;
+    --input-text-color: #ffffff;
+}
+
+.wpcf7-form input, .wpcf7-form textarea {
+    background-color: var(--input-background-color);
+    color: var(--input-text-color);
+    flex: 1;
+    font-family: 'Trebuchet MS', sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    width: 100%;
+    text-align: left;
+    border: solid 1px lightgray;
+    padding: 0.7rem 1.75rem 0.1rem 0.75rem;
+    line-height: 31px;
+    box-sizing: border-box;
+}
+
+.wpcf7-form textarea {
+    height: 10rem;
+}
+
+.wpcf7-form input[type="submit"] {
+    display: inline-block;
+    color: var(--button-text-color);
+    text-align: center;
+    vertical-align: middle;
+    user-select: none;
+    background-color: var(--button-bg-color);
+    border: 0px;
+    padding: 0.6rem 2.4rem;
+    line-height: 1.5;
+    border-radius: 0;
+    cursor: pointer;
+    width: 100%;
+    font-size: 1.25rem;
+    font-weight: 800;
+    font-family: inherit;
+    position: relative;
+    overflow: hidden;
+    margin: 0;
+}
+
+.entry-content .wpcf7 {
+    display: none;
+}
