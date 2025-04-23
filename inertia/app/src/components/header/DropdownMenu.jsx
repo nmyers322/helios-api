@@ -7,7 +7,6 @@ import { isUserLoggedIn } from "../../modules/authentication";
 import { hardLoad, useGoTo } from "../../modules/links";
 import { isOrderInProgress } from "../../modules/orderFormValidation";
 import { onAnyOrderPage, onCheckoutPage } from "../../modules/routes";
-import { logInLink, logOutLink } from "../../modules/wordpressApi";
 import BetaFeaturesLink from "./BetaFeaturesLink";
 
 export const DropDownBackdrop = styled.div`
@@ -128,9 +127,9 @@ const DropdownMenu = () => {
   links.push({ text: "Mastering", href: "/mastering" });
 
   if (isUserLoggedIn()) {
-    links.push({ text: "Logout", hardLink: logOutLink() });
+    links.push({ text: "Logout", href: "/logout" });
   } else {
-    links.push({ text: "Login / Register", hardLink: logInLink });
+    links.push({ text: "Login / Register", href: "/login" });
   }
 
   return (

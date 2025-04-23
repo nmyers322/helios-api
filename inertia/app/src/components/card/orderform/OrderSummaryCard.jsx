@@ -5,7 +5,7 @@ import styled from "styled-components";
 import { resetOrderForm, saveLocalOrderForm } from "../../../actions/orderFormActions";
 import { isUserLoggedIn } from "../../../modules/authentication";
 import { isLocal } from "../../../modules/environment";
-import CancelButton from "../../form/main/CancelButton";
+import TertiaryButton from "../../form/main/TertiaryButton";
 import ContinueAndSaveButton from "../../form/main/ContinueAndSaveButton";
 import Modal from "../../main/Modal";
 import OrderFormCard from "./OrderFormCard";
@@ -173,7 +173,7 @@ const OrderSummaryCard = () => {
           }
         }}
       />
-      <CancelButton
+      <TertiaryButton
         buttonText="Cancel Order and Reset All Inputs"
         onClick={(event) => {
           event.preventDefault();

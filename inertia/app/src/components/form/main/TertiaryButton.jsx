@@ -60,7 +60,7 @@ export const StyledButton = styled.button`
   }
 `;
 
-const CancelButton = ({ 
+const TertiaryButton = ({ 
   buttonText, 
   className, 
   disabled,
@@ -76,4 +76,4 @@ const CancelButton = ({
   );
 };
 
-export default CancelButton;
+export default TertiaryButton;

@@ -1,13 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { styled, ThemeProvider } from "styled-components";
-import { onCheckoutPage, onContactPage, onInformationPage, onLandingPage, onWCPage } from "../../modules/routes";
+import { onCheckoutPage, onContactPage, onInformationPage, onLandingPage, onLoginPage, onWCPage } from "../../modules/routes";
 import theme from "../../modules/theme";
 import GlobalStyle from "../../styles/GlobalStyle";
 import Footer from "../header/Footer";
 import Header from "../header/Header";
 import LandingPageHeader from "../header/LandingPageHeader";
 import WCHeader from "../header/WCHeader";
+import LoginHeader from "../header/LoginHeader";
 import PrintModal from "./PrintModal";
 import Routes from "./Routes";
 import { useLocation } from "react-router-dom";
@@ -38,6 +39,9 @@ const ThemedApp = () => {
     } else if (onCheckoutPage()) {
       setHeaderType("wc");
       setShowFooter(false);
+    } else if (onLoginPage()) {
+      setHeaderType("login");
+      setShowFooter(false);
     } else if (onWCPage()) {
       setHeaderType("wc");
     } else {
@@ -53,6 +57,7 @@ const ThemedApp = () => {
         { headerType === "landing" && <LandingPageHeader routesWrapperRef={routesWrapperRef} titleRef={titleRef} /> }
         { headerType === "wc" && <WCHeader /> }
         { headerType === "default" && <Header /> }
+        { headerType === "login" && <LoginHeader />}
         <PrintModal />
         <Routes 
           routesWrapperRef={routesWrapperRef}

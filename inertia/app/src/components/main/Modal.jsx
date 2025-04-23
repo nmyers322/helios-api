@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import Button from "../form/main/Button";
-import CancelButton from "../form/main/CancelButton";
+import TertiaryButton from "../form/main/TertiaryButton";
 
 export const ModalBackdrop = styled.div`
   position: fixed;
@@ -62,7 +62,7 @@ export const ModalConfirmButton = styled(Button)`
   }
 `;
 
-export const ModalCancelButton = styled(CancelButton)`
+export const ModalCancelButton = styled(TertiaryButton)`
   && {
     font-size: 1rem;
     padding: 1rem;

@@ -15,7 +15,7 @@ router.post('/api/session', [SessionController, 'store'])
 router.delete('/api/session', [SessionController, 'destroy'])
     .use(middleware.auth({ guards: ['api'] }))
 
-router.on('/').renderInertia('home')
+router.on('/*').renderInertia('home')
 
 
 

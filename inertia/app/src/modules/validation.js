@@ -72,6 +72,16 @@ export const validateNumberInput = (input) => {
   return ValidationResponse.valid();
 };
 
+export const validateEmailInput = (input) => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!input) {
+    return ValidationResponse.invalid(FIELD_REQUIRED);
+  } else if (!emailRegex.test(input)) {
+    return ValidationResponse.invalid("The email address is not formatted properly");
+  }
+  return ValidationResponse.valid();
+}
+
 export const validateOption = (input, options) => {
   if (!input) {
     return ValidationResponse.invalid(FIELD_REQUIRED);

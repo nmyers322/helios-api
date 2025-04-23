@@ -14,6 +14,8 @@ export const onContactPage = () => getPathParts().length === 1 && getPathParts()
 
 export const onLandingPage = () => window.location.pathname === "/";
 
+export const onLoginPage = () => window.location.pathname === "/login";
+
 export const onInformationPage = () => {
     if (getPathParts().length !== 1) {
         return false;

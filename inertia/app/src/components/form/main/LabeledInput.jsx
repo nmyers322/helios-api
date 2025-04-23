@@ -199,7 +199,7 @@ const LabeledInput = ({
   };
   return (
     <FormInputContainer>
-      {(type === "text" || (type === "number" && !!isDisabled)) && (
+      {(type === "text" || type === "password" || (type === "number" && !!isDisabled)) && (
         <StyledInput
           autoComplete="off"
           className={inputClassNames}
@@ -211,7 +211,7 @@ const LabeledInput = ({
           readOnly={!!isDisabled}
           style={inputStyles}
           title={name}
-          type={"text"}
+          type={type === "password" ? "password" : "text"}
           value={value}
         />
       )}

@@ -7,7 +7,10 @@ const shieldConfig = defineConfig({
    */
   csp: {
     enabled: false,
-    directives: {},
+    directives: {
+      defaultSrc: [`'self'`, '@viteDevUrl'],
+      connectSrc: ['@viteHmrUrl']
+    },
     reportOnly: false,
   },
 
@@ -16,9 +19,9 @@ const shieldConfig = defineConfig({
    * to learn more
    */
   csrf: {
-    enabled: true,
-    exceptRoutes: ['/api/session'],
-    enableXsrfCookie: false,
+    enabled: false,
+    exceptRoutes: [],
+    enableXsrfCookie: true,
     methods: ['POST', 'PUT', 'PATCH', 'DELETE'],
   },
 

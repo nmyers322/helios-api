@@ -6,7 +6,6 @@ import { isUserLoggedIn } from '../../modules/authentication';
 import { useGoTo } from '../../modules/links';
 import { validateAlbumDetailsCard } from '../../modules/orderFormValidation';
 import { onLandingPage } from '../../modules/routes';
-import { logOutLink } from '../../modules/wordpressApi';
 import { HeaderButtonContainer, HeaderContainerLarge, HeaderContainerSmall, HeaderLink } from '../../styles/LandingPageHeader';
 import Button from '../form/main/Button';
 import BetaFeaturesLink from './BetaFeaturesLink';
@@ -64,10 +63,10 @@ const LandingPageHeader = ({
               <MiniDropDown closer={toggleAccountDropDown} open={isAccountDropDownOpen}>
                 <HeaderLink onClick={() => toggleThemeLocal()}>Toggle Theme</HeaderLink>
                 <BetaFeaturesLink LinkClass={HeaderLink} />
-                <HeaderLink onClick={() => window.location.href = logOutLink()}>Logout</HeaderLink>
+                <HeaderLink onClick={() => goTo('/logout')}>Logout</HeaderLink>
               </MiniDropDown>
             </HeaderLink>
-          : <HeaderLink onClick={() => window.location.href = "/login"}>Log In</HeaderLink>
+          : <HeaderLink onClick={() => goTo('/login')}>Log In</HeaderLink>
         }
       </HeaderContainerLarge>
       <HeaderContainerSmall>
