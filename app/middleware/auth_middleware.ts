@@ -21,7 +21,7 @@ export default class AuthMiddleware {
   ) {
     try {
       await ctx.auth.authenticateUsing(options.guards, { loginRoute: this.redirectTo })
-      
+
       ctx.inertia.share({
         data: {user: ctx.auth.user},
       });
@@ -32,8 +32,8 @@ export default class AuthMiddleware {
       if (ctx.request.ajax() || ctx.request.accepts(['json', 'html']) === 'json') {
         return ctx.response.unauthorized({ error: 'Unauthorized' });
       }
-
-      return ctx.response.redirect(this.redirectTo);
+      return ctx.response.unauthorized({ error: "Unauthorized" });
+      //return ctx.response.redirect(this.redirectTo);
     }
   }
 }

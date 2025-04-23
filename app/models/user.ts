@@ -1,11 +1,11 @@
 import { DateTime } from 'luxon'
 import hash from '@adonisjs/core/services/hash'
 import { compose } from '@adonisjs/core/helpers'
-import { BaseModel, HasMany, column } from '@adonisjs/lucid/orm'
+import { BaseModel, column, hasMany } from '@adonisjs/lucid/orm'
 import { withAuthFinder } from '@adonisjs/auth/mixins/lucid'
 import { DbAccessTokensProvider } from '@adonisjs/auth/access_tokens'
-import { hasMany } from '@adonisjs/lucid/build/src/orm/decorators'
-import Address from './address'
+import Address from './address.ts'
+import type { HasMany } from '@adonisjs/lucid/types/relations'
 
 const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
   uids: ['email'],
@@ -32,10 +32,10 @@ export default class User extends compose(BaseModel, AuthFinder) {
   declare phone: string | null
 
   @hasMany(() => Address)
-  public shipping: HasMany<typeof Address>
+  public shipping!: HasMany<typeof Address>
 
   @hasMany(() => Address)
-  public billing: HasMany<typeof Address>
+  public billing!: HasMany<typeof Address>
 
   @column({ serializeAs: null })
   declare password: string
