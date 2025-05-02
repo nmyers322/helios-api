@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { saveLocalTheme, setPrintContent, setShowPrintModal, toggleTheme } from "../../actions/metaActions";
-import { isUserLoggedIn } from "../../modules/authentication";
+import { isUserLoggedIn } from "../../modules/authorization";
 import { hardLoad, useGoTo } from "../../modules/links";
 import { isOrderInProgress } from "../../modules/orderFormValidation";
 import { onAnyOrderPage, onCheckoutPage } from "../../modules/routes";

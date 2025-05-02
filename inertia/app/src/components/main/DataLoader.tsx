@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { heliosLogger } from "../../modules/logging.js";
-import { getUserId, isUserLoggedIn } from "../../modules/authentication.js";
+import { getUserId, isUserLoggedIn } from "../../modules/authorization.js";
 import { setFetchingCustomer, updateCustomerFromApiResponse } from "../../actions/customerActions.js";
 import { fetchCart, fetchCustomer, fetchOrder } from "../../modules/wordpressApi.js";
 import { updateBillingAddressFormFromApiResponse } from "../../actions/billingAddressActions.js";

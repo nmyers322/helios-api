@@ -20,7 +20,7 @@ class ValidationResponse {
 
   static invalid(errorMsg, details = '') {
     heliosLogger(errorMsg, details);
-    return new ValidationResponse(false, errorMsg + details);
+    return new ValidationResponse(false, errorMsg);
   }
 
   static testValidity(value, errorMsg = '') {

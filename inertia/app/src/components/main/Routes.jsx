@@ -16,6 +16,9 @@ import TemplatesPage from "../page/TemplatesPage";
 import TermsOfService from "../page/TermsOfService";
 import ThanksPage from "../page/ThanksPage";
 import LoginPage from "../page/LoginPage";
+import RegisterCard from "../card/login/RegisterCard";
+import Logout from "../standalone/Logout";
+import LoginCard from "../card/login/LoginCard";
 
 const RoutesWrapper = styled.div`
   margin-top: var(--header-height);
@@ -52,11 +55,18 @@ const Routes = ({
                 <Route path="/contact-us" element={<ContactUsPage />} />
                 <Route path="/checkout/order-received/*" element={<OrderReceivedPage />} />
                 <Route path="/checkout" element={<CheckoutPage />} />
-                <Route path="/login" element={<LoginPage />} />
+                <Route path="/login" element={<LoginPage />}>
+                    <Route path="" element={<LoginCard />} />
+                </Route>
                 <Route path="/login-success" element={<LoginSuccessPage />} />
-                <Route path="/logout" element={<LoginPage />} />
+                <Route path="/logout" element={<LoginPage />}>
+                    <Route path="" element={<Logout />} />
+                </Route>
                 <Route path="/mastering" element={<MasteringPage />} />
                 <Route path="/order/*" element={<OrderPage />} />
+                <Route path="/register" element={<LoginPage />}>
+                    <Route path="" element={<RegisterCard />} />
+                </Route>
                 <Route path="/templates" element={<TemplatesPage />} />
                 <Route path="/terms" element={<TermsOfService />} />
                 <Route path="/thanks" element={<ThanksPage />} />

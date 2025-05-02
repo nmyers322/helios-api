@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { userMe } from '../mocks/user-me';
-import { getNonce, getUserDetails, isUserLoggedIn } from './authentication';
+import { getNonce, getUserDetails, isUserLoggedIn } from './authorization';
 import { isLocal, isTest } from './environment';
 import { products } from '../mocks/products';
 import { variation } from '../mocks/variation';

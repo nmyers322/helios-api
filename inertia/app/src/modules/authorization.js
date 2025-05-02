@@ -1,12 +1,13 @@
 import { reactPress } from "../mocks/reactPress"
 import { isLocal } from "./environment";
+import { hasActiveToken } from "./heliosApi";
 
 export const isUserAdmin = () =>
     // Not yet implemented
     false;
 
 export const isUserLoggedIn = () =>
-    getEnvAwareReactPress()?.user?.data?.user_login;
+    hasActiveToken();
 
 const getEnvAwareReactPress = () =>
     isLocal() ? reactPress : window.reactPress;

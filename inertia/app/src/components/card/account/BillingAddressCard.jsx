@@ -10,7 +10,7 @@ import Modal from "../../main/Modal";
 import { useDispatch, useSelector } from "react-redux";
 import LabeledSpinner from "../../main/LabeledSpinner";
 import { updateCustomer, updateMyUser } from "../../../modules/wordpressApi";
-import { getUserDetails } from "../../../modules/authentication";
+import { getUserDetails } from "../../../modules/authorization";
 import { customerShippingAddressIsEmpty, customerShippingAndBillingAddressesAreEqual, validateAddress1, validateBillingAddressCard } from "../../../modules/accountValidation";
 import Address1 from "../../form/account/Address1";
 import Address2 from "../../form/account/Address2";

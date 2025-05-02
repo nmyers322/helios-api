@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { resetOrderForm, saveLocalOrderForm } from "../../../actions/orderFormActions";
-import { isUserLoggedIn } from "../../../modules/authentication";
+import { isUserLoggedIn } from "../../../modules/authorization";
 import { isLocal } from "../../../modules/environment";
 import TertiaryButton from "../../form/main/TertiaryButton";
 import ContinueAndSaveButton from "../../form/main/ContinueAndSaveButton";

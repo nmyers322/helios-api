@@ -24,6 +24,12 @@ export const ModalContent = styled.div`
   max-height: calc(100% - 6rem);
   width: auto;
   max-width: calc(100vw - 6rem);
+  min-width: 20rem;
+
+  @media (max-width: 20rem) {
+    max-width: calc(100vw - 2rem);
+    min-width: 10rem;
+  }
 `;
 
 export const ModalBody = styled.div`

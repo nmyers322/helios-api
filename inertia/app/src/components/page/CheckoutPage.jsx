@@ -11,7 +11,7 @@ import { CheckoutPageCardColumn, CheckoutPageContainer, OrderSummaryContainerLar
 import { useNavigate } from "react-router-dom";
 import { useGoTo } from "../../modules/links";
 import { getCurrentOrderStep, isOrderInProgress, validateCompleteOrderForm } from "../../modules/orderFormValidation";
-import { isUserLoggedIn } from "../../modules/authentication";
+import { isUserLoggedIn } from "../../modules/authorization";
 import { HEADER_HEIGHT } from "../../styles/GlobalStyle";
 import { remToPx } from "../../modules/serialization";
 

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { saveLocalTheme, toggleTheme } from '../../actions/metaActions';
-import { isUserLoggedIn } from '../../modules/authentication';
+import { isUserLoggedIn } from '../../modules/authorization';
 import { useGoTo } from '../../modules/links';
 import { validateAlbumDetailsCard } from '../../modules/orderFormValidation';
 import { onLandingPage } from '../../modules/routes';
