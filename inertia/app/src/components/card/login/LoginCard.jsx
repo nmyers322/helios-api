@@ -105,8 +105,7 @@ const LoginCard = () => {
             buttonText={"Login With Google"}
             disabled={showModal}
             onClick={() => {
-                console.log("no op");
-                alert("Not implemented yet");
+                goTo("/login/google");
             }} />
         { showModal && 
             <Modal>

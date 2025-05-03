@@ -2,7 +2,7 @@ import { heliosLogger } from "./logging";
 import { getPathParts } from "./routes";
 
 export const HARD_LINKS = [
-
+    '/login/google'
 ]
 
 export const hardLoad = (url) => {
