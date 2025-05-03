@@ -6,7 +6,7 @@ import ThemedApp from "./ThemedApp.jsx";
 import DataLoader from "./DataLoader.jsx";
 
 // Update this to force a cache clear
-export const PRODUCTS_VARIATIONS_CACHE_KEY = "936f1222-e200-47ae-af09-66eb65d80307";
+export const PRODUCTS_VARIATIONS_CACHE_KEY = "736f1222-e200-47ae-af09-66eb65d80308";
 
 const App = (props: any) => (
   <Provider store={store}>

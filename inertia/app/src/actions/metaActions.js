@@ -1,3 +1,7 @@
+export const logout = () => ({
+  type: "LOGOUT",
+});
+
 export const saveLocalTheme = (currentTheme) => ({
   type: "SAVE_LOCAL_THEME",
   payload: currentTheme,
@@ -31,6 +35,11 @@ export const setReadyForCheckout = (value = true) => ({
 export const setShowPrintModal = (value) => ({
   type: "SET_SHOW_PRINT_MODAL",
   payload: value,
+});
+
+export const setToken = (token) => ({
+  type: "SET_TOKEN",
+  payload: token,
 });
 
 export const toggleTheme = () => ({

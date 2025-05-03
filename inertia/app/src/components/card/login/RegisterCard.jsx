@@ -78,7 +78,7 @@ const RegisterCard = () => {
                     setModalMessage("Account successfully created. Logging in...");
                     
                     setTimeout(() => {
-                        handlePossiblRedirect(navigate, "/");
+                        handlePossiblRedirect(navigate, "/login-success");
                     }, 3000);
                 }
             }} />

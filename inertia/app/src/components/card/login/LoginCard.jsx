@@ -1,19 +1,33 @@
-import { useDispatch } from "react-redux"
-import { useNavigate } from "react-router-dom";
-import { getQueryParamsObject, handlePossiblRedirect, useGoTo } from "../../../modules/links";
-import { LoginCardContainer, Separator, LoginCardTitle } from "../../../styles/LoginPage";
-import LabeledInput from "../../form/main/LabeledInput";
-import { useState } from "react";
-import Button from "../../form/main/Button";
-import TertiaryButton from "../../form/main/TertiaryButton";
-import { validateEmail } from "../../../modules/accountValidation";
-import { validateEmailInput, validateTextInput } from "../../../modules/validation";
-import BackButton from "../../form/main/BackButton";
-import Modal from "../../main/Modal";
-import LabeledSpinner from "../../main/LabeledSpinner";
-import { login } from "../../../modules/heliosApi";
-import ErrorText from "../../form/main/ErrorText";
-import SuccessText from "../../form/main/SuccessText";
+import { useState } from 'react'
+
+import { useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+
+import { getTokenFromResponse, login } from '../../../modules/heliosApi'
+import {
+    getQueryParamsObject,
+    handlePossiblRedirect,
+    useGoTo,
+} from '../../../modules/links'
+import {
+    validateEmailInput,
+    validateTextInput,
+} from '../../../modules/validation'
+import {
+    LoginCardContainer,
+    LoginCardTitle,
+    Separator,
+} from '../../../styles/LoginPage'
+import BackButton from '../../form/main/BackButton'
+import ErrorText from '../../form/main/ErrorText'
+import LabeledInput from '../../form/main/LabeledInput'
+import SuccessText from '../../form/main/SuccessText'
+import TertiaryButton from '../../form/main/TertiaryButton'
+import LabeledSpinner from '../../main/LabeledSpinner'
+import Modal from '../../main/Modal'
+import { setToken } from '../../../actions/metaActions'
+import { setActiveTokenStatus } from '../../../actions/customerActions'
+import { heliosLogger } from '../../../modules/logging'
 
 const LoginCard = () => {
     const dispatch = useDispatch();
@@ -61,9 +75,14 @@ const LoginCard = () => {
                 setShowModal(true);
                 let result = await login(email, password);
                 if (result?.status === 200) {
+                    let token = getTokenFromResponse(result);
+                    if (token) {
+                        dispatch(setToken(token));
+                        dispatch(setActiveTokenStatus(true));
+                    }
                     setError(null);
                     setShowModal(true);
-                    handlePossiblRedirect(navigate, "/");
+                    handlePossiblRedirect(navigate, "/login-success");
                 } else {
                     let errorMessage = result?.response?.data?.errors[0]?.message || "There was a problem logging in. Try again or please contact support.";
                     setError(errorMessage);

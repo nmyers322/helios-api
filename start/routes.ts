@@ -7,15 +7,24 @@
 |
 */
 
-import SessionController from '#controllers/SessionController'
 import router from '@adonisjs/core/services/router'
 import { middleware } from './kernel.ts'
-import AccountController from '../app/controllers/AccountController.js'
+import ProductController from '../app/controllers/products_controller.ts'
+import SessionController from '../app/controllers/session_controller.ts'
+import UsersController from '#controllers/users_controller'
+import VariationsController from '#controllers/variations_controller'
 
 router.post('/api/session', [SessionController, 'store'])
 router.delete('/api/session', [SessionController, 'destroy'])
     .use(middleware.auth({ guards: ['api'] }))
-router.post('/api/account', [AccountController, 'create'])
+
+router.post('/api/account', [UsersController, 'create'])
+router.get('/api/account', [UsersController, 'getMyAccount'])
+    .use(middleware.auth({ guards: ['api'] }))
+
+router.get('/api/products', [ProductController, 'getAll'])
+
+router.get('/api/variations/:productId', [VariationsController, 'getByProductId'])
 
 router.on('/*').renderInertia('home')
 

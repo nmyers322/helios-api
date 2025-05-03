@@ -2,18 +2,15 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { setReadyForCheckout } from "../../../actions/metaActions";
 import { resetOrderForm, saveLocalOrderForm } from "../../../actions/orderFormActions";
-import { isUserLoggedIn } from "../../../modules/authorization";
-import { isLocal } from "../../../modules/environment";
-import TertiaryButton from "../../form/main/TertiaryButton";
+import { useGoTo } from "../../../modules/links";
+import { validateCompleteOrderForm } from "../../../modules/orderFormValidation";
 import ContinueAndSaveButton from "../../form/main/ContinueAndSaveButton";
+import TertiaryButton from "../../form/main/TertiaryButton";
+import { outerPackagingTypeName } from "../../form/orderform/OuterPackagingType";
 import Modal from "../../main/Modal";
 import OrderFormCard from "./OrderFormCard";
-import { validateCompleteOrderForm } from "../../../modules/orderFormValidation";
-import { hardLoad, useGoTo } from "../../../modules/links";
-import { logInLink } from "../../../modules/wordpressApi";
-import { setReadyForCheckout } from "../../../actions/metaActions";
-import { outerPackagingTypeName } from "../../form/orderform/OuterPackagingType";
 
 const CardContent = styled.div`
   flex-grow: 1;
@@ -55,6 +52,7 @@ const OrderSummaryCard = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const goTo = useGoTo(navigate);
+  const customer = useSelector((state) => state.customer);
   const orderForm = useSelector((state) => state.orderForm);
   const backLink = "/order/assembly-options";
   const [showModal, setShowModal] = useState(false);
@@ -161,15 +159,10 @@ const OrderSummaryCard = () => {
           event.preventDefault();
           dispatch(saveLocalOrderForm(orderForm));
           dispatch(setReadyForCheckout(true));
-          if (isLocal()) {
-            goTo(`/account/billing-address`);
+          if (!customer.hasActiveToken) {
+            goTo(`/login`);
           } else {
-            if (!isUserLoggedIn()) {
-              hardLoad(logInLink);
-            } else {
-              goTo(`/login-success`);
-            }
-            
+            goTo(`/login-success`);
           }
         }}
       />

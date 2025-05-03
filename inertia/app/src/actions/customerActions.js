@@ -1,4 +1,13 @@
+import { setToken } from "../modules/heliosApi";
 import { snakeCaseToCamelCaseAllObjectKeys } from "../modules/serialization";
+
+export const setActiveTokenStatus = (hasActiveToken) => {
+  !hasActiveToken && setToken(null);
+  return {
+    type: "SET_ACTIVE_TOKEN_STATUS",
+    payload: hasActiveToken,
+  };
+};
 
 export const setFetchingCustomer = (fetching) => ({
   type: "SET_FETCHING_CUSTOMER",
@@ -27,17 +36,20 @@ export const updateCustomerFromApiResponse = (customer) => {
       newCustomer.shipping = [snakeCaseToCamelCaseAllObjectKeys(customer.shipping)];
     }
   }
-  if (customer.first_name) {
-    newCustomer.firstName = customer.first_name;
+  if (customer.firstName) {
+    newCustomer.firstName = customer.firstName;
   }
-  if (customer.last_name) {
-    newCustomer.lastName = customer.last_name;
+  if (customer.lastName) {
+    newCustomer.lastName = customer.lastName;
   }
   if (customer.email) {
     newCustomer.email = customer.email;
   }
-  if (customer.username) {
-    newCustomer.username = customer.username;
+  if (customer.id) {
+    newCustomer.id = customer.id;
+  }
+  if (customer.phone) {
+    newCustomer.phone = customer.phone;
   }
 
   return {

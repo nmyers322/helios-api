@@ -11,7 +11,6 @@ import { CheckoutPageCardColumn, CheckoutPageContainer, OrderSummaryContainerLar
 import { useNavigate } from "react-router-dom";
 import { useGoTo } from "../../modules/links";
 import { getCurrentOrderStep, isOrderInProgress, validateCompleteOrderForm } from "../../modules/orderFormValidation";
-import { isUserLoggedIn } from "../../modules/authorization";
 import { HEADER_HEIGHT } from "../../styles/GlobalStyle";
 import { remToPx } from "../../modules/serialization";
 
@@ -86,7 +85,7 @@ const CheckoutPage = () => {
     if (localSettingsLoaded) {
       if (!readyForCheckout 
         || !validateCompleteOrderForm(orderForm).isValid
-        || !isUserLoggedIn()) {
+        || !customer.hasActiveToken) {
         setModalText("Not ready for checkout. Redirecting...");
         if (isOrderInProgress(orderForm)) {
           goTo(`/order/${getCurrentOrderStep(orderForm)}`);
@@ -99,7 +98,7 @@ const CheckoutPage = () => {
 
   return (
     <WCPageContainer>
-      { (!isUserLoggedIn() || customer?.fetching) && 
+      { (!customer.hasActiveToken || customer?.fetching) && 
         <Modal>
           <LabeledSpinner text={modalText} />
         </Modal>

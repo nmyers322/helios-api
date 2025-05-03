@@ -12,6 +12,18 @@ export const orderFormPersistMiddleware = (store) => (next) => (action) => {
   return result;
 };
 
+export const sessionPersistMiddleware = (store) => (next) => (action) => {
+  const result = next(action);
+  if (action.type === "SET_TOKEN") {
+    const state = store.getState();
+    localStorage.setItem("token", action.payload);
+  }
+  if (action.type === "LOGOUT") {
+    localStorage.removeItem("token");
+  }
+  return result;
+}
+
 export const themePersistMiddleware = (store) => (next) => (action) => {
   const result = next(action);
   if (action.type === "SAVE_LOCAL_THEME") {
@@ -48,6 +60,10 @@ export const getCheckoutStatusFromLocalStorage = () => {
 export const getIsBetaFromLocalStorage = () => {
   return JSON.parse(localStorage.getItem("isBeta"));
 };
+
+export const getTokenFromLocalStorage = () => {
+  return localStorage.getItem("token");
+}
 
 export const getThemeFromLocalStorage = () => {
   return JSON.parse(localStorage.getItem("currentTheme"));

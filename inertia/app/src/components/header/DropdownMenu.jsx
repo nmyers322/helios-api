@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { saveLocalTheme, setPrintContent, setShowPrintModal, toggleTheme } from "../../actions/metaActions";
-import { isUserLoggedIn } from "../../modules/authorization";
 import { hardLoad, useGoTo } from "../../modules/links";
 import { isOrderInProgress } from "../../modules/orderFormValidation";
 import { onAnyOrderPage, onCheckoutPage } from "../../modules/routes";
@@ -94,6 +93,7 @@ export const StyledSubLink = styled.a`
 const DropdownMenu = () => {
   const currentTheme = useSelector((state) => state.meta.currentTheme);
   const dispatch = useDispatch();
+  const customer = useSelector((state) => state.customer);
   const orderForm = useSelector((state) => state.orderForm);
   const navigate = useNavigate();
   const goTo = useGoTo(navigate);
@@ -126,7 +126,7 @@ const DropdownMenu = () => {
 
   links.push({ text: "Mastering", href: "/mastering" });
 
-  if (isUserLoggedIn()) {
+  if (customer.hasActiveToken) {
     links.push({ text: "Logout", href: "/logout" });
   } else {
     links.push({ text: "Login / Register", href: "/login" });

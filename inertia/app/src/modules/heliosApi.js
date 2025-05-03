@@ -7,7 +7,7 @@ curl -v -X POST http://localhost:3333/api/session -H 'Content-Type: application/
 
 import axios from 'axios';
 import { userMe } from '../mocks/user-me';
-import { getNonce, getUserDetails, isUserLoggedIn } from './authorization';
+import { getUserDetails } from './authorization';
 import { isLocal } from './environment';
 import { products } from '../mocks/products';
 import { variation } from '../mocks/variation';
@@ -32,21 +32,18 @@ const makeCall = async ({
   endpoint, 
   method
 }) => {
-  heliosLogger(`Making call to ${endpoint}`);
-  heliosLogger(`Method: ${method}`);
-  heliosLogger(`Data:`, data);
+  let headers = {
+    'Content-Type': 'application/json'
+  };
+  if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+  }
+  let remotePath = `${endpoint}`;
+  heliosLogger(`Calling ${method} ${remotePath}`);
+  heliosLogger(`Headers:`, headers);
+  heliosLogger(`Request data:`, data);
+  let response;
   try {
-    let headers = {
-      'Content-Type': 'application/json'
-    };
-    if (token) {
-        headers['Authorization'] = `Bearer ${token}`;
-    }
-    let remotePath = `${endpoint}`;
-    heliosLogger(`Calling ${method} ${remotePath}`);
-    heliosLogger(`Headers:`, headers);
-    heliosLogger(`Request data:`, data);
-    let response;
     if (method.toLowerCase() === 'delete') {
       response = await api.delete(remotePath, { headers });
     } else if (method.toLowerCase() === 'get') {
@@ -54,15 +51,19 @@ const makeCall = async ({
     } else {
       response = await api[method](remotePath, data, { headers });
     }
-    heliosLogger(`Response:`, response);
-    if (response?.data?.token) {
-      token = response.data.token;
-    }
-    return response;
   } catch (error) {
     heliosLogger(`Error calling ${method} ${endpoint}`, error);
+    if (error?.response?.status === 401) {
+      heliosLogger(`Token expired, deleting token`);
+      token = null;
+    }
     return error;
   }
+  heliosLogger(`Response:`, response);
+  if (getTokenFromResponse(response)) {
+    token = getTokenFromResponse(response);
+  }
+  return response;
 }
 
 const makeDeleteCall = async (endpoint) =>
@@ -103,11 +104,18 @@ export const logout = async () => {
     return data;
 }
 
+export const deleteToken = () =>
+    token = null;
+
+export const getTokenFromResponse = (response) =>
+  response?.data?.token;
+
 export const hasActiveToken = () => 
     !!token;
 
-export const deleteToken = () =>
-    token = null;
+export const setToken = (newToken) => {
+    token = newToken;
+}
 
 /****************************************************
  * Account
@@ -119,46 +127,13 @@ export const createAccount = async (email, password, password2) => {
         password,
         password2
     };
-    let response = await makePostCall("/api/account", data);
-    return response;
+    let result = await makePostCall("/api/account", data);
+    return result;
 }
 
-/****************************************************
- * Cart
- ***************************************************/
-
-export const addToCart = async (productId, quantity, variation) => {
-  let data = {
-    id: productId,
-    quantity
-  }
-  if (variation) {
-    data.variation = variation;
-  }
-  return makePostCall("/wp-json/wc/store/v1/cart/add-item", data);
-}
-
-export const addToCartBatch = async (items) => {
-  const requests = items.map(item => ({
-    path: "/wc/store/v1/cart/add-item",
-    method: "POST",
-    cache: "no-store",
-    body: item,
-    headers: {
-      Nonce: wcStoreApiNonce
-    }
-  }));
-  return makePostCall("/wp-json/wc/store/v1/batch", { requests });
-}
-
-export const deleteAllCartItems = async () =>
-  makeDeleteCall("/wp-json/wc/store/v1/cart/items");
-
-export const fetchCart = async () =>
-  isLocal() ? cartMock : makeGetCall("/wp-json/wc/store/v1/cart");
-
-export const removeFromCart = async (key) => {
-  return makePostCall("/wp-json/wc/store/v1/cart/remove-item", { key });
+export const getMyAccount = async () => {
+    let result = await makeGetCall("/api/account");
+    return result;
 }
 
 /****************************************************
@@ -166,61 +141,12 @@ export const removeFromCart = async (key) => {
  ***************************************************/
 
 export const fetchAllProducts = async () =>
-  isLocal() ? products : makeCall({
-    endpoint: "/wp-json/wc/v3/products", 
-    method: "get",
-    woocommerce: true
-  });
-
-export const fetchProduct = async (productId) =>
-  isLocal() ? {} : makeCall({
-    endpoint: `/wp-json/wc/v3/products/${productId}`, 
-    method: "get",
-    woocommerce: true
-  });
+  makeGetCall("/api/products");
 
 export const fetchProductVariations = async (productId) =>
-  isLocal() ? variation : makeCall({
-    endpoint: `/wp-json/wc/v3/products/${productId}/variations`, 
-    method: "get",
-    woocommerce: true
-  });
-
-/****************************************************
- * User
- ***************************************************/
-
-export const fetchCustomer = async (id) =>
-  makeGetCall(`/wp-json/wc/v3/customers/${id}`);
-
-export const fetchMyUser = async () => {
-  if (isLocal()) {
-    return userMe;
-  }
-  return makeGetCall("/wp-json/wp/v2/users/me");
-}
-
-export const logInLink = import.meta.env.VITE_REACT_APP_DOMAIN + "/wp-login.php";
-export const logOutLink = () => `${domain}/wp-login.php?action=logout&_wpnonce=${getNonce()}`;
-
-export const updateMyUser = async (data) => {
-  return makePostCall("/wp-json/wp/v2/users/me", data);
-}
-
-export const updateCustomer = async (data) => {
-  let userDetails = getUserDetails();
-  if (!userDetails) {
-    return Promise.reject("User details not found");
-  }
-  return makePutCall(`/wp-json/wc/v3/customers/${userDetails.ID}`, data);
-}
+  makeGetCall(`/api/variations/${productId}`);
 
 /****************************************************
  * Orders
  * ***************************************************/
-
-export const fetchOrder = async (orderId) =>
-  makeGetCall(`/wp-json/wc/v3/orders/${orderId}`);
-
-
 

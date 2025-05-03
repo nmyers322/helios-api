@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { saveLocalTheme, toggleTheme } from '../../actions/metaActions';
-import { isUserLoggedIn } from '../../modules/authorization';
 import { useGoTo } from '../../modules/links';
 import { validateAlbumDetailsCard } from '../../modules/orderFormValidation';
 import { onLandingPage } from '../../modules/routes';
@@ -20,6 +19,7 @@ const LandingPageHeader = ({
   const goTo = useGoTo(navigate);
   const dispatch = useDispatch();
   const currentTheme = useSelector((state) => state.meta.theme);
+  const customer = useSelector((state) => state.customer);
   const orderForm = useSelector((state) => state.orderForm);
   const [isAccountDropDownOpen, setIsAccountDropDownOpen] = useState(false);
 
@@ -57,7 +57,7 @@ const LandingPageHeader = ({
         <HeaderLink onClick={() => goTo('/contact-us')}>Contact Us</HeaderLink>
         <HeaderLink onClick={() => goTo('/templates')}>Templates</HeaderLink>
         <HeaderLink onClick={() => goTo('/mastering')}>Mastering</HeaderLink>
-        { isUserLoggedIn()
+        { customer.hasActiveToken
           ? <HeaderLink onClick={() => toggleAccountDropDown()}>
               Account
               <MiniDropDown closer={toggleAccountDropDown} open={isAccountDropDownOpen}>

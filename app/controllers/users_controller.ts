@@ -7,7 +7,7 @@ const MIN_INPUT_LENGTH = 2
 const MAX_INPUT_LENGTH = 200
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-export default class AccountController {
+export default class UsersController {
   async create({ request, auth }: HttpContext) {
     const { email, password, password2 } = request.only(['email', 'password', 'password2'])
     // Validate the email and password
@@ -39,5 +39,15 @@ export default class AccountController {
     }
     // Generate a token for the user
     return await auth.use('api').createToken(user);
+  }
+
+  async getMyAccount({ auth }: HttpContext) {
+    // Get the authenticated user
+    const user = auth.user
+    if (!user) {
+      throw new BadRequestException('User not found')
+    }
+    // Return the user data
+    return user;
   }
 }

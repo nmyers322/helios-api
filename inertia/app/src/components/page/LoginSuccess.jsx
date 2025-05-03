@@ -29,7 +29,6 @@ const LoginSuccessPage = () => {
   const navigate = useNavigate();
   const goTo = useGoTo(navigate);
   const fetchingProductsOrVariations = useSelector(state => state.products.fetchingProductsOrVariations);
-  const fetchingCart = useSelector(state => state.cart.fetching);
   const customer = useSelector(state => state.customer);
   const products = useSelector(state => state.products.products);
   const variations = useSelector(state => state.products.variations);
@@ -44,17 +43,15 @@ const LoginSuccessPage = () => {
         || products.length === 0 
         || !variations 
         || variations.length === 0 
-        || valueIsEmpty(customer.username)
-        || fetchingCart;
+        || !customer.hasActiveToken;
       if (cannotContinue) {
         heliosLogger("Fetching data. Waiting to proceed.");
         heliosLogger(fetchingProductsOrVariations, 
           !products, 
           products.length === 0, 
           !variations, 
-          variations.length === 0, 
-          valueIsEmpty(customer.username),
-          fetchingCart);
+          variations.length === 0,
+          !customer.hasActiveToken);
         return;
       }
       if (!firstLoad) {
@@ -70,40 +67,17 @@ const LoginSuccessPage = () => {
         return;
       }
       const orderForm = getOrderFormFromLocalStorage();
-      dispatch(setFetchingCart(true));
-      const cart = await fetchCart();
       if (orderForm && validateCompleteOrderForm(orderForm).isValid) {
-        let addToCartPromise;
-        // Let's create a timer so we can time these calls.
-        let startTime = new Date().getTime();
-        if (!validateCart(cart).isValid || !orderFormSameAsCart(orderForm, cart)) {
-          await emptyCart(cart);
-          heliosLogger("Empty cart took: " + (new Date().getTime() - startTime) + "ms");
-          addToCartPromise = addOrderFormToCart(orderForm, products).then(() => {
-            heliosLogger("Add to cart took: " + (new Date().getTime() - startTime) + "ms");
-            dispatch(setFetchingCart(false));
-          });
-        }
         heliosLogger("Checking customer addresses", customer);
         if (!validateAddress(customer.billing?.[0], "billing").isValid) {
           goTo("/account/billing-address");
         } else if (!validateAddress(customer.shipping?.[0], "shipping").isValid) {
           goTo("/account/shipping-address");
         } else {
-          if (addToCartPromise) {
-            await addToCartPromise;
-            heliosLogger("Add to cart promise took: " + (new Date().getTime() - startTime) + "ms. Heading to checkout");
-          }
           goTo("/checkout");
         }
-      } else if (validateCart(cart).isValid) {
-        // To-do: Convert remote cart to local order form then proceed to billing and remove the following 2 lines
-        heliosLogger("Invalid cart. Emptying cart and navigating to home.");
-        emptyCart(cart);
-        goTo("/");
       } else {
-        heliosLogger("Invalid order form and cart. Emptying cart and navigating to home.");
-        emptyCart(cart);
+        heliosLogger("Invalid order form. Navigating to home.");
         goTo("/");
       }
     }
@@ -116,7 +90,6 @@ const LoginSuccessPage = () => {
   }, [
     customer, 
     dispatch,
-    fetchingCart, 
     fetchingProductsOrVariations, 
     firstLoad,
     goTo,
@@ -128,7 +101,7 @@ const LoginSuccessPage = () => {
   return (
     <LoginSuccessContainer>
       <Modal>
-        <LabeledSpinner text={"Preparing your order. Please wait up to one minute, and do not navigate away from this page."} />
+        <LabeledSpinner text={"Preparing your order..."} />
       </Modal>
     </LoginSuccessContainer>
   );

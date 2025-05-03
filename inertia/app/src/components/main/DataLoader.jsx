@@ -2,29 +2,27 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { heliosLogger } from "../../modules/logging.js";
-import { getUserId, isUserLoggedIn } from "../../modules/authorization.js";
-import { setFetchingCustomer, updateCustomerFromApiResponse } from "../../actions/customerActions.js";
-import { fetchCart, fetchCustomer, fetchOrder } from "../../modules/wordpressApi.js";
+import { setActiveTokenStatus, setFetchingCustomer, updateCustomerFromApiResponse } from "../../actions/customerActions.js";
+import { fetchCustomer, fetchOrder } from "../../modules/wordpressApi.js";
 import { updateBillingAddressFormFromApiResponse } from "../../actions/billingAddressActions.js";
 import { updateShippingAddressFormFromApiResponse } from "../../actions/shippingAddressActions.js";
-import { getCheckoutStatusFromLocalStorage, getIsBetaFromLocalStorage, getOrderFormFromLocalStorage, getThemeFromLocalStorage } from "../../modules/dataPersistMiddleware.js";
+import { getCheckoutStatusFromLocalStorage, getIsBetaFromLocalStorage, getOrderFormFromLocalStorage, getThemeFromLocalStorage, getTokenFromLocalStorage } from "../../modules/dataPersistMiddleware.js";
 import { updateOrderForm } from "../../actions/orderFormActions.js";
 import { fetchAllProductsAndAllVariations, invalidateProductCache, setProducts, setVariations } from "../../actions/productsActions.js";
 import { setFetchingOrders, setOrderError, updateOrder } from "../../actions/ordersActions.js";
 import { getOrderNumber } from "../../modules/orders.js";
 import { setIsBeta, setLocalSettingsLoaded, setReadyForCheckout, updateTheme } from "../../actions/metaActions.js";
-import { order452 } from "../../mocks/orders.js";
 import { isLocal } from "../../modules/environment.js";
 import { PRODUCTS_VARIATIONS_CACHE_KEY } from "./App.js";
 import { valueIsEmpty } from "../../modules/validation.js";
 import { customerMock } from "../../mocks/customer.js";
-import { setCart, setFetchingCart } from "../../actions/cartActions.js";
+import { getMyAccount, hasActiveToken, setToken } from "../../modules/heliosApi.js";
 
 const StyledDataLoader = styled.div`
     display: none;
 `;
 
-const DataLoader = (props: any) => {
+const DataLoader = (props) => {
 
     const [isFirstLoad, setIsFirstLoad] = useState(true);
     const dispatch = useDispatch();
@@ -33,58 +31,21 @@ const DataLoader = (props: any) => {
     const orders = useSelector((state) => state.orders);
     const meta = useSelector((state) => state.meta);
 
-    heliosLogger("DataLoader props", props);
-
-    useEffect(() => {
-      // Save the original XMLHttpRequest
-      const originalXhrOpen = XMLHttpRequest.prototype.open;
-
-      // Override the open method of XMLHttpRequest
-      XMLHttpRequest.prototype.open = function (method, url, ...rest) {
-        // Check if the request URL matches the specific endpoint
-        if (url.includes('/?wc-ajax=wbte_sc_set_block_checkout_values')) {
-          this.addEventListener('load', () => {
-            // Trigger a cart fetch after the request completes
-            heliosLogger("Detected payment method change via XMLHttpRequest, reloading cart...");
-            dispatch(setFetchingCart(true));
-            fetchCart().then((newCart) => {
-              dispatch(setCart(newCart));
-              dispatch(setFetchingCart(false));
-            });
-          });
-        }
-
-        // Call the original open method
-        return originalXhrOpen.call(this, method, url, ...rest);
-      };
-
-      // Cleanup: Restore the original XMLHttpRequest open method
-      return () => {
-        XMLHttpRequest.prototype.open = originalXhrOpen;
-      };
-    }, [dispatch]);
-
     useEffect(() => {
       async function loadCustomer() {
-        if (!customer.fetching && valueIsEmpty(customer?.username)) {
+        if (!customer.fetching && !customer.hasActiveToken && hasActiveToken()) {
           heliosLogger("Loading customer data");
-          if (isUserLoggedIn()) {
-            heliosLogger("User is logged in, fetching customer data");
-            dispatch(setFetchingCustomer(true));
-            let customerApiResponse;
-            if (isLocal()) {
-              customerApiResponse = customerMock;
-            } else {
-              customerApiResponse = await fetchCustomer(getUserId());
-            }
-            heliosLogger("Received customer data", customerApiResponse);
-            dispatch(updateCustomerFromApiResponse(customerApiResponse));
-            dispatch(updateBillingAddressFormFromApiResponse(customerApiResponse));
-            dispatch(updateShippingAddressFormFromApiResponse(customerApiResponse));
-            dispatch(setFetchingCustomer(false));
+          dispatch(setFetchingCustomer(true));
+          let result = await getMyAccount();
+          if (result?.status === 200 && !valueIsEmpty(result?.data)) {
+            dispatch(setActiveTokenStatus(true));
+            dispatch(updateCustomerFromApiResponse(result?.data));
+            dispatch(updateBillingAddressFormFromApiResponse(result?.data));
+            dispatch(updateShippingAddressFormFromApiResponse(result?.data));
           } else {
-            heliosLogger("User is not logged in, skipping customer data fetch");
+            dispatch(setActiveTokenStatus(false));
           }
+          dispatch(setFetchingCustomer(false));
         }
       }
       async function loadOrderForm() {
@@ -111,16 +72,6 @@ const DataLoader = (props: any) => {
       }
       async function loadOrder() {
         let orderNumber = getOrderNumber();
-        if (isLocal()) {
-          if (orderNumber === "452") {
-            if (valueIsEmpty(orders.orders[452])) {
-              dispatch(updateOrder(order452));
-            }
-          } else if (!orders.error) {
-            dispatch(setOrderError("Error getting order. Redirecting to home page..."));
-          }
-          return;
-        }
         if (orderNumber && !orders.fetching) {
           dispatch(setFetchingOrders(true));
           let order = await fetchOrder(orderNumber);
@@ -135,6 +86,7 @@ const DataLoader = (props: any) => {
       }
       async function loadLocalSettings() {
         if (!meta.localSettingsLoaded) {
+          heliosLogger("Loading local settings");
           const savedTheme = getThemeFromLocalStorage();
           if (savedTheme) {
             dispatch(updateTheme(savedTheme));
@@ -149,8 +101,17 @@ const DataLoader = (props: any) => {
           dispatch(setLocalSettingsLoaded(true));
         }
       }
+      function loadLocalToken() {
+        if (!hasActiveToken()) {
+          const token = getTokenFromLocalStorage();
+          if (token) {
+            setToken(token);
+          }
+        }
+      }
       if (isFirstLoad) {
         heliosLogger("DataLoader rendering");
+        loadLocalToken();
         loadLocalSettings();
         loadProducts();
         loadOrderForm();

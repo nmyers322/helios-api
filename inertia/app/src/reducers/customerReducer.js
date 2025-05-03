@@ -5,6 +5,7 @@ const initialState = {
     email: "",
     fetching: false,
     firstName: "",
+    hasActiveToken: false,
     lastName: "",
     shipping: [],
     username: ""
@@ -14,6 +15,11 @@ const initialState = {
     switch (action.type) {
       case "RESET_CUSTOMER":
         return initialState;
+      case "SET_ACTIVE_TOKEN_STATUS":
+        return {
+          ...state,
+          hasActiveToken: action.payload,
+        };
       case "SET_FETCHING_CUSTOMER":
         return {
           ...state,

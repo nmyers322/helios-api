@@ -1,5 +1,6 @@
+import { fetchAllProducts, fetchProductVariations } from "../modules/heliosApi";
 import { heliosLogger } from "../modules/logging";
-import { fetchAllProducts, fetchProductVariations } from "../modules/wordpressApi";
+import { valueIsEmpty } from "../modules/validation";
 
 export const PRODUCT_KEYS_TO_KEEP = ["id", "name", "price", "sku"];
 export const VARIATION_KEYS_TO_KEEP = ["id", "name", "price", "sku"];
@@ -13,17 +14,25 @@ export const fetchAllProductsAndAllVariations = async (dispatch) => {
     dispatch(fetchingProductsOrVariations(true));
     let caughtAnyErrors = false;
     try {
-        const products = await fetchAllProducts();
-        dispatch(setProducts(products));
-        await Promise.all(products.map(async product => {
-            try {
-                const variations = await fetchProductVariations(product.id);
-                dispatch(setProductVariations(product.id, variations));
-            } catch (error) {
-                caughtAnyErrors = true;
-                heliosLogger(`Error fetching variations for product ${product.id}:`, error);
-            }
-        }));
+        const result = await fetchAllProducts();
+        let products = result?.data;
+        if (!valueIsEmpty(products)) {
+            dispatch(setProducts(products));
+            await Promise.all(products.map(async product => {
+                try {
+                    const result = await fetchProductVariations(product.id);
+                    let variations = result?.data;
+                    if (valueIsEmpty(variations)) {
+                        heliosLogger(`No variations found for product ${product.id}`);
+                        return;
+                    }
+                    dispatch(setProductVariations(product.id, variations));
+                } catch (error) {
+                    caughtAnyErrors = true;
+                    heliosLogger(`Error fetching variations for product ${product.id}:`, error);
+                }
+            }));
+        }
     } catch (error) {
         caughtAnyErrors = true;
         heliosLogger('Error fetching products:', error);
