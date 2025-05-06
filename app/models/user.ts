@@ -31,6 +31,9 @@ export default class User extends compose(BaseModel, AuthFinder) {
   @column()
   declare phone: string | null
 
+  @column()
+  declare role: 'admin' | 'customer'
+
   @hasMany(() => Address)
   public shipping!: HasMany<typeof Address>
 
