@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes as LibRoutes, Route } from "react-router-dom";
+import { Routes as LibRoutes, Navigate, Route } from "react-router-dom";
 import { styled } from "styled-components";
 import { onLandingPage } from "../../modules/routes";
 import AccountPage from "../page/AccountPage";
@@ -38,6 +38,7 @@ const RoutesWrapper = styled.div`
 const Routes = ({
     $shouldMinimizePageHeight = false,
     $shouldShowHeader = true,
+    initialPage = null,
     routesWrapperRef,
     titleRef
 }) => {
@@ -58,6 +59,7 @@ const Routes = ({
                 <Route path="/login" element={<LoginPage />}>
                     <Route path="" element={<LoginCard />} />
                 </Route>
+                <Route path="/login-success-google" element={<Navigate to="/login-success" replace />} />
                 <Route path="/login-success" element={<LoginSuccessPage />} />
                 <Route path="/logout" element={<LoginPage />}>
                     <Route path="" element={<Logout />} />

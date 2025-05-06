@@ -18,6 +18,7 @@ import { valueIsEmpty } from "../../modules/validation.js";
 import { customerMock } from "../../mocks/customer.js";
 import { getMyAccount, hasActiveToken, setToken } from "../../modules/heliosApi.js";
 
+
 const StyledDataLoader = styled.div`
     display: none;
 `;
@@ -102,7 +103,12 @@ const DataLoader = (props) => {
         }
       }
       function loadLocalToken() {
-        if (!hasActiveToken()) {
+        // Injecting Google token from Inertia
+        let possibleToken = props?.props?.initialPage?.props?.auth?.token;
+        if (possibleToken) {
+          heliosLogger("Loading token from page props");
+          setToken(possibleToken);
+        } else if (!hasActiveToken()) {
           const token = getTokenFromLocalStorage();
           if (token) {
             setToken(token);

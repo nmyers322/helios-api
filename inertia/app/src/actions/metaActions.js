@@ -37,7 +37,7 @@ export const setShowPrintModal = (value) => ({
   payload: value,
 });
 
-export const setToken = (token) => ({
+export const setLocalToken = (token) => ({
   type: "SET_TOKEN",
   payload: token,
 });

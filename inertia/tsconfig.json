@@ -9,5 +9,5 @@
     },
     "strictPropertyInitialization": false,
   },
-  "include": ["./**/*.ts", "./**/*.tsx", "app/src/components/main/DataLoader.jsx"],
+  "include": ["./**/*.ts", "./**/*.tsx", "app/src/components/main/DataLoader.jsx", "app/src/components/page/LoginSuccessGooglePage.jsx"],
 }
