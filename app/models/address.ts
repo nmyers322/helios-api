@@ -12,13 +12,13 @@ export default class Address extends BaseModel {
   public id: number
 
   @column()
-  public userId: number
-
-  @column()
   public type: 'shipping' | 'billing'
 
   @belongsTo(() => User)
   public user: BelongsTo<typeof User>
+
+  @column()
+  public userId: number
 
   @column()
   public firstName: string
@@ -29,10 +29,10 @@ export default class Address extends BaseModel {
   @column()
   public company: string | null
 
-  @column()
+  @column({ serializeAs: 'address_1' })
   public address1: string
 
-  @column()
+  @column({ serializeAs: 'address_2' })
   public address2: string | null
 
   @column()

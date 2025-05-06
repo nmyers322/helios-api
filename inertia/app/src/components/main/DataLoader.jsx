@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { heliosLogger } from "../../modules/logging.js";
-import { setActiveTokenStatus, setFetchingCustomer, updateCustomerFromApiResponse } from "../../actions/customerActions.js";
+import { setActiveTokenStatus, setFetchingCustomer, updateCustomerAddress, updateCustomerFromApiResponse } from "../../actions/customerActions.js";
 import { fetchCustomer, fetchOrder } from "../../modules/wordpressApi.js";
 import { updateBillingAddressFormFromApiResponse } from "../../actions/billingAddressActions.js";
 import { updateShippingAddressFormFromApiResponse } from "../../actions/shippingAddressActions.js";
@@ -11,12 +11,12 @@ import { updateOrderForm } from "../../actions/orderFormActions.js";
 import { fetchAllProductsAndAllVariations, invalidateProductCache, setProducts, setVariations } from "../../actions/productsActions.js";
 import { setFetchingOrders, setOrderError, updateOrder } from "../../actions/ordersActions.js";
 import { getOrderNumber } from "../../modules/orders.js";
-import { setIsBeta, setLocalSettingsLoaded, setReadyForCheckout, updateTheme } from "../../actions/metaActions.js";
+import { setIsBeta, setLocalSettingsLoaded, setLocalToken, setReadyForCheckout, updateTheme } from "../../actions/metaActions.js";
 import { isLocal } from "../../modules/environment.js";
 import { PRODUCTS_VARIATIONS_CACHE_KEY } from "./App.js";
 import { valueIsEmpty } from "../../modules/validation.js";
 import { customerMock } from "../../mocks/customer.js";
-import { getMyAccount, hasActiveToken, setToken } from "../../modules/heliosApi.js";
+import { getMyAccount, getMyAddresses, hasActiveToken, setToken } from "../../modules/heliosApi.js";
 
 
 const StyledDataLoader = styled.div`
@@ -37,12 +37,22 @@ const DataLoader = (props) => {
         if (!customer.fetching && !customer.hasActiveToken && hasActiveToken()) {
           heliosLogger("Loading customer data");
           dispatch(setFetchingCustomer(true));
-          let result = await getMyAccount();
-          if (result?.status === 200 && !valueIsEmpty(result?.data)) {
+          let user = await getMyAccount();
+          if (user?.status === 200 && !valueIsEmpty(user?.data)) {
             dispatch(setActiveTokenStatus(true));
-            dispatch(updateCustomerFromApiResponse(result?.data));
-            dispatch(updateBillingAddressFormFromApiResponse(result?.data));
-            dispatch(updateShippingAddressFormFromApiResponse(result?.data));
+            dispatch(updateCustomerFromApiResponse(user?.data));
+            let addresses = await getMyAddresses();
+            heliosLogger("Addresses", addresses);
+            if (addresses?.status === 200 && !valueIsEmpty(addresses?.data) && Array.isArray(addresses.data)) {
+              addresses.data.map((address) => {
+                dispatch(updateCustomerAddress(address));
+                if (address.type === "billing") {
+                  dispatch(updateBillingAddressFormFromApiResponse(address));
+                } else if (address.type === "shipping") {
+                  dispatch(updateShippingAddressFormFromApiResponse(address));
+                }
+              });
+            }
           } else {
             dispatch(setActiveTokenStatus(false));
           }
@@ -105,9 +115,11 @@ const DataLoader = (props) => {
       function loadLocalToken() {
         // Injecting Google token from Inertia
         let possibleToken = props?.props?.initialPage?.props?.auth?.token;
-        if (possibleToken) {
+        if (possibleToken && !hasActiveToken()) {
           heliosLogger("Loading token from page props");
           setToken(possibleToken);
+          dispatch(setActiveTokenStatus(true));
+          dispatch(setLocalToken(possibleToken));
         } else if (!hasActiveToken()) {
           const token = getTokenFromLocalStorage();
           if (token) {

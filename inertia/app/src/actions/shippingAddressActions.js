@@ -13,7 +13,6 @@ export const buildShippingAddressFromBillingAddress = (billingAddress) => {
   let newShippingAddress = {
     ...billingAddress,
   };
-  delete newShippingAddress.email;
   delete newShippingAddress.phone;
   delete newShippingAddress.company;
   return newShippingAddress;
@@ -42,18 +41,10 @@ export const updateShippingAddressForm = (value) => ({
   payload: value,
 });
 
-export const updateShippingAddressFormFromApiResponse = (customer) => {
-  let shipping = {};
-  if (customer.shipping) {
-    if (Array.isArray(customer.shipping)) {
-      shipping = snakeCaseToCamelCaseAllObjectKeys(customer.shipping[customer.shipping.length - 1]);
-    } else {
-      shipping = snakeCaseToCamelCaseAllObjectKeys(customer.shipping);
-    }
-  }
+export const updateShippingAddressFormFromApiResponse = (address) => {
   return {
     type: "UPDATE_SHIPPING_ADDRESS_FORM_FROM_API_RESPONSE",
-    payload: shipping
+    payload: snakeCaseToCamelCaseAllObjectKeys(address)
   };
 };
 

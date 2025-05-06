@@ -1,16 +1,14 @@
 import React, { useState } from "react";
 import OrderFormCard from "../orderform/OrderFormCard";
-import Phone from "../../form/account/Phone";
+import Phone, { phoneName } from "../../form/account/Phone";
 import FirstName, { firstNameName } from "../../form/account/FirstName";
 import LastName, { lastNameName } from "../../form/account/LastName";
 import City from "../../form/account/City";
-import Company from "../../form/account/Company";
+import Company, { companyName } from "../../form/account/Company";
 import State from "../../form/account/State";
 import Modal from "../../main/Modal";
 import { useDispatch, useSelector } from "react-redux";
 import LabeledSpinner from "../../main/LabeledSpinner";
-import { updateCustomer, updateMyUser } from "../../../modules/wordpressApi";
-import { getUserDetails } from "../../../modules/authorization";
 import { customerShippingAddressIsEmpty, customerShippingAndBillingAddressesAreEqual, validateAddress1, validateBillingAddressCard } from "../../../modules/accountValidation";
 import Address1 from "../../form/account/Address1";
 import Address2 from "../../form/account/Address2";
@@ -20,10 +18,10 @@ import { FormInputRow, FormInputRowSpacer } from "../../../styles/Form";
 import { updateCustomerField } from "../../../actions/customerActions";
 import { useNavigate } from "react-router-dom";
 import { updateOrderFormField } from "../../../actions/orderFormActions";
-import { camelCaseToSnakeCaseAllObjectKeys } from "../../../modules/serialization";
 import { shippingSameAsBillingName } from "../../form/account/ShippingSameAsBilling";
 import { buildShippingAddressFromBillingAddress, updateShippingAddressForm } from "../../../actions/shippingAddressActions";
 import { buildBillingAddressFromForm } from "../../../actions/billingAddressActions";
+import { updateAddress, updateMyUser } from "../../../modules/heliosApi";
 
 
 const BillingAddress = ({
@@ -38,27 +36,25 @@ const BillingAddress = ({
   const [showLoadingModal, setShowLoadingModal] = useState(false);
 
   const onSubmit = async () => {
-    let userDetails = getUserDetails();
     let newBillingAddress = buildBillingAddressFromForm(billingAddressForm);
-    let newBillingAddressWithEmail = {
-      ...newBillingAddress,
-      email: userDetails ? userDetails.user_email : ""
-    };
     setModalMessage("Saving your billing address...");
     setShowLoadingModal(true);
     updateMyUser({
-      first_name: billingAddressForm[firstNameName],
-      last_name: billingAddressForm[lastNameName]
+      firstName: billingAddressForm[firstNameName],
+      lastName: billingAddressForm[lastNameName],
+      phone: billingAddressForm[phoneName],
+      company: billingAddressForm[companyName]
     }).then(() => {
-      return updateCustomer({
-        billing: camelCaseToSnakeCaseAllObjectKeys(newBillingAddress)
+      return updateAddress({
+        type: "billing",
+        ...newBillingAddress
       });
     }).then(() => {
-      dispatch(updateCustomerField("billing", [newBillingAddressWithEmail]));
-      dispatch(updateOrderFormField("billing", newBillingAddressWithEmail));
+      dispatch(updateCustomerField("billing", [newBillingAddress]));
+      dispatch(updateOrderFormField("billing", newBillingAddress));
       if (customerShippingAddressIsEmpty(customer) || customerShippingAndBillingAddressesAreEqual(customer)) {
         dispatch(updateOrderFormField(shippingSameAsBillingName, true));
-        let newShippingAddress = buildShippingAddressFromBillingAddress(newBillingAddressWithEmail);
+        let newShippingAddress = buildShippingAddressFromBillingAddress(newBillingAddress);
         dispatch(updateShippingAddressForm(newShippingAddress));
       } else {
         // User has a shipping address, and it's not the same as billing

@@ -56,6 +56,9 @@ const makeCall = async ({
     if (error?.response?.status === 401) {
       heliosLogger(`Token expired, deleting token`);
       token = null;
+      if (window.location.pathname !== '/logout' && window.location.pathname !== '/login') {
+        window.location.href = '/logout';
+      }
     }
     return error;
   }
@@ -133,6 +136,24 @@ export const createAccount = async (email, password, password2) => {
 
 export const getMyAccount = async () => {
     let result = await makeGetCall("/api/account");
+    return result;
+}
+
+export const updateMyUser = async (data) => {
+    let result = await makePutCall("/api/account", data);
+    return result;
+}
+
+/****************************************************
+ * Addresses
+ ***************************************************/
+export const getMyAddresses = async () => {
+    let result = await makeGetCall("/api/account/addresses");
+    return result;
+}
+
+export const updateAddress = async (data) => {
+    let result = await makePutCall(`/api/account/addresses`, data);
     return result;
 }
 

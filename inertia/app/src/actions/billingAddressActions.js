@@ -36,19 +36,10 @@ export const updateBillingAddressForm = (billingAddress) => ({
   payload: billingAddress,
 });
 
-export const updateBillingAddressFormFromApiResponse = (customer) => {
-  let billing = {};
-  if (customer.billing) {
-    if (Array.isArray(customer.billing)) {
-      billing = snakeCaseToCamelCaseAllObjectKeys(customer.billing[customer.billing.length - 1]);
-    } else {
-      billing = snakeCaseToCamelCaseAllObjectKeys(customer.billing);
-      billing.email = customer.email;
-    }
-  }
+export const updateBillingAddressFormFromApiResponse = (address) => {
   return {
     type: "UPDATE_BILLING_ADDRESS_FORM_FROM_API_RESPONSE",
-    payload: billing
+    payload: snakeCaseToCamelCaseAllObjectKeys(address)
   };
 };
 

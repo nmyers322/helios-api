@@ -5,7 +5,7 @@ import LastName from "../../form/account/LastName";
 import City from "../../form/account/City";
 import State from "../../form/account/State";
 import Modal from "../../main/Modal";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import LabeledSpinner from "../../main/LabeledSpinner";
 import { validateAddress1, validateShippingAddressCard } from "../../../modules/accountValidation";
 import Address1 from "../../form/account/Address1";
@@ -17,37 +17,35 @@ import ShippingSameAsBilling from "../../form/account/ShippingSameAsBilling";
 import { camelCaseToSnakeCaseAllObjectKeys } from "../../../modules/serialization";
 import { updateCustomer } from "../../../modules/wordpressApi";
 import { buildShippingAddressFromForm } from "../../../actions/shippingAddressActions";
+import { updateAddress } from "../../../modules/heliosApi";
+import { useGoTo } from "../../../modules/links";
+import { useNavigate } from "react-router-dom";
+import { updateCustomerField } from "../../../actions/customerActions";
+import { updateOrderFormField } from "../../../actions/orderFormActions";
 
 const ShippingAddress = ({
   className = "",
 }) => {
-  const fetchingCart = useSelector((state) => state.cart.fetching);
   const customer = useSelector((state) => state.customer);
   const orderForm = useSelector((state) => state.orderForm);
+  const dispatch = useDispatch();
+  const goTo = useGoTo(useNavigate());
   const shippingAddressForm = useSelector((state) => state.shippingAddressForm);
   const fieldsAreDisabled = orderForm?.shippingSameAsBilling || customer?.fetching || false;
   const [showLoadingModal, setShowLoadingModal] = useState(false);
   const [modalMessage, setModalMessage] = useState("Populating user data...");
-  const [redirectToCheckout, setRedirectToCheckout] = useState(false);
-
-  useEffect(() => {
-    if (redirectToCheckout && !fetchingCart) {
-      window.location.href = "/checkout";
-    }
-  }, [redirectToCheckout, fetchingCart]);
 
   const onSubmit = async () => {
     let newShippingAddress = buildShippingAddressFromForm(shippingAddressForm);
     setModalMessage("Saving your shipping address...");
     setShowLoadingModal(true);
-    updateCustomer({
-        shipping: camelCaseToSnakeCaseAllObjectKeys(newShippingAddress)
+    updateAddress({
+      type: "shipping",
+      ...newShippingAddress
     }).then(() => {
-      // These two lines won't matter since we're moving on, unless we cache it
-      // dispatch(updateCustomerField("shipping", [newShippingAddress]));
-      // dispatch(updateOrderFormField("shipping", newShippingAddress));
-      setModalMessage("Finalizing your order. Please wait up to one minute, and do not navigate away from this page.");
-      setRedirectToCheckout(true);
+      dispatch(updateCustomerField("shipping", [newShippingAddress]));
+      dispatch(updateOrderFormField("shipping", newShippingAddress));
+      goTo("/checkout");
     });
   }
 
