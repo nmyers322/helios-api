@@ -1,4 +1,7 @@
 import type { HttpContext } from '@adonisjs/core/http'
+import ShipStationService from '#services/ShipStationService'
+
+export const HELIOS_POSTCODE = "76825";
 
 export default class ShippingOptionsController {
     async getShippingOptions({ request, response }: HttpContext) {
@@ -9,27 +12,30 @@ export default class ShippingOptionsController {
             return response.status(400).json({ error: 'Invalid request body' })
         }
 
-        // Mocked shipping options
-        const shippingOptions = [
+        const shipStationService = new ShipStationService();
+        const shippingOptions = await shipStationService.getRatesFromShipStationAPI(
+            HELIOS_POSTCODE,
+            shippingAddress.state,
+            shippingAddress.country,
+            shippingAddress.postcode,
+            shippingAddress.city,
             {
-                id: 1,
-                name: 'Standard Shipping',
-                price: 5.99,
-                estimatedDelivery: '5-7 business days',
+                "value": 100,
+                "unit": "ounces"
             },
             {
-                id: 2,
-                name: 'Express Shipping',
-                price: 15.99,
-                estimatedDelivery: '2-3 business days',
+                "height": 10,
+                "length": 10,
+                "width": 10,
+                "units": "inches"
             },
-            {
-                id: 3,
-                name: 'Overnight Shipping',
-                price: 29.99,
-                estimatedDelivery: '1 business day',
-            },
-        ]
+            "delivery",
+            true
+        );
+        if (!shippingOptions) {
+            return response.status(500).json({ error: 'Failed to fetch shipping options' })
+        }
+        
         console.log('Shipping Options:', shippingOptions)
         return response.status(200).json({ shippingOptions });
     }

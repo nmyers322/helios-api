@@ -8,6 +8,7 @@ import ShippingCost from '../standalone/ShippingCost';
 import { isLocal } from '../../modules/environment';
 import RedXButton from '../form/main/RedXButton';
 import { updateOrderFormField } from '../../actions/orderFormActions';
+import { calculateShippingCost, CUSTOM_FREIGHT_QUOTE_OPTION, getSelectedShippingOption, IN_STORE_PICKUP_OPTION } from '../../modules/shipping';
 
 const Container = styled.div`
   background-color: ${(props) => props.theme.colors.sideBar.background};
@@ -68,6 +69,13 @@ const LineItemPart = styled.div`
   padding-right: 0rem;
 `;
 
+const LineItemPartRight = styled.div`
+  padding-left: 1rem;
+  padding-right: 0rem;
+  margin-left: auto;
+  text-align: right;
+`;
+
 const TotalPrice = styled.div`
   display: flex;
   justify-content: space-between;
@@ -110,6 +118,7 @@ const OrderSummarySidePanel = ({disabled}) => {
   const products = useSelector(state => state.products.products);
   const variations = useSelector(state => state.products.variations);
   const shippingOptions = useSelector(state => state.shippingOptions);
+  const selectedShippingOption = getSelectedShippingOption(shippingOptions.shippingOptions, shippingOptions.selectedOption);
   let memoedPrice = {};
 
   const [visibleSections, setVisibleSections] = useState({
@@ -164,6 +173,23 @@ const OrderSummarySidePanel = ({disabled}) => {
       return price;
     }
     return 0;
+  }
+
+  const formatShippingPrice = (selectedShippingOption) => {
+    if (!selectedShippingOption) {
+      return "";
+    }
+    if (selectedShippingOption.serviceCode === IN_STORE_PICKUP_OPTION.serviceCode) {
+      return "Free";
+    } else if (selectedShippingOption.serviceCode === CUSTOM_FREIGHT_QUOTE_OPTION.serviceCode) {
+      return "Quoted and Invoiced Separately";
+    } else {
+      const shippingPrice = calculateShippingCost(selectedShippingOption);
+      if (shippingPrice) {
+        return formatPrice(shippingPrice);
+      }
+      return "Free";
+    }
   }
 
   const getSelectedOptionLabel = name => 
@@ -222,10 +248,6 @@ const OrderSummarySidePanel = ({disabled}) => {
     return output;
   }
 
-  const getShippingPrice = () => {
-    return shippingOptions?.shippingOptions?.find(option => option.id === shippingOptions.selectedOption)?.price || 0;
-  }
-
   const getTotalPrice = () => {
     let total = 0;
     const pricedItems = [
@@ -245,7 +267,7 @@ const OrderSummarySidePanel = ({disabled}) => {
     orderForm.colors.length > 0 && orderForm.colors.forEach(color => {
       total += calculatePrice("color", color);
     });
-    let shippingPrice = getShippingPrice();
+    let shippingPrice = calculateShippingCost(selectedShippingOption);
     shippingPrice && (total += parseFloat(shippingPrice));
     return total;
   };
@@ -348,8 +370,8 @@ const OrderSummarySidePanel = ({disabled}) => {
           Shipping and Handling
         </LineItemTitle>
         <LineItem className={visibleSections.albumType ? "visible" : "invisible"}>
-          <LineItemPart><ShippingCost /></LineItemPart>
-          <LineItemPart><ShippingCost output="price" /></LineItemPart>
+          <LineItemPart>{ selectedShippingOption?.serviceName || "Not Yet Calculated" }</LineItemPart>
+          <LineItemPartRight>{ formatShippingPrice(selectedShippingOption) }</LineItemPartRight>
         </LineItem>
         <TotalPrice>
           <span>Total</span>

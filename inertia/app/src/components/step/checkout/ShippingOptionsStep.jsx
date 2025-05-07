@@ -10,7 +10,7 @@ const ShippingOptionsStep = () => {
   const fetchingShippingOptions = useSelector((state) => state.shippingOptions.fetching);
   const goTo = useGoTo(useNavigate());
   return (<StepContainer>
-    <ShippingOptionsCard disabled={fetchingShippingOptions} />
+    <ShippingOptionsCard />
     <CheckoutCard
       disabled={fetchingShippingOptions}>
         <Button
