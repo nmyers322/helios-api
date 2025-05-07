@@ -14,7 +14,7 @@ const CheckoutCardContainer = styled.div`
   pointer-events: ${(props) => (props.disabled ? "none" : "auto")};
 
   @media (max-width: 57rem) {
-    width: calc(100% - 4rem);
+    width: calc(100% - 6rem);
     padding: 1rem 2rem 1.5rem 2rem;
   }
 `;

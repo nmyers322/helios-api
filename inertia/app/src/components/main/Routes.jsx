@@ -26,12 +26,12 @@ const RoutesWrapper = styled.div`
   height: auto;
   width: 100vw;
   background-color: ${(props) => props.$isLandingPage ? props.theme.colors.background : props.theme.colors.background};
-  height: ${(props) => props.$shouldShowHeader ? 'calc(100% - var(--header-height))' : '100%'};
+  height: 100%;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
   align-items: flex-start;
-  overflow-y: ${(props) => props.$shouldMinimizePageHeight ? 'visible' : 'auto'};
+  overflow-y: default;
   scroll-behavior: smooth;
 `;
 
@@ -45,17 +45,15 @@ const Routes = ({
 
     return (
         <RoutesWrapper 
-            // this doesnt work, need to useEffect
-            $isLandingPage={onLandingPage()}
             ref={routesWrapperRef} 
-            $shouldShowHeader={$shouldShowHeader} 
-            $shouldMinimizePageHeight={$shouldMinimizePageHeight}>
+            $shouldShowHeader={true} 
+            $shouldMinimizePageHeight={false}>
             <LibRoutes>
                 <Route path="/" element={<LandingPage routesWrapperRef={routesWrapperRef} titleRef={titleRef} />} />
                 <Route path="/account/*" element={<AccountPage />} />
                 <Route path="/contact-us" element={<ContactUsPage />} />
                 <Route path="/checkout/order-received/*" element={<OrderReceivedPage />} />
-                <Route path="/checkout" element={<CheckoutPage />} />
+                <Route path="/checkout/*" element={<CheckoutPage />} />
                 <Route path="/login" element={<LoginPage />}>
                     <Route path="" element={<LoginCard />} />
                 </Route>

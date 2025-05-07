@@ -109,6 +109,7 @@ const OrderSummarySidePanel = ({disabled}) => {
   const orderForm = useSelector(state => state.orderForm);
   const products = useSelector(state => state.products.products);
   const variations = useSelector(state => state.products.variations);
+  const shippingOptions = useSelector(state => state.shippingOptions);
   let memoedPrice = {};
 
   const [visibleSections, setVisibleSections] = useState({
@@ -221,6 +222,10 @@ const OrderSummarySidePanel = ({disabled}) => {
     return output;
   }
 
+  const getShippingPrice = () => {
+    return shippingOptions?.shippingOptions?.find(option => option.id === shippingOptions.selectedOption)?.price || 0;
+  }
+
   const getTotalPrice = () => {
     let total = 0;
     const pricedItems = [
@@ -240,7 +245,8 @@ const OrderSummarySidePanel = ({disabled}) => {
     orderForm.colors.length > 0 && orderForm.colors.forEach(color => {
       total += calculatePrice("color", color);
     });
-    orderForm.shippingCost && (total += parseFloat(orderForm.shippingCost));
+    let shippingPrice = getShippingPrice();
+    shippingPrice && (total += parseFloat(shippingPrice));
     return total;
   };
 
@@ -342,8 +348,8 @@ const OrderSummarySidePanel = ({disabled}) => {
           Shipping and Handling
         </LineItemTitle>
         <LineItem className={visibleSections.albumType ? "visible" : "invisible"}>
-          <LineItemPart></LineItemPart>
           <LineItemPart><ShippingCost /></LineItemPart>
+          <LineItemPart><ShippingCost output="price" /></LineItemPart>
         </LineItem>
         <TotalPrice>
           <span>Total</span>

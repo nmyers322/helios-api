@@ -15,6 +15,7 @@ import UsersController from '#controllers/users_controller'
 import VariationsController from '#controllers/variations_controller'
 import OauthsController from '#controllers/oauths_controller'
 import AddressesController from '#controllers/addresses_controller'
+import ShippingOptionsController from '#controllers/shipping_options_controller'
 
 router.post('/api/session', [SessionsController, 'store'])
 router.delete('/api/session', [SessionsController, 'destroy'])
@@ -36,6 +37,9 @@ router.put('/api/account/addresses', [AddressesController, 'createOrUpdate'])
 router.get('/api/products', [ProductsController, 'getAll'])
 
 router.get('/api/variations/:productId', [VariationsController, 'getByProductId'])
+
+router.post('/api/shipping-options', [ShippingOptionsController, 'getShippingOptions'])
+    .use(middleware.auth({ guards: ['api'] }))
 
 router.get('/login/google', ({ ally }) => {
     return ally.use('google').redirect()

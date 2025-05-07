@@ -7,6 +7,7 @@ export const CheckoutPageContainer = styled.div`
   align-items: center;
   margin-left: 0;
   margin-right: 0;
+  margin-bottom: 4rem;
   height: 100%;
   box-sizing: border-box;
   width: (100vw - 30rem);
@@ -57,11 +58,17 @@ export const OrderSummaryContainerLarge = styled.div`
   align-self: flex-start; 
   box-sizing: border-box;
   max-height: var(--header-height);
-  z-index: 1;
   transition: top 0.1s ease-in-out;
   overflow-y: visible;
 
   @media (max-width: 40rem) {
     display: none;
   }
+`;
+
+export const StepContainer = styled.div`
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
 `;

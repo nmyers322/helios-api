@@ -158,6 +158,14 @@ export const updateAddress = async (data) => {
 }
 
 /****************************************************
+ * Shipping Options
+ ***************************************************/
+export const getShippingOptions = async (data) => {
+  let result = await makePostCall("/api/shipping-options", data);
+  return result;
+}
+
+/****************************************************
  * Products
  ***************************************************/
 

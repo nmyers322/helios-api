@@ -5,8 +5,10 @@ import { ViewOnMobileOnly } from '../../styles/Page';
 import { onCheckoutPage } from '../../modules/routes';
 import { selectShippingRate } from '../../actions/cartActions';
 
-const ShippingCost = ({source="orderForm"}) => {
+const ShippingCost = ({source="shippingOptions", output="name"}) => {
     const orderForm = useSelector((state) => state.orderForm);
+    const shippingOptions = useSelector((state) => state.shippingOptions.shippingOptions);
+    const selectedShippingOption = useSelector((state) => state.shippingOptions.selectedOption);
     const dispatch = useDispatch();
     const checkoutPage = onCheckoutPage();
     const [showHelpMsg, setShowHelpMsg] = useState(false);
@@ -17,42 +19,24 @@ const ShippingCost = ({source="orderForm"}) => {
         }
     }, [checkoutPage]);
 
-    useEffect(() => {
-        const targetNode = document.querySelector('#shipping-option');
-        const updateShippingCost = () => {
-            const selectedOptionPrice = document.querySelector('#shipping-option .wc-block-components-radio-control__option-checked .wc-block-components-radio-control__secondary-label > span');
-            if (selectedOptionPrice) {
-                dispatch(updateOrderFormField("shippingCost", selectedOptionPrice.textContent.replace('$', '').replace(',', '').replace('Free', '0')));
-            }
-            const selectedOptionId = document.querySelector('#shipping-option .wc-block-components-radio-control__option-checked');
-            if (selectedOptionId) {
-                dispatch(selectShippingRate(selectedOptionId.getAttribute('for').replace('radio-control-0-', '')));
-            }
-        };
-        const handleClick = (event) => {
-            const radio = event.target.closest('input[type="radio"]');
-            if (radio) {
-                updateShippingCost();
-            }
-        };
-
-        if (targetNode) {
-            targetNode.addEventListener('click', handleClick);
-
-            updateShippingCost();
-
-            return () => {
-                targetNode.removeEventListener('click', handleClick);
-            };
-        }
-    }, [dispatch]);
-
+    const getName = () => {
+        return shippingOptions.find(option => option.id === selectedShippingOption)?.name || "";
+    }
+    const getPrice = () => {
+        return shippingOptions.find(option => option.id === selectedShippingOption)?.price || "";
+    }
     return (
         <div>
             { source === "orderForm" && 
                 ( orderForm.shippingCost 
                     ? ("$" + orderForm.shippingCost )
                     : "Not yet calculated" )
+            }
+            { source === "shippingOptions" &&
+                <div>
+                    { output === "name" && getName() }
+                    { output === "price" && getPrice() }
+                </div>
             }
             { showHelpMsg && <ViewOnMobileOnly>(Select option below)</ViewOnMobileOnly> }
         </div>

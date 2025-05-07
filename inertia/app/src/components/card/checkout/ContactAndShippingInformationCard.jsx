@@ -64,7 +64,7 @@ const OrderContactCard = ({
       disabled={disabled}
       title="Contact and Shipping Information"
     >
-      { billing?.company && <OneLine><Title>Company Name:</Title><AddressLine>{billing.company}</AddressLine></OneLine> }
+      { billing?.company && <OneLine><Title>Company Name:</Title><AddressLine>{billing.company} { isEditable && <a href="/account/billing-address">(Edit)</a> }</AddressLine></OneLine> }
       <Title>Billing Address: { isEditable && <a href="/account/billing-address">(Edit)</a> }</Title>
       <AddressLine>{billing && parseAddressIntoFullName(billing)}</AddressLine>
       <AddressLine>{billing && parseAddressIntoStreetAddress(billing)}</AddressLine>
@@ -77,7 +77,7 @@ const OrderContactCard = ({
       <AddressLine>{shipping && parseAddressIntoCityStateZip(shipping)}</AddressLine>
       { shipping && shipping.country && <AddressLine>{getCountryFromCode(shipping.country)}</AddressLine> }
       <FormInputColumnSpacer />
-      { billing?.phone && <OneLine><Title>Phone number:</Title><AddressLine>{billing.phone}</AddressLine></OneLine> }
+      { billing?.phone && <OneLine><Title>Phone number:</Title><AddressLine>{billing.phone} { isEditable && <a href="/account/billing-address">(Edit)</a> }</AddressLine></OneLine> }
     </CheckoutCard>
   );
 };
