@@ -1,18 +1,17 @@
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import CheckoutCard from "./CheckoutCard";
 import { useDispatch, useSelector } from "react-redux";
-import { getCountryFromCode, parseAddressIntoCityStateZip, parseAddressIntoFullName, parseAddressIntoStreetAddress } from "../../../modules/serialization";
-import { FormInputColumnSpacer } from "../../../styles/Form";
 import { updateOrderFormField } from "../../../actions/orderFormActions";
 import styled from "styled-components";
-import { valueIsEmpty } from "../../../modules/validation";
-import Modal from "../../main/Modal";
 import LabeledSpinner from "../../main/LabeledSpinner";
 import RadioSelector from "../../form/main/RadioSelector";
 import { getShippingOptions } from "../../../modules/heliosApi";
 import { selectShippingOption, setFetchingShippingOptions, setShippingOptions } from "../../../actions/shippingOptionsActions";
 import ErrorText from "../../form/main/ErrorText";
 import { calculateShippingCost, CUSTOM_FREIGHT_QUOTE_OPTION, IN_STORE_PICKUP_OPTION } from "../../../modules/shipping";
+import { albumTypeName } from "../../form/orderform/AlbumType";
+import { outerPackagingTypeName } from "../../form/orderform/OuterPackagingType";
+import { totalQuantityName } from "../../form/orderform/TotalQuantity";
 
 const Title = styled.p`
   font-size: 1.2rem;
@@ -54,13 +53,15 @@ const ShippingOptionsCard = ({
       dispatch(setFetchingShippingOptions(true));
       let shippingOptions = await getShippingOptions({
         shippingAddress,
-        order: orderForm
+        albumType: orderForm[albumTypeName]?.value,
+        packagingType: orderForm[outerPackagingTypeName]?.value,
+        totalQuantity: orderForm[totalQuantityName]
       });
       if (shippingOptions?.data?.shippingOptions) {
         dispatch(setShippingOptions(shippingOptions.data.shippingOptions));
         dispatch(selectShippingOption(shippingOptions.data.shippingOptions[0].serviceCode));
       } else {
-        setErrorText("Error fetching shipping options. Please try again later or contact support at <a href=\"mailto:contact@heliospressing.com\">contact@heliospressing.com</a>.");
+        setErrorText("Error fetching shipping options. Please try again later or contact support at contact@heliospressing.com.");
       }
       dispatch(setFetchingShippingOptions(false));
     };
@@ -74,7 +75,8 @@ const ShippingOptionsCard = ({
   return (
     <CheckoutCard
       disabled={disabled}
-      title="Shipping Options"
+      title={"Shipping Options"}
+      subtitle={shippingAddress?.postcode && `Shipping to ${shippingAddress.postcode}`}
     >
       { !fetchingShippingOptions && shippingOptions.map((option) => (
         <OneLine key={option.serviceCode} $isSelected={option.serviceCode === selectedShippingOption}

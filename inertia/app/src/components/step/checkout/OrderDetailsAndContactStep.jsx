@@ -5,6 +5,7 @@ import CheckoutCard from "../../card/checkout/CheckoutCard";
 import Button from "../../form/main/Button";
 import ContactAndShippingInformationCard from "../../card/checkout/ContactAndShippingInformationCard";
 import { StepContainer } from "../../../styles/CheckoutPage";
+import TertiaryButton from "../../form/main/TertiaryButton";
 
 const OrderDetailsAndContactStep = ({isDisabled = false}) => {
 const goTo = useGoTo(useNavigate());
@@ -18,11 +19,17 @@ return (<StepContainer>
     disabled={isDisabled}
     className="checkout-card">
         <Button
-        buttonText="Continue to Shipping Options" 
-        disabled={isDisabled}
-        onClick={() => {
-            goTo("/checkout/shipping");
-        }} />
+            buttonText="Continue to Shipping Options" 
+            disabled={isDisabled}
+            onClick={() => {
+                goTo("/checkout/shipping");
+            }} />
+        <TertiaryButton
+            buttonText="Back to Order Form" 
+            disabled={isDisabled}
+            onClick={() => {
+                goTo("/order");
+            }} />
     </CheckoutCard>
 </StepContainer>);
 }

@@ -58,18 +58,20 @@ const CheckoutPage = () => {
       }
       { !customer?.fetching &&
         <CheckoutPageContainer>
-          <OrderSummaryContainerSmall>
+          {/* <OrderSummaryContainerSmall>
             <OrderSummarySidePanel
               disabled={isCheckoutSubmitted} />
-          </OrderSummaryContainerSmall>
+          </OrderSummaryContainerSmall> */}
           <CheckoutPageCardColumn>
             <Routes>
               <Route path="/" element={<OrderDetailsAndContactStep isCheckoutSubmitted={isCheckoutSubmitted} />} />
               <Route path="/shipping" element={<ShippingOptionsStep isCheckoutSubmitted={isCheckoutSubmitted} />} />
             </Routes>
           </CheckoutPageCardColumn>
-          <OrderSummarySidePanel
-            disabled={isCheckoutSubmitted} />
+          <OrderSummaryContainerLarge>
+            <OrderSummarySidePanel
+              disabled={isCheckoutSubmitted} />
+          </OrderSummaryContainerLarge>
         </CheckoutPageContainer>
       }
     </WCPageContainer>

@@ -27,6 +27,18 @@ const CheckoutCardTitle = styled.div`
   padding-top: 1rem;
 `;
 
+const CheckoutCardSubtitle = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  margin-left: 1rem;
+  color: ${(props) => props.theme.colors.text};
+  font-size: 0.8rem;
+  font-weight: bold;
+  text-align: center;
+`;
+
 const CheckoutCardContent = styled.div`
   flex-grow: 1;
 `;
@@ -39,6 +51,7 @@ const CheckoutCard = ({
   className = "",
   children,
   disabled = false,
+  subtitle,
   title,
 }) => {
 
@@ -49,6 +62,11 @@ const CheckoutCard = ({
           <CheckoutCardTitle>
             <h2>{title}</h2>
           </CheckoutCardTitle> 
+        }
+        { subtitle &&
+          <CheckoutCardSubtitle>
+            <h3>{subtitle}</h3>
+          </CheckoutCardSubtitle>
         }
         <CheckoutCardContent>{children}</CheckoutCardContent>
       </WidthGrowWrapper>

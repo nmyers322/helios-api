@@ -5,6 +5,7 @@ import ShippingOptionsCard from "../../card/checkout/ShippingOptionsCard";
 import Button from "../../form/main/Button";
 import { useGoTo } from "../../../modules/links";
 import { useNavigate } from "react-router-dom";
+import TertiaryButton from "../../form/main/TertiaryButton";
 
 const ShippingOptionsStep = () => {
   const fetchingShippingOptions = useSelector((state) => state.shippingOptions.fetching);
@@ -14,11 +15,17 @@ const ShippingOptionsStep = () => {
     <CheckoutCard
       disabled={fetchingShippingOptions}>
         <Button
-        buttonText="Continue to Payment Options"
-        disabled={fetchingShippingOptions}
-        onClick={() => {
-          goTo("/checkout/payment-options");          
-        }} />
+          buttonText="Continue to Payment Options"
+          disabled={fetchingShippingOptions}
+          onClick={() => {
+            goTo("/checkout/payment-options");          
+          }} />
+        <TertiaryButton
+          buttonText="Back to Contact and Shipping Information"
+          disabled={fetchingShippingOptions}
+          onClick={() => {
+            goTo("/checkout");          
+          }} />
     </CheckoutCard>
   </StepContainer>);
 }

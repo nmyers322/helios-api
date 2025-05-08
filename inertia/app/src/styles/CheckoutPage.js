@@ -4,7 +4,7 @@ export const CheckoutPageContainer = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   margin-left: 0;
   margin-right: 0;
   margin-bottom: 4rem;
@@ -14,6 +14,9 @@ export const CheckoutPageContainer = styled.div`
 
   @media (max-width: 40rem) {
     width: 100vw;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
   }
 `;
 
@@ -25,7 +28,7 @@ export const CheckoutPageCardColumn = styled.div`
   width: calc(100vw - 30rem);
   height: 100%;
   box-sizing: border-box;
-  margin-left: 0;
+  margin-left: 2rem;
 
   @media (max-width: 40rem) {
     width: 100vw;
@@ -57,9 +60,7 @@ export const OrderSummaryContainerLarge = styled.div`
   top: var(--header-height);
   align-self: flex-start; 
   box-sizing: border-box;
-  max-height: var(--header-height);
   transition: top 0.1s ease-in-out;
-  overflow-y: visible;
 
   @media (max-width: 40rem) {
     display: none;

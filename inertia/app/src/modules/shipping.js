@@ -1,6 +1,6 @@
 export const calculateShippingCost = (option) => {
-    if (option && typeof option.shipmentCost === "number" && typeof option.otherCost === "number") {
-        return (option.shipmentCost + option.otherCost).toFixed(2);
+    if (option && typeof option.totalCost === "number") {
+        return (option.totalCost).toFixed(2);
     }
     return null;
 }
