@@ -2,13 +2,18 @@ import { heliosLogger } from "../modules/logging";
 
 const initialState = {
     billing: [],
+    company: "",
+    createdAt: "",
     email: "",
     fetching: false,
     firstName: "",
     hasActiveToken: false,
+    id: null,
     lastName: "",
+    phone: "",
+    role: null,
     shipping: [],
-    username: ""
+    updatedAt: "",
   };
   
   const customerReducer = (state = initialState, action) => {

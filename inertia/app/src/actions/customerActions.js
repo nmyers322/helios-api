@@ -1,8 +1,8 @@
-import { setToken } from "../modules/heliosApi";
+import { setApiToken } from "../modules/heliosApi";
 import { snakeCaseToCamelCaseAllObjectKeys } from "../modules/serialization";
 
 export const setActiveTokenStatus = (hasActiveToken) => {
-  !hasActiveToken && setToken(null);
+  !hasActiveToken && setApiToken(null);
   return {
     type: "SET_ACTIVE_TOKEN_STATUS",
     payload: hasActiveToken,

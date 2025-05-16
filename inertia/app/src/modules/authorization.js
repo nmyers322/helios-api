@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { getMyAccount, hasActiveToken } from "./heliosApi";
+import { getMyAccount, hasActiveApiToken } from "./heliosApi";
 import { goTo } from "./links";
 
 export const isUserAdmin = () =>
@@ -7,7 +7,7 @@ export const isUserAdmin = () =>
     false;
 
 export const isUserLoggedIn = () =>
-    hasActiveToken();
+    hasActiveApiToken();
 
 export const getNonce = () =>
     null;

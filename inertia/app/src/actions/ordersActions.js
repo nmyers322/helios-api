@@ -1,15 +1,12 @@
 import { snakeCaseToCamelCaseAllObjectKeys } from "../modules/serialization";
 
 export const updateOrder = (order) => {
-  if (typeof order?.pricedCart === "string") {
-    order.pricedCart = JSON.parse(order.pricedCart);
-  }
-  function jsonify(name) {
+  let jsonStringKeys = ['billingAddress', 'externalOrder', 'pricedCart', 'shippingAddress', 'selectedShippingOption'];
+  jsonStringKeys.forEach(name => {
     if (typeof order[name] === "string") {
       order[name] = JSON.parse(order[name]);
     }
-  }
-  ['billingAddress', 'externalOrder', 'pricedCart', 'shippingAddress', 'selectedShippingOption'].forEach(jsonify);
+  });
   return {
     type: "UPDATE_ORDER",
     payload: {

@@ -1,5 +1,6 @@
 import Product from '#models/product'
 import Variation from '#models/variation'
+import { parse } from 'path';
 
 export default class CartService {
 
@@ -11,17 +12,17 @@ export default class CartService {
             if (!product) {
                 return item;
             }
-            if (product?.price && product.price !== '0') {
+            if (product?.price && parseFloat(product.price) !== 0) {
+                item.price = parseFloat(product.price);
                 item.total = parseFloat(product.price) * item.quantity;
             } else {
-                const variationIdentifiers = item.variation?.map((v: any) => v.value);
-                console.log('Variation Identifiers:', variationIdentifiers);
-                if (variationIdentifiers) {
+                const itemVariationIdentifiers = item.variation?.map((v: any) => v.value);
+                if (itemVariationIdentifiers) {
                     const productVariations = variations.filter(v => v.productId === item.id);
-                    const pricedVariation = productVariations.find((v: any) => v.name?.replaceAll(" ", "").split(",")
-                                    .every((v: any) => variationIdentifiers.includes(v)));
-                    if (pricedVariation?.price && pricedVariation.price !== '0') {
-                        item.total = parseFloat(pricedVariation.price) * item.quantity;
+                    const matchedVariation = productVariations.find((v: any) => v.name?.replaceAll(" ", "").split(",")
+                                    .every((v: any) => itemVariationIdentifiers.includes(v)));
+                    if (matchedVariation?.price && parseFloat(matchedVariation.price) !== 0) {
+                        item.total = parseFloat(matchedVariation.price) * item.quantity;
                     }
                 }
             }

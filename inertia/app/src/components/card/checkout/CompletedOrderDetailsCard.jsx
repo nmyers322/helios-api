@@ -176,7 +176,7 @@ const CompletedOrderDetailsCard = ({
                             {orderType === "12-inch" && <Item>12-inch base fee {isDoubleLP(order) && "(x2)"}</Item>}
                         </LeftColumn>
                         <RightColumn>
-                            {orderType === "12-inch" && <Item>${getCartItem(albumTypeName, order)?.total.toFixed(2)}</Item>}
+                            {orderType === "12-inch" && <Item>${getCartItem(albumTypeName, order)?.total?.toFixed(2)}</Item>}
                         </RightColumn>
                     </Row> }
                     <Row>
@@ -188,7 +188,7 @@ const CompletedOrderDetailsCard = ({
                         <RightColumn>
                             <Item>${ getCartItem(isDoubleLP(order) 
                                 ? testPressSetupFeeDoubleLPName 
-                                : testPressSetupFeeSingleLPName, order)?.total.toFixed(2) }</Item>
+                                : testPressSetupFeeSingleLPName, order)?.total?.toFixed(2) }</Item>
                         </RightColumn>
                     </Row>
                     <Row>
@@ -196,7 +196,7 @@ const CompletedOrderDetailsCard = ({
                             <Item>{getCartItem(testPressesName, order)?.quantity} {testPressesLabel}</Item>
                         </LeftColumn>
                         <RightColumn>
-                            <Item>${getCartItem(testPressesName, order)?.total.toFixed(2)}</Item>
+                            <Item>${getCartItem(testPressesName, order)?.total?.toFixed(2)}</Item>
                         </RightColumn>
                     </Row>
                 </SectionContents>
@@ -209,7 +209,7 @@ const CompletedOrderDetailsCard = ({
                             <Item>{weight}</Item>
                         </LeftColumn>
                         <RightColumn>
-                            <Item>${getCartItem(weightName, order)?.total.toFixed(2)}</Item>
+                            <Item>${getCartItem(weightName, order)?.total?.toFixed(2)}</Item>
                         </RightColumn>
                     </Row>
                 </SectionContents>
@@ -225,7 +225,7 @@ const CompletedOrderDetailsCard = ({
                         </LeftColumn>
                         <RightColumn>
                             <Item key={"order-details-color-"+color.name?.replace(" ", "-")+"-total"}>
-                                ${color.total.toFixed(2)}
+                                ${color.total?.toFixed(2)}
                             </Item>
                         </RightColumn>
                     </Row> ) }
@@ -237,7 +237,7 @@ const CompletedOrderDetailsCard = ({
                         </LeftColumn>
                         <RightColumn>
                             <Item key={"order-details-color-"+color.name?.replace(" ", "-")+"-setup-fee"}>
-                                ${getCartItem("colorSetupFee", order)?.total.toFixed(2)}
+                                ${getCartItem("colorSetupFee", order)?.total?.toFixed(2)}
                             </Item>
                         </RightColumn>
                     </Row> ) }
@@ -253,7 +253,7 @@ const CompletedOrderDetailsCard = ({
                             </Item>
                         </LeftColumn>
                         <RightColumn>
-                            <Item>${centerLabelLineItem?.total.toFixed(2)}</Item>
+                            <Item>${centerLabelLineItem?.total?.toFixed(2)}</Item>
                         </RightColumn>
                     </Row>
                 </SectionContents>
@@ -268,7 +268,7 @@ const CompletedOrderDetailsCard = ({
                             </Item>
                         </LeftColumn>
                         <RightColumn>
-                            <Item>${innersleeveLineItem?.total.toFixed(2)}</Item>
+                            <Item>${innersleeveLineItem?.total?.toFixed(2)}</Item>
                         </RightColumn>
                     </Row>
                 </SectionContents>
@@ -293,7 +293,7 @@ const CompletedOrderDetailsCard = ({
                             }
                         </LeftColumn>
                         <RightColumn>
-                            <Item>${getCartItem("outerPackaging", order)?.total.toFixed(2)}</Item>
+                            <Item>${getCartItem("outerPackaging", order)?.total?.toFixed(2)}</Item>
                         </RightColumn>
                     </Row>
                 </SectionContents>
@@ -312,7 +312,7 @@ const CompletedOrderDetailsCard = ({
                             }
                         </LeftColumn>
                         <RightColumn>
-                            <Item>${insertLineItem?.total.toFixed(2)}</Item>
+                            <Item>${insertLineItem?.total?.toFixed(2)}</Item>
                         </RightColumn>
                     </Row>
                 </SectionContents>
@@ -326,7 +326,7 @@ const CompletedOrderDetailsCard = ({
                             <Item>{assemblyOptionOptions.find(option => option.value === getCartItemMetaData(getCartItem(assemblyOptionName, order), assemblyOptionName))?.label}</Item>
                         </LeftColumn>
                         <RightColumn>
-                            <Item>${getCartItem(polybagName, order)?.total.toFixed(2)}</Item>
+                            <Item>${getCartItem(polybagName, order)?.total?.toFixed(2)}</Item>
                         </RightColumn>
                     </Row>
                 </SectionContents>
@@ -339,7 +339,7 @@ const CompletedOrderDetailsCard = ({
                             <Item>via {order?.selectedShippingOption?.serviceName}</Item>
                         </LeftColumn>
                         <RightColumn>
-                            <Item>${order?.selectedShippingOption?.totalCost.toFixed(2)}</Item>
+                            <Item>${order?.selectedShippingOption?.totalCost?.toFixed(2)}</Item>
                         </RightColumn>
                     </Row>
                 </SectionContents>

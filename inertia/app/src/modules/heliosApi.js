@@ -106,10 +106,10 @@ export const deleteToken = () =>
 export const getTokenFromResponse = (response) =>
   response?.data?.token;
 
-export const hasActiveToken = () => 
+export const hasActiveApiToken = () => 
     !!token;
 
-export const setToken = (newToken) => {
+export const setApiToken = (newToken) => {
     token = newToken;
 }
 

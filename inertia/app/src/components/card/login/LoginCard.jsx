@@ -53,7 +53,7 @@ const LoginCard = () => {
         </LoginCardTitle>
         { successCode === "logout" && <SuccessText text={"You have been logged out successfully."} /> }
         { errorCode === "access_denied" && <ErrorText text={"You do not have access to this page."} /> }
-        { errorCode === "state_mismatch" && <ErrorText text={"Your login session has expired. Please start over."} /> }
+        { errorCode === "state_mismatch" && <ErrorText text={"Your login session has expired. Please login to continue."} /> }
         { errorCode === "unknown" && <ErrorText text={"There was a problem with the login. Please try again."} /> }
         <LabeledInput
             isDisabled={false}
