@@ -1,4 +1,5 @@
 import Order from '#models/order'
+import CartService from '#services/CartService'
 import type { HttpContext } from '@adonisjs/core/http'
 
 export default class OrdersController {
@@ -24,5 +25,38 @@ export default class OrdersController {
             return response.status(404).json({ error: 'Order not found' })
         }
         return response.status(200).json({order})
+    }
+
+    async initializeOrder({ auth, request, response }: HttpContext) {
+        const { billingAddress, cart, selectedShippingOption, shippingAddress } = request.all()
+        console.log('InitializeOrder called')
+        console.log('billingAddress', billingAddress)
+        console.log('cart', JSON.stringify(cart))
+        const pricedCart = await CartService.getPricedCart(cart)
+        console.log('pricedCart', JSON.stringify(pricedCart))
+        const subTotalPrice = await CartService.getSubTotalPrice(pricedCart)
+        console.log('subTotalPrice', subTotalPrice)
+        console.log('selectedShippingOption', selectedShippingOption)
+        const totalPrice = subTotalPrice + selectedShippingOption.totalCost
+        console.log('totalPrice', totalPrice)
+        console.log('shippingAddress', shippingAddress)
+        try {
+            let order = await Order.create({
+                billingAddress: JSON.stringify(billingAddress),
+                pricedCart: JSON.stringify(pricedCart),
+                selectedShippingOption: JSON.stringify(selectedShippingOption),
+                shippingAddress: JSON.stringify(shippingAddress),
+                totalPrice: totalPrice.toFixed(2),
+                externalOrderId: "bank_transfer",
+                externalOrder: undefined,
+                status: "CREATED",
+                userId: auth?.user?.id
+            });
+
+            return response.status(201).json({ order });
+        } catch (error) {
+            console.error('Error creating order:', error);
+            return response.status(500).json({ error: 'Failed to create order' });
+        }
     }
 }

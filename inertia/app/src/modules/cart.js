@@ -34,6 +34,12 @@ export const buildCartFromOrderForm = async (orderForm, products) => {
 
     const items = [];
     const addItemToCart = (productId, quantity, variations, userInput) => {
+        const variationsEqual = (a, b) => {
+            if (!a && !b) return true;
+            if (!a || !b) return false;
+            if (a.length !== b.length) return false;
+            return a.every((v, i) => v.attribute === b[i].attribute && v.value === b[i].value);
+        }
         let product = getProductFromId(productId, products);
         let item = {
             id: productId,
@@ -47,7 +53,13 @@ export const buildCartFromOrderForm = async (orderForm, products) => {
         if (userInput) {
             item.heliosUserInput = sanitizeUserInput(userInput);
         }
-        items.push(item);
+        let existingItem = items.find(i =>
+            i.sku === item.sku && variationsEqual(i.variation, item.variation));
+        if (existingItem) {
+            existingItem.quantity += item.quantity;
+        } else {
+            items.push(item);
+        }
     };
     const getFormValue = (name) => getValue(name, orderForm);
     const buildVariation = (attribute) => ({
@@ -108,6 +120,10 @@ export const buildCartFromOrderForm = async (orderForm, products) => {
             {
                 attribute: "baseFee",
                 value: colorOrBlackValue
+            },
+            {
+                attribute: "selectedQuantity",
+                value: color.quantity
             }
         ];
         addItemToCart(colorProductId, color.quantity * albumTypeFactor, colorVariations);

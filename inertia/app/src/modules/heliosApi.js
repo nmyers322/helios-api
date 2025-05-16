@@ -183,3 +183,6 @@ export const getOrderById = async (orderId) =>
 
 export const getOrders = async () =>
   await makeGetCall("/api/orders");
+
+export const createOrder = async (data) =>
+  await makePostCall("/api/orders", data);

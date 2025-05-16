@@ -38,6 +38,8 @@ router.get('/api/orders/:id', [OrdersController, 'getById'])
     .use(middleware.auth({ guards: ['api'] }))
 router.get('/api/orders', [OrdersController, 'getAll'])
     .use(middleware.auth({ guards: ['api'] }))
+router.post('/api/orders', [OrdersController, 'initializeOrder'])
+    .use(middleware.auth({ guards: ['api'] }))
 
 router.post('/api/paypal/order', [PaypalsController, 'initializeOrder'])
     .use(middleware.auth({ guards: ['api'] }))

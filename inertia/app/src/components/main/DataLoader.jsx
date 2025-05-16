@@ -133,7 +133,6 @@ const DataLoader = (props) => {
       }
 
       if (customer?.hasActiveToken && !customer?.fetching) {
-        heliosLogger("Loading customer data", customer.hasActiveToken, customer.fetching);
         loadCustomer();
       }
     }, [customer, dispatch]);

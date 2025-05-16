@@ -147,9 +147,6 @@ const OrderSummarySidePanel = ({disabled}) => {
   }, [orderForm]);
 
   const calculatePrice = (name, color) => {
-    if (isLocal()) {
-      return 0;
-    }
     if (!populated) {
       return 0;
     }

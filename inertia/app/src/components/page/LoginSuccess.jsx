@@ -44,7 +44,8 @@ const LoginSuccessPage = () => {
         || products.length === 0 
         || !variations 
         || variations.length === 0 
-        || !customer.hasActiveToken;
+        || !customer.hasActiveToken
+        || valueIsEmpty(customer?.id);
       if (cannotContinue) {
         heliosLogger("Fetching data. Waiting to proceed.");
         heliosLogger(fetchingProductsOrVariations, 

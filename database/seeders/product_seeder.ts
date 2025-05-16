@@ -6,7 +6,7 @@ const products = [
       "id": 525,
       "name": "12 Inch Innersleeve",
       "sku": "helios-12inch-innersleeve",
-      "price": "0.21"
+      "price": "0"
   },
   {
       "id": 342,
@@ -60,7 +60,7 @@ const products = [
       "id": 89,
       "name": "12 Inch Center Labels",
       "sku": "helios-12inch-center-labels",
-      "price": "168"
+      "price": "0"
   },
   {
       "id": 87,
@@ -72,19 +72,19 @@ const products = [
       "id": 86,
       "name": "12 Inch Weight",
       "sku": "helios-12inch-weight",
-      "price": "0.53"
+      "price": "0"
   },
   {
       "id": 83,
       "name": "12 Inch Color",
       "sku": "helios-12inch-color",
-      "price": "2.1"
+      "price": "0"
   },
   {
       "id": 82,
       "name": "12 Inch Test Press",
       "sku": "helios-12inch-test-press",
-      "price": "5.25"
+      "price": "0"
   },
   {
       "id": 81,

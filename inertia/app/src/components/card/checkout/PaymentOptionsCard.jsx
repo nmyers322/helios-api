@@ -5,7 +5,7 @@ import { updateOrderFormField } from "../../../actions/orderFormActions";
 import styled from "styled-components";
 import LabeledSpinner from "../../main/LabeledSpinner";
 import RadioSelector from "../../form/main/RadioSelector";
-import { capturePaypalOrder, getShippingOptions, initializePaypalOrder } from "../../../modules/heliosApi";
+import { capturePaypalOrder, createOrder, getShippingOptions, initializePaypalOrder } from "../../../modules/heliosApi";
 import { selectShippingOption, setFetchingShippingOptions, setShippingOptions } from "../../../actions/shippingOptionsActions";
 import ErrorText from "../../form/main/ErrorText";
 import { calculateShippingCost, CUSTOM_FREIGHT_QUOTE_OPTION, IN_STORE_PICKUP_OPTION } from "../../../modules/shipping";
@@ -71,6 +71,13 @@ const PaymentOptionsCard = ({
   const [errorText, setErrorText] = useState("");
   const [selectedPaymentOption, setSelectedPaymentOption] = useState("bank_transfer");
 
+  const buildNewOrder = async () => ({
+    billingAddress: billingAddress,
+    cart: await buildCartFromOrderForm(orderForm, products),
+    selectedShippingOption: shippingOptions?.selectedOption,
+    shippingAddress: shippingAddress
+  });
+
   return (
     <CheckoutCard
       disabled={disabled}
@@ -107,12 +114,17 @@ const PaymentOptionsCard = ({
                 <Button
                   buttonText="Submit Order"
                   disabled={false}
-                  onClick={() => {
-                    // Todo create order
-                    let order = {
-                      id: 0
-                    };
-                    goTo(`/checkout/order-received/${order.id}`);          
+                  onClick={async () => {
+                    let createOrderResult = await createOrder(await buildNewOrder());
+                    let order = createOrderResult?.data?.order;
+                    if (order) {
+                      dispatch(updateOrder(order));
+                      // Todo: need to clear the order form and shipping stuff here
+                      goTo(`/checkout/order-received/${order.id}`);
+                    } else {
+                      heliosLogger("Error creating order:", createOrderResult);
+                      setErrorText("There was an error creating the order. Please try again.");
+                    } 
                   }} />
             </PaymentOption>
         }
@@ -138,12 +150,7 @@ const PaymentOptionsCard = ({
                 <PayPalButtons
                     createOrder={async () => {
                         setErrorText("");
-                        let newOrder = await initializePaypalOrder({
-                          billingAddress: billingAddress,
-                          cart: await buildCartFromOrderForm(orderForm, products),
-                          selectedShippingOption: shippingOptions?.selectedOption,
-                          shippingAddress: shippingAddress
-                        });
+                        let newOrder = await initializePaypalOrder(await buildNewOrder());
                         try {
                           const orderData = newOrder?.data?.jsonResponse;
                           if (orderData.status === "CREATED" && orderData.id) {
