@@ -77,7 +77,6 @@ const LoginCard = () => {
             disabled={showModal || !validateEmailInput(email).isValid || !validateTextInput(password, "password").isValid}
             onClick={async () => {
                 dispatch(setActiveTokenStatus(false));
-                dispatch(setLocalToken(null));
                 setShowModal(true);
                 let result = await login(email, password);
                 if (result?.status === 200) {

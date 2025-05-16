@@ -125,9 +125,8 @@ const DataLoader = (props) => {
           } else {
             heliosLogger("Error loading customer data", user);
             dispatch(setActiveTokenStatus(false));
-            dispatch(setLocalToken(null));
             dispatch(setFetchingCustomer(false));
-            window.location.href = "/login?error=state_mismatch";
+            dispatch(setLocalToken(null));
           }
           dispatch(setFetchingCustomer(false));
         }

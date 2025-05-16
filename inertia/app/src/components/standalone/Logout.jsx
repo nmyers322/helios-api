@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { deleteToken } from "../../modules/heliosApi";
 import { useGoTo } from "../../modules/links";
 import { setActiveTokenStatus } from "../../actions/customerActions";
-import { setLocalToken } from "../../actions/metaActions";
+import { logout, setLocalToken } from "../../actions/metaActions";
 import { useDispatch } from "react-redux";
 
 export const Logout = () => {
@@ -11,8 +11,7 @@ export const Logout = () => {
     const handleLogout = async () => {
         await deleteToken();
         dispatch(setActiveTokenStatus(false));
-        dispatch(setLocalToken(null));
-        goTo("/login?success=logout", {});
+        dispatch(logout());
     };
     handleLogout();
     return <></>;

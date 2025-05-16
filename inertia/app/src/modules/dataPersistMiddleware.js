@@ -16,10 +16,14 @@ export const sessionPersistMiddleware = (store) => (next) => (action) => {
   const result = next(action);
   if (action.type === "SET_TOKEN") {
     const state = store.getState();
-    localStorage.setItem("token", action.payload);
+    if (action.payload === null) {
+      localStorage.removeItem("token");
+      window.location.href = "/login?error=state_mismatch";
+    }
   }
   if (action.type === "LOGOUT") {
     localStorage.removeItem("token");
+    window.location.href = "/login?success=logout";
   }
   return result;
 }
