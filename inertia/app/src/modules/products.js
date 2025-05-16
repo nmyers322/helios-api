@@ -249,6 +249,17 @@ export const getIdFromName = (name, products) => {
     return products.find(product => product.sku === sku)?.id;
 }
 
+export const getProductFromId = (id, products) => {
+    if (!id) {
+        return null;
+    }
+    let product = products.find(product => product.id === id);
+    if (!product) {
+        return null;
+    }
+    return product;
+}
+
 export const getSkuFromName = (name) => 
     namesToSku[name] ? namesToSku[name] : null;
 

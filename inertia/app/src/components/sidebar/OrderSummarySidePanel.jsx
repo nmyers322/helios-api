@@ -118,7 +118,7 @@ const OrderSummarySidePanel = ({disabled}) => {
   const products = useSelector(state => state.products.products);
   const variations = useSelector(state => state.products.variations);
   const shippingOptions = useSelector(state => state.shippingOptions);
-  const selectedShippingOption = getSelectedShippingOption(shippingOptions.shippingOptions, shippingOptions.selectedOption);
+  const selectedShippingOption = shippingOptions.selectedOption;
   let memoedPrice = {};
 
   const [visibleSections, setVisibleSections] = useState({

@@ -20,10 +20,10 @@ const ShippingCost = ({source="shippingOptions", output="name"}) => {
     }, [checkoutPage]);
 
     const getName = () => {
-        return shippingOptions.find(option => option.serviceCode === selectedShippingOption)?.name || "";
+        return shippingOptions.find(option => option.serviceCode === selectedShippingOption?.serviceCode)?.name || "";
     }
     const getPrice = () => {
-        return shippingOptions.find(option => option.serviceCode === selectedShippingOption)?.price || "";
+        return shippingOptions.find(option => option.serviceCode === selectedShippingOption?.serviceCode)?.price || "";
     }
     return (
         <div>

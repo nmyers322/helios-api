@@ -13,6 +13,7 @@ import { valueIsEmpty } from "../../modules/validation";
 import { fetchCart } from "../../modules/wordpressApi";
 import LabeledSpinner from "../main/LabeledSpinner";
 import Modal from "../main/Modal";
+import { updateOrderFormField } from "../../actions/orderFormActions";
 
 const LoginSuccessContainer = styled.div`
   display: flex;
@@ -72,8 +73,11 @@ const LoginSuccessPage = () => {
         if (!validateAddress(customer.billing?.[0], "billing").isValid) {
           goTo("/account/billing-address");
         } else if (!validateAddress(customer.shipping?.[0], "shipping").isValid) {
+          dispatch(updateOrderFormField("billing", customer.billing[0]));
           goTo("/account/shipping-address");
         } else {
+          dispatch(updateOrderFormField("billing", customer.billing[0]));
+          dispatch(updateOrderFormField("shipping", customer.shipping[0]));
           goTo("/checkout");
         }
       } else {

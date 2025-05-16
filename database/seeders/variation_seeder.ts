@@ -5,18 +5,6 @@ const variations = {
   "28": [],
   "79": [
       {
-          "id": 446,
-          "sku": "helios-12inch-outer-packaging",
-          "price": "0",
-          "name": "none, none, none, none"
-      },
-      {
-          "id": 445,
-          "sku": "helios-12inch-outer-packaging",
-          "price": "0",
-          "name": "customerSupplied, none, none, none"
-      },
-      {
           "id": 444,
           "sku": "helios-12inch-outer-packaging",
           "price": "2572.5",
@@ -221,18 +209,6 @@ const variations = {
           "sku": "helios-12inch-insert",
           "price": "132.3",
           "name": "n100"
-      },
-      {
-          "id": 420,
-          "sku": "helios-12inch-insert",
-          "price": "0",
-          "name": "none, none, none, none"
-      },
-      {
-          "id": 419,
-          "sku": "helios-12inch-insert",
-          "price": "0",
-          "name": "customerSupplied, none, none, none"
       }
   ],
   "81": [
@@ -325,14 +301,7 @@ const variations = {
   "283": [],
   "284": [],
   "285": [],
-  "286": [
-      {
-          "id": 403,
-          "sku": "helios-order-type",
-          "price": "0",
-          "name": "12-inch"
-      }
-  ],
+  "286": [],
   "342": [],
   "525": [
       {

@@ -14,6 +14,9 @@ import { useNavigate } from "react-router-dom";
 import { useGoTo } from "../../modules/links";
 import { setReadyForCheckout } from "../../actions/metaActions";
 import { resetOrderForm } from "../../actions/orderFormActions";
+import { getOrderById } from "../../modules/heliosApi";
+import { updateOrder } from "../../actions/ordersActions";
+import { heliosLogger } from "../../modules/logging";
 
 const OrderReceivedPageCardContainer = styled.div`
   display: flex;
@@ -80,18 +83,29 @@ const OrderReceivedPage = () => {
   const navigate = useNavigate();
   const goTo = useGoTo(navigate);
   const [modalText, setModalText] = useState("Fetching your details...");
+  const [firstLoad, setFirstLoad] = useState(true);
   const orderNumber = getOrderNumber();
   const order = orders?.orders[orderNumber];
 
 
   useEffect(() => {
+    async function getOrder() {
+      let orderResult = await getOrderById(orderNumber);
+      heliosLogger("OrderReceivedPage: orderResult", orderResult);
+      if (orderResult?.data?.order) {
+        dispatch(updateOrder(orderResult.data.order));
+      }
+    }
     if (!orderNumber) {
       setModalText("No order number found. Redirecting to the main page...");
       setTimeout(() => {
         goTo("/");
       }, 4000);
+    } else if (firstLoad && !orders.fetching && !customer.fetching && !order) {
+      setFirstLoad(false);
+      getOrder();
     }
-  }, [goTo, orderNumber]);
+  }, [goTo, orderNumber, orders, customer, firstLoad, dispatch]);
 
   useEffect(() => {
     if (orders.error) {
@@ -104,8 +118,8 @@ const OrderReceivedPage = () => {
 
   useEffect(() => {
     if (order) {
-      dispatch(setReadyForCheckout(false));
-      dispatch(resetOrderForm());
+      // dispatch(setReadyForCheckout(false));
+      // dispatch(resetOrderForm());
     }
   }, [dispatch, order]);
 

@@ -49,11 +49,11 @@ const OrderContactCard = ({
         setShipping(customer.shipping[0]);
       }
     } else {
-      if (!valueIsEmpty(order.billing)) {
-        setBilling(order.billing);
+      if (!valueIsEmpty(order.billingAddress)) {
+        setBilling(order.billingAddress);
       }
-      if (!valueIsEmpty(order.shipping)) {
-        setShipping(order.shipping);
+      if (!valueIsEmpty(order.shippingAddress)) {
+        setShipping(order.shippingAddress);
       }
     }
   }, [customer, dispatch, orders, orderNumber]);

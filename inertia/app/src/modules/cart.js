@@ -18,20 +18,27 @@ import { weightName } from "../components/form/orderform/Weight";
 import { isDoubleLP } from "../reducers/orderFormReducer";
 import { heliosLogger } from "./logging";
 import { validateCompleteOrderForm } from "./orderFormValidation";
-import { calculateCenterLabelsQuantity, calculateInsertQuantity, calculateOuterPackagingQuantity, getColorOrBlackValue, getColorValue, getIdFromName, getSkuFromName, getValue } from "./products";
+import { calculateCenterLabelsQuantity, calculateInsertQuantity, calculateOuterPackagingQuantity, getColorOrBlackValue, getColorValue, getIdFromName, getProductFromId, getSkuFromName, getValue } from "./products";
 import { sanitizeUserInput } from "./serialization";
 import { ValidationResponse } from "./validation";
 import { addToCartBatch, deleteAllCartItems } from "./wordpressApi";
 
 export const addOrderFormToCart = async (orderForm, products) => {
+    return;
+}
+
+export const buildCartFromOrderForm = async (orderForm, products) => {
     if (!validateCompleteOrderForm(orderForm).isValid) {
         return;
     }
 
     const items = [];
     const addItemToCart = (productId, quantity, variations, userInput) => {
+        let product = getProductFromId(productId, products);
         let item = {
             id: productId,
+            name: product?.name,
+            sku: product?.sku,
             quantity: quantity
         };
         if (variations && variations.length > 0) {
@@ -152,7 +159,6 @@ export const addOrderFormToCart = async (orderForm, products) => {
         insertVariations.push(buildVariationWithNoneValue(insertPrintName));
         insertVariations.push(buildVariationWithNoneValue(insertFinishName));
         insertVariations.push(buildVariationWithQuantity("none"));
-
     }
     addItemToCart(insertProductId, 1, insertVariations);
 
@@ -168,7 +174,7 @@ export const addOrderFormToCart = async (orderForm, products) => {
     
     heliosLogger("Adding order form to cart", items);
 
-    await addToCartBatch(items);
+    return items;
 };
 
 export const cartIsEmpty = (cart) =>

@@ -59,7 +59,7 @@ const ShippingOptionsCard = ({
       });
       if (shippingOptions?.data?.shippingOptions) {
         dispatch(setShippingOptions(shippingOptions.data.shippingOptions));
-        dispatch(selectShippingOption(shippingOptions.data.shippingOptions[0].serviceCode));
+        dispatch(selectShippingOption(shippingOptions.data.shippingOptions[0]));
       } else {
         setErrorText("Error fetching shipping options. Please try again later or contact support at contact@heliospressing.com.");
       }
@@ -79,13 +79,13 @@ const ShippingOptionsCard = ({
       subtitle={shippingAddress?.postcode && `Shipping to ${shippingAddress.postcode}`}
     >
       { !fetchingShippingOptions && shippingOptions.map((option) => (
-        <OneLine key={option.serviceCode} $isSelected={option.serviceCode === selectedShippingOption}
+        <OneLine key={option.serviceCode} $isSelected={option.serviceCode === selectedShippingOption?.serviceCode}
           onClick={() => {
-            dispatch(selectShippingOption(option.serviceCode));
-            dispatch(updateOrderFormField("shippingOption", option.serviceCode));
+            dispatch(selectShippingOption(option));
+            dispatch(updateOrderFormField("shippingOption", option));
           }}>
           <RadioSelector 
-            checked={option.serviceCode === selectedShippingOption}
+            checked={option.serviceCode === selectedShippingOption?.serviceCode}
             name={option.serviceName} />
           <Title>
             {option.serviceName}

@@ -3,19 +3,14 @@ import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { heliosLogger } from "../../modules/logging.js";
 import { setActiveTokenStatus, setFetchingCustomer, updateCustomerAddress, updateCustomerFromApiResponse } from "../../actions/customerActions.js";
-import { fetchCustomer, fetchOrder } from "../../modules/wordpressApi.js";
 import { updateBillingAddressFormFromApiResponse } from "../../actions/billingAddressActions.js";
 import { updateShippingAddressFormFromApiResponse } from "../../actions/shippingAddressActions.js";
 import { getCheckoutStatusFromLocalStorage, getIsBetaFromLocalStorage, getOrderFormFromLocalStorage, getThemeFromLocalStorage, getTokenFromLocalStorage } from "../../modules/dataPersistMiddleware.js";
 import { updateOrderForm } from "../../actions/orderFormActions.js";
 import { fetchAllProductsAndAllVariations, invalidateProductCache, setProducts, setVariations } from "../../actions/productsActions.js";
-import { setFetchingOrders, setOrderError, updateOrder } from "../../actions/ordersActions.js";
-import { getOrderNumber } from "../../modules/orders.js";
 import { setIsBeta, setLocalSettingsLoaded, setLocalToken, setReadyForCheckout, updateTheme } from "../../actions/metaActions.js";
-import { isLocal } from "../../modules/environment.js";
 import { PRODUCTS_VARIATIONS_CACHE_KEY } from "./App.js";
 import { valueIsEmpty } from "../../modules/validation.js";
-import { customerMock } from "../../mocks/customer.js";
 import { getMyAccount, getMyAddresses, hasActiveToken, setToken } from "../../modules/heliosApi.js";
 
 
@@ -81,20 +76,6 @@ const DataLoader = (props) => {
           }
         }
       }
-      async function loadOrder() {
-        let orderNumber = getOrderNumber();
-        if (orderNumber && !orders.fetching) {
-          dispatch(setFetchingOrders(true));
-          let order = await fetchOrder(orderNumber);
-          if (order) {
-            dispatch(updateOrder(order));
-          } else {
-            dispatch(setOrderError("Error getting order. Redirecting to home page..."));
-          }
-          dispatch(updateOrder(order));
-          dispatch(setFetchingOrders(false));
-        }
-      }
       async function loadLocalSettings() {
         if (!meta.localSettingsLoaded) {
           heliosLogger("Loading local settings");
@@ -133,8 +114,8 @@ const DataLoader = (props) => {
         loadLocalSettings();
         loadProducts();
         loadOrderForm();
+        // These two are broken due to async login
         loadCustomer();
-        loadOrder();
         setIsFirstLoad(false);
       }
     }, [customer, dispatch, isFirstLoad, meta, orders, products]);

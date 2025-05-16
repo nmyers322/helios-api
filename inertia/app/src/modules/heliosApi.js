@@ -1,10 +1,3 @@
-
-/*
-curl -v -X DELETE http://localhost:3333/api/session -H 'Content-Type: application/json' -H 'Accept: application/json' -H 'Authorization: Bearer oat_Mg.RVRMMEY4d0NfU09qcHRrVmdsNEx6N0kwN2VDR3lPSTdSWUxVNTYtTjIxOTEyNDI5NA'
-curl -v -X POST http://localhost:3333/api/session -H 'Content-Type: application/json' -H 'Accept: application/json' -d '{"email": "nmyers322@gmail.com", "password": "password"}'
-*/
-
-
 import axios from 'axios';
 import { userMe } from '../mocks/user-me';
 import { getUserDetails } from './authorization';
@@ -179,3 +172,14 @@ export const fetchProductVariations = async (productId) =>
  * Orders
  * ***************************************************/
 
+export const initializePaypalOrder = async (data) =>
+  makePostCall("/api/paypal/order", data);
+
+export const capturePaypalOrder = async (data) =>
+  makePostCall("/api/paypal/capture", data);
+
+export const getOrderById = async (orderId) =>
+  makeGetCall(`/api/orders/${orderId}`);
+
+export const getOrders = async () =>
+  await makeGetCall("/api/orders");

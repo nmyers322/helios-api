@@ -12,7 +12,7 @@ const RadioSelectorWrapper = styled.input`
 
 const RadioSelector = ({ checked, name, onChange }) => {
   const handleChange = (event) => {
-    onChange(event.target.value);
+    onChange && onChange(event.target.value);
   };
 
   return (

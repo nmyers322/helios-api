@@ -18,13 +18,13 @@ const ShippingOptionsStep = () => {
           buttonText="Continue to Payment Options"
           disabled={fetchingShippingOptions}
           onClick={() => {
-            goTo("/checkout/payment-options");          
+            goTo("/checkout/payment");          
           }} />
         <TertiaryButton
-          buttonText="Back to Contact and Shipping Information"
+          buttonText="Back to Order Form"
           disabled={fetchingShippingOptions}
           onClick={() => {
-            goTo("/checkout");          
+            goTo("/order");
           }} />
     </CheckoutCard>
   </StepContainer>);

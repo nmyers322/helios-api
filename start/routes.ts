@@ -16,6 +16,8 @@ import VariationsController from '#controllers/variations_controller'
 import OauthsController from '#controllers/oauths_controller'
 import AddressesController from '#controllers/addresses_controller'
 import ShippingOptionsController from '#controllers/shipping_options_controller'
+import PaypalsController from '#controllers/paypals_controller'
+import OrdersController from '#controllers/orders_controller'
 
 router.post('/api/session', [SessionsController, 'store'])
 router.delete('/api/session', [SessionsController, 'destroy'])
@@ -31,15 +33,23 @@ router.get('/api/account/addresses', [AddressesController, 'getAll'])
     .use(middleware.auth({ guards: ['api'] }))
 router.put('/api/account/addresses', [AddressesController, 'createOrUpdate'])
     .use(middleware.auth({ guards: ['api'] }))
-// router.delete('/api/account/addresses', [AddressesController, 'delete'])
-//     .use(middleware.auth({ guards: ['api'] }))
+
+router.get('/api/orders/:id', [OrdersController, 'getById'])
+    .use(middleware.auth({ guards: ['api'] }))
+router.get('/api/orders', [OrdersController, 'getAll'])
+    .use(middleware.auth({ guards: ['api'] }))
+
+router.post('/api/paypal/order', [PaypalsController, 'initializeOrder'])
+    .use(middleware.auth({ guards: ['api'] }))
+router.post('/api/paypal/capture', [PaypalsController, 'captureOrder'])
+    .use(middleware.auth({ guards: ['api'] }))
 
 router.get('/api/products', [ProductsController, 'getAll'])
 
-router.get('/api/variations/:productId', [VariationsController, 'getByProductId'])
-
 router.post('/api/shipping-options', [ShippingOptionsController, 'getShippingOptions'])
     .use(middleware.auth({ guards: ['api'] }))
+
+router.get('/api/variations/:productId', [VariationsController, 'getByProductId'])
 
 router.get('/login/google', ({ ally }) => {
     return ally.use('google').redirect()
