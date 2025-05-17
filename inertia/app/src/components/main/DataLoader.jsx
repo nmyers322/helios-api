@@ -110,18 +110,18 @@ const DataLoader = (props) => {
           let user = await getMyAccount();
           if (user?.status === 200 && !valueIsEmpty(user?.data)) {
             dispatch(updateCustomerFromApiResponse(user?.data));
-            let addresses = await getMyAddresses();
-            heliosLogger("Addresses", addresses);
-            if (addresses?.status === 200 && !valueIsEmpty(addresses?.data) && Array.isArray(addresses.data)) {
-              addresses.data.map((address) => {
-                dispatch(updateCustomerAddress(address));
-                if (address.type === "billing") {
-                  dispatch(updateBillingAddressFormFromApiResponse(address));
-                } else if (address.type === "shipping") {
-                  dispatch(updateShippingAddressFormFromApiResponse(address));
-                }
-              });
-            }
+            // let addresses = await getMyAddresses();
+            // heliosLogger("Addresses", addresses);
+            // if (addresses?.status === 200 && !valueIsEmpty(addresses?.data) && Array.isArray(addresses.data)) {
+            //   addresses.data.map((address) => {
+            //     dispatch(updateCustomerAddress(address));
+            //     if (address.type === "billing") {
+            //       dispatch(updateBillingAddressFormFromApiResponse(address));
+            //     } else if (address.type === "shipping") {
+            //       dispatch(updateShippingAddressFormFromApiResponse(address));
+            //     }
+            //   });
+            // }
           } else {
             heliosLogger("Error loading customer data", user);
             dispatch(setActiveTokenStatus(false));

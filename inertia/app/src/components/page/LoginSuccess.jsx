@@ -14,6 +14,10 @@ import { fetchCart } from "../../modules/wordpressApi";
 import LabeledSpinner from "../main/LabeledSpinner";
 import Modal from "../main/Modal";
 import { updateOrderFormField } from "../../actions/orderFormActions";
+import { getMyAddresses } from "../../modules/heliosApi";
+import { updateCustomerAddress } from "../../actions/customerActions";
+import { updateBillingAddressFormFromApiResponse } from "../../actions/billingAddressActions";
+import { updateShippingAddressFormFromApiResponse } from "../../actions/shippingAddressActions";
 
 const LoginSuccessContainer = styled.div`
   display: flex;
@@ -70,15 +74,30 @@ const LoginSuccessPage = () => {
       }
       const orderForm = getOrderFormFromLocalStorage();
       if (orderForm && validateCompleteOrderForm(orderForm).isValid) {
-        heliosLogger("Checking customer addresses", customer);
-        if (!validateAddress(customer.billing?.[0], "billing").isValid) {
+        let addresses = await getMyAddresses();
+        let shippingAddress;
+        let billingAddress;
+        heliosLogger("Addresses", addresses);
+        if (addresses?.status === 200 && !valueIsEmpty(addresses?.data) && Array.isArray(addresses.data)) {
+          addresses.data.map((address) => {
+            dispatch(updateCustomerAddress(address));
+            if (address.type === "billing") {
+              billingAddress = address;
+              dispatch(updateBillingAddressFormFromApiResponse(address));
+            } else if (address.type === "shipping") {
+              shippingAddress = address;
+              dispatch(updateShippingAddressFormFromApiResponse(address));
+            }
+          });
+        }
+        if (!validateAddress(billingAddress, "billing").isValid) {
           goTo("/account/billing-address");
-        } else if (!validateAddress(customer.shipping?.[0], "shipping").isValid) {
-          dispatch(updateOrderFormField("billing", customer.billing[0]));
+        } else if (!validateAddress(shippingAddress, "shipping").isValid) {
+          dispatch(updateOrderFormField("billing",billingAddress));
           goTo("/account/shipping-address");
         } else {
-          dispatch(updateOrderFormField("billing", customer.billing[0]));
-          dispatch(updateOrderFormField("shipping", customer.shipping[0]));
+          dispatch(updateOrderFormField("billing", billingAddress));
+          dispatch(updateOrderFormField("shipping", shippingAddress));
           goTo("/checkout");
         }
       } else {
