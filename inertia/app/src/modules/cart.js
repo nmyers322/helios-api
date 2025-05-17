@@ -137,10 +137,10 @@ export const buildCartFromOrderForm = async (orderForm, products) => {
     // Center labels
     const centerLabelQuantity = calculateCenterLabelsQuantity(getFormValue(centerLabelName), totalQuantity);
     const centerLabelProductId = getProductId(centerLabelName);
-    const centerLabelVariations = [
-        buildVariation(centerLabelName),
-        buildVariationWithQuantity("n" + centerLabelQuantity),
-    ];
+    const centerLabelVariations = [buildVariation(centerLabelName)];
+    if (centerLabelQuantity > 0) {
+        centerLabelVariations.push(buildVariationWithQuantity("n" + centerLabelQuantity));
+    }
     addItemToCart(centerLabelProductId, 1 * albumTypeFactor, centerLabelVariations);
 
     // Innersleeve
@@ -155,7 +155,9 @@ export const buildCartFromOrderForm = async (orderForm, products) => {
     if (getFormValue(outerPackagingTypeName) !== "none" && getFormValue(outerPackagingTypeName) !== "customerSupplied") {
         outerPackagingVariations.push(buildVariation(outerPackagingPrintName));
         outerPackagingVariations.push(buildVariation(outerPackagingFinishName));
-        outerPackagingVariations.push({ attribute: "outerPackagingAmount", value: "n" + outerPackagingQuantity });
+        if (outerPackagingQuantity > 0) {
+            outerPackagingVariations.push({ attribute: "outerPackagingAmount", value: "n" + outerPackagingQuantity });
+        }
     } else {
         outerPackagingVariations.push(buildVariationWithNoneValue(outerPackagingPrintName));
         outerPackagingVariations.push(buildVariationWithNoneValue(outerPackagingFinishName));
@@ -170,7 +172,9 @@ export const buildCartFromOrderForm = async (orderForm, products) => {
         insertVariations.push(buildVariation(insertPrintName));
         insertVariations.push(buildVariation(insertFinishName));
         const insertQuantity = calculateInsertQuantity(getFormValue(insertTypeName), totalQuantity);
-        insertVariations.push(buildVariationWithQuantity("n" + insertQuantity));
+        if (insertQuantity > 0) {
+            insertVariations.push(buildVariationWithQuantity("n" + insertQuantity));
+        }
     } else {
         insertVariations.push(buildVariationWithNoneValue(insertPrintName));
         insertVariations.push(buildVariationWithNoneValue(insertFinishName));

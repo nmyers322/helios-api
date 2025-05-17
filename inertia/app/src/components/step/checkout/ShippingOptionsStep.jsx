@@ -2,6 +2,7 @@ import { useSelector } from "react-redux";
 import { StepContainer } from "../../../styles/CheckoutPage";
 import CheckoutCard from "../../card/checkout/CheckoutCard";
 import ShippingOptionsCard from "../../card/checkout/ShippingOptionsCard";
+import ContactAndShippingInformationCard from "../../card/checkout/ContactAndShippingInformationCard";
 import Button from "../../form/main/Button";
 import { useGoTo } from "../../../modules/links";
 import { useNavigate } from "react-router-dom";
@@ -11,6 +12,7 @@ const ShippingOptionsStep = () => {
   const fetchingShippingOptions = useSelector((state) => state.shippingOptions.fetching);
   const goTo = useGoTo(useNavigate());
   return (<StepContainer>
+    <ContactAndShippingInformationCard isEditable={true} />
     <ShippingOptionsCard />
     <CheckoutCard
       disabled={fetchingShippingOptions}>

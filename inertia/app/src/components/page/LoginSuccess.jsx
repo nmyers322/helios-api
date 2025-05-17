@@ -18,6 +18,7 @@ import { getMyAddresses } from "../../modules/heliosApi";
 import { updateCustomerAddress } from "../../actions/customerActions";
 import { updateBillingAddressFormFromApiResponse } from "../../actions/billingAddressActions";
 import { updateShippingAddressFormFromApiResponse } from "../../actions/shippingAddressActions";
+import { snakeCaseToCamelCaseAllObjectKeys } from "../../modules/serialization";
 
 const LoginSuccessContainer = styled.div`
   display: flex;
@@ -82,10 +83,10 @@ const LoginSuccessPage = () => {
           addresses.data.map((address) => {
             dispatch(updateCustomerAddress(address));
             if (address.type === "billing") {
-              billingAddress = address;
+              billingAddress = snakeCaseToCamelCaseAllObjectKeys(address);
               dispatch(updateBillingAddressFormFromApiResponse(address));
             } else if (address.type === "shipping") {
-              shippingAddress = address;
+              shippingAddress = snakeCaseToCamelCaseAllObjectKeys(address);
               dispatch(updateShippingAddressFormFromApiResponse(address));
             }
           });

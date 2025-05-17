@@ -222,7 +222,7 @@ const PaymentOptionsCard = ({
               
             </Icon>
         </PaymentOptionHeader>
-        { loadingStripe && <LabeledSpinner text={"Loading Stripe Payment Element..."} /> }
+        { loadingStripe && <LabeledSpinner text={"Loading..."} /> }
         { selectedPaymentOption === "stripe" &&
           <CheckoutProvider stripe={stripePromise} options={{
             fetchClientSecret: async () => {
