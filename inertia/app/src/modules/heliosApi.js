@@ -171,6 +171,8 @@ export const fetchProductVariations = async (productId) =>
 /****************************************************
  * Orders
  * ***************************************************/
+export const initializeStripeOrder = async (data) =>
+  makePostCall("/api/stripe/order", data);
 
 export const initializePaypalOrder = async (data) =>
   makePostCall("/api/paypal/order", data);

@@ -67,6 +67,8 @@
     "@paypal/paypal-server-sdk": "^1.0.0",
     "@paypal/react-paypal-js": "^8.8.3",
     "@reduxjs/toolkit": "^2.7.0",
+    "@stripe/react-stripe-js": "^3.7.0",
+    "@stripe/stripe-js": "^7.3.0",
     "@vinejs/vine": "^3.0.0",
     "axios": "^1.8.4",
     "crypto-browserify": "^3.12.1",
@@ -86,6 +88,7 @@
     "redux": "^5.0.1",
     "reflect-metadata": "^0.2.2",
     "stream-browserify": "^3.0.0",
+    "stripe": "^18.0.0",
     "styled-components": "^6.1.17",
     "web-vitals": "^4.2.4"
   },

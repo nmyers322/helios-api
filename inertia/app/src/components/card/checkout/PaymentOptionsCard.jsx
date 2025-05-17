@@ -1,17 +1,11 @@
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import CheckoutCard from "./CheckoutCard";
 import { useDispatch, useSelector } from "react-redux";
-import { updateOrderFormField } from "../../../actions/orderFormActions";
 import styled from "styled-components";
 import LabeledSpinner from "../../main/LabeledSpinner";
 import RadioSelector from "../../form/main/RadioSelector";
-import { capturePaypalOrder, createOrder, getShippingOptions, initializePaypalOrder } from "../../../modules/heliosApi";
-import { selectShippingOption, setFetchingShippingOptions, setShippingOptions } from "../../../actions/shippingOptionsActions";
+import { capturePaypalOrder, createOrder, initializePaypalOrder, initializeStripeOrder } from "../../../modules/heliosApi";
 import ErrorText from "../../form/main/ErrorText";
-import { calculateShippingCost, CUSTOM_FREIGHT_QUOTE_OPTION, IN_STORE_PICKUP_OPTION } from "../../../modules/shipping";
-import { albumTypeName } from "../../form/orderform/AlbumType";
-import { outerPackagingTypeName } from "../../form/orderform/OuterPackagingType";
-import { totalQuantityName } from "../../form/orderform/TotalQuantity";
 import { PayPalButtons } from "@paypal/react-paypal-js";
 import { buildCartFromOrderForm } from "../../../modules/cart";
 import Button from "../../form/main/Button";
@@ -19,6 +13,10 @@ import { useGoTo } from "../../../modules/links";
 import { useNavigate } from "react-router-dom";
 import { updateOrder } from "../../../actions/ordersActions";
 import { heliosLogger } from "../../../modules/logging";
+import { CheckoutProvider, PaymentElement, useCheckout } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
+
+const stripePromise = loadStripe(import.meta.env.VITE_REACT_APP_STRIPE_API_KEY);
 
 const Title = styled.p`
   font-size: 1.2rem;
@@ -70,6 +68,7 @@ const PaymentOptionsCard = ({
   const shippingOptions = useSelector((state) => state.shippingOptions);
   const [errorText, setErrorText] = useState("");
   const [selectedPaymentOption, setSelectedPaymentOption] = useState("bank_transfer");
+  const [loadingStripe, setLoadingStripe] = useState(false);
 
   const buildNewOrder = async () => ({
     billingAddress: billingAddress,
@@ -115,6 +114,7 @@ const PaymentOptionsCard = ({
                   buttonText="Submit Order"
                   disabled={false}
                   onClick={async () => {
+                    setErrorText("");
                     let createOrderResult = await createOrder(await buildNewOrder());
                     let order = createOrderResult?.data?.order;
                     if (order) {
@@ -208,6 +208,7 @@ const PaymentOptionsCard = ({
       <PaymentOptionContainer 
         $isSelected={selectedPaymentOption === "stripe"}
         onClick={() => {
+          selectedPaymentOption !== "stripe" && setLoadingStripe(true);
           setSelectedPaymentOption("stripe");
         }}>
         <PaymentOptionHeader>
@@ -221,10 +222,56 @@ const PaymentOptionsCard = ({
               
             </Icon>
         </PaymentOptionHeader>
+        { loadingStripe && <LabeledSpinner text={"Loading Stripe Payment Element..."} /> }
         { selectedPaymentOption === "stripe" &&
+          <CheckoutProvider stripe={stripePromise} options={{
+            fetchClientSecret: async () => {
+              setErrorText("");
+              let newOrder = await initializeStripeOrder(await buildNewOrder());
+              try {
+                const order = newOrder?.data?.order;
+                if (order.status === "open" && order.id) {
+                  dispatch(updateOrder(order));
+                  return newOrder?.data?.checkoutSessionClientSecret;
+                } else {
+                  throw new Error(newOrder);
+                }
+              } catch (error) {
+                heliosLogger("Error creating Stripe order:", error);
+                setErrorText("There was an error creating the Stripe order. Please try again.");
+              }
+            }
+          }}>
             <PaymentOption>
-
+              <PaymentElement 
+                onLoaderStart={() => setLoadingStripe(false)}/>
+              <Button
+                  buttonText="Submit Order"
+                  disabled={loadingStripe}
+                  onClick={async () => {
+                    setErrorText("");
+                    const stripeCheckout = useCheckout();
+                    const result = await stripeCheckout?.confirm();
+                    if (result?.type === "error") {
+                      heliosLogger("Error confirming Stripe payment:", result);
+                      setErrorText("There was an error confirming the Stripe payment. Please try again.");
+                    } else {
+                      heliosLogger("Stripe payment confirmed:", result);
+                      alert("success");
+                    }
+                    // let createOrderResult = await createOrder(await buildNewOrder());
+                    // let order = createOrderResult?.data?.order;
+                    // if (order) {
+                    //   dispatch(updateOrder(order));
+                    //   // Todo: need to clear the order form and shipping stuff here
+                    //   goTo(`/checkout/order-received/${order.id}`);
+                    // } else {
+                    //   heliosLogger("Error creating order:", createOrderResult);
+                    //   setErrorText("There was an error creating the order. Please try again.");
+                    // } 
+                  }} />
             </PaymentOption>
+          </CheckoutProvider>
         }
       </PaymentOptionContainer>
       { errorText && <ErrorText text={errorText} /> }

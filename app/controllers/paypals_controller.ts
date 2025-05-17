@@ -34,7 +34,7 @@ export default class PaypalsController {
         const subTotalPrice = await CartService.getSubTotalPrice(pricedCart);
         console.log('subTotalPrice', subTotalPrice);
         console.log('selectedShippingOption', selectedShippingOption)
-        const totalPrice = subTotalPrice + selectedShippingOption.totalCost;
+        const totalPrice = parseFloat((subTotalPrice + selectedShippingOption.totalCost).toFixed(2))
         console.log('totalPrice', totalPrice);
         console.log('shippingAddress', shippingAddress)
         const collect = {

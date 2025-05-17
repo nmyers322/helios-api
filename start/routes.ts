@@ -18,6 +18,7 @@ import AddressesController from '#controllers/addresses_controller'
 import ShippingOptionsController from '#controllers/shipping_options_controller'
 import PaypalsController from '#controllers/paypals_controller'
 import OrdersController from '#controllers/orders_controller'
+import StripesController from '#controllers/stripes_controller'
 
 router.post('/api/session', [SessionsController, 'store'])
 router.delete('/api/session', [SessionsController, 'destroy'])
@@ -49,6 +50,9 @@ router.post('/api/paypal/capture', [PaypalsController, 'captureOrder'])
 router.get('/api/products', [ProductsController, 'getAll'])
 
 router.post('/api/shipping-options', [ShippingOptionsController, 'getShippingOptions'])
+    .use(middleware.auth({ guards: ['api'] }))
+
+router.post('/api/stripe/order', [StripesController, 'initializeOrder'])
     .use(middleware.auth({ guards: ['api'] }))
 
 router.get('/api/variations/:productId', [VariationsController, 'getByProductId'])

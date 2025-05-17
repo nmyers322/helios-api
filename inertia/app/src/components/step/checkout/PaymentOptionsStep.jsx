@@ -1,7 +1,5 @@
-import { useSelector } from "react-redux";
 import { StepContainer } from "../../../styles/CheckoutPage";
 import CheckoutCard from "../../card/checkout/CheckoutCard";
-import Button from "../../form/main/Button";
 import { useGoTo } from "../../../modules/links";
 import { useNavigate } from "react-router-dom";
 import TertiaryButton from "../../form/main/TertiaryButton";
