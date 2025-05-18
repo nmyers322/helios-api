@@ -1,6 +1,6 @@
 import Order from '#models/order'
-import CartService from '#services/CartService'
 import type { HttpContext } from '@adonisjs/core/http'
+import OrderService from '#services/OrderService';
 
 export default class OrdersController {
     async getAll({ auth, response }: HttpContext) {
@@ -28,18 +28,13 @@ export default class OrdersController {
     }
 
     async initializeOrder({ auth, request, response }: HttpContext) {
-        const { billingAddress, cart, selectedShippingOption, shippingAddress } = request.all()
-        console.log('InitializeOrder called')
-        console.log('billingAddress', billingAddress)
-        console.log('cart', JSON.stringify(cart))
-        const pricedCart = await CartService.getPricedCart(cart)
-        console.log('pricedCart', JSON.stringify(pricedCart))
-        const subTotalPrice = await CartService.getSubTotalPrice(pricedCart)
-        console.log('subTotalPrice', subTotalPrice)
-        console.log('selectedShippingOption', selectedShippingOption)
-        const totalPrice = parseFloat((subTotalPrice + selectedShippingOption.totalCost).toFixed(2))
-        console.log('totalPrice', totalPrice)
-        console.log('shippingAddress', shippingAddress)
+        const {
+            billingAddress,
+            selectedShippingOption,
+            shippingAddress,
+            pricedCart,
+            totalPrice
+        } = await OrderService.getAndLogOrderInitializationParams(request);
         try {
             let order = await Order.create({
                 billingAddress: JSON.stringify(billingAddress),

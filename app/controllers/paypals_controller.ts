@@ -1,7 +1,8 @@
 import Order from '#models/order';
-import CartService from '#services/CartService';
 import type { HttpContext } from '@adonisjs/core/http';
 import { CheckoutPaymentIntent, Client, Environment, LogLevel, OrdersController } from '@paypal/paypal-server-sdk';
+import OrderService from '#services/OrderService';
+import Address from '#models/address';
 
 const client = new Client({
     clientCredentialsAuthCredentials: {
@@ -25,18 +26,14 @@ const ordersController = new OrdersController(client);
 
 export default class PaypalsController {
     async initializeOrder({ auth, request, response }: HttpContext) {
-        const {billingAddress, cart, selectedShippingOption, shippingAddress} = request.all();
-        console.log('Paypal initializeOrder called')
-        console.log('billingAddress', billingAddress)
-        console.log('cart', JSON.stringify(cart))
-        const pricedCart = await CartService.getPricedCart(cart);
-        console.log('pricedCart', JSON.stringify(pricedCart));
-        const subTotalPrice = await CartService.getSubTotalPrice(pricedCart);
-        console.log('subTotalPrice', subTotalPrice);
-        console.log('selectedShippingOption', selectedShippingOption)
-        const totalPrice = parseFloat((subTotalPrice + selectedShippingOption.totalCost).toFixed(2))
-        console.log('totalPrice', totalPrice);
-        console.log('shippingAddress', shippingAddress)
+        const {
+            billingAddress,
+            selectedShippingOption,
+            shippingAddress,
+            pricedCart,
+            totalPrice
+        } = await OrderService.getAndLogOrderInitializationParams(request);
+
         const collect = {
             body: {
                 intent: CheckoutPaymentIntent.Capture,
@@ -54,6 +51,10 @@ export default class PaypalsController {
 
         try {
             const { body, ...httpResponse } = await ordersController.createOrder(collect);
+            if (typeof body !== 'string') {
+                console.error('Error: body is not a string', body);
+                throw new Error('Invalid response from PayPal');
+            }
             let paypalOrder = JSON.parse(body);
             console.log('paypalOrder', paypalOrder);
             let order;
@@ -91,6 +92,10 @@ export default class PaypalsController {
         };
         try {
             const { body, ...httpResponse } = await ordersController.captureOrder(collect);
+            if (typeof body !== 'string') {
+                console.error('Error: body is not a string', body);
+                throw new Error('Invalid response from PayPal');
+            }
             const paypalOrder = JSON.parse(body);
             console.log('paypalOrder', paypalOrder);
             let order = await Order.findBy('externalOrderId', orderId);
@@ -98,7 +103,20 @@ export default class PaypalsController {
                 order.status = paypalOrder.status;
                 order.externalOrder = JSON.stringify(paypalOrder);
                 let newShippingAddress = this.convertShippingAddress(paypalOrder.purchase_units[0].shipping);
-                // Todo: Check if shipping address is correct. If not, update the customer's address in the database.
+                let customerShippingAddress = await Address.query().where('userId', auth.user!.id).where('type', 'shipping').first();
+                if (customerShippingAddress) {
+                    let fieldsToUpdate = ['firstName', 'lastName', 'address1', 'address2', 'city', 'state', 'postcode', 'country'] as const;
+                    let shouldUpdate = false;
+                    for (let field of fieldsToUpdate) {
+                        if ((customerShippingAddress as any)[field] !== newShippingAddress[field]) {
+                            (customerShippingAddress as any)[field] = newShippingAddress[field];
+                            shouldUpdate = true;
+                        }
+                    }
+                    if (shouldUpdate) {
+                        await customerShippingAddress.save();
+                    }
+                }
                 order.shippingAddress = JSON.stringify(newShippingAddress);
                 await order.save();
             } else {

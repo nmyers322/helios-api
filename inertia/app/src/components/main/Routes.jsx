@@ -10,6 +10,7 @@ import LoginSuccessPage from "../page/LoginSuccess";
 import MasteringPage from "../page/MasteringPage";
 import OrderPage from "../page/OrderPage";
 import OrderReceivedPage from "../page/OrderReceivedPage";
+import StripeErrorPage from "../page/StripeErrorPage";
 import PrivacyPolicy from "../page/PrivacyPolicy";
 import ReturnPolicy from "../page/ReturnPolicy";
 import TemplatesPage from "../page/TemplatesPage";
@@ -53,7 +54,7 @@ const Routes = ({
                 <Route path="/account/*" element={<AccountPage />} />
                 <Route path="/contact-us" element={<ContactUsPage />} />
                 <Route path="/checkout/order-received/*" element={<OrderReceivedPage />} />
-                <Route path="/checkout/stripe-error" element={<Navigate to="/checkout" replace />} />
+                <Route path="/checkout/stripe-error" element={<StripeErrorPage />} />
                 <Route path="/checkout/*" element={<CheckoutPage />} />
                 <Route path="/login" element={<LoginPage />}>
                     <Route path="" element={<LoginCard />} />

@@ -1,7 +1,7 @@
 import InformationPage from "../../styles/InformationPage";
 import { PageTitle } from "../../styles/Page";
 
-const PrivacyPolicy = () => {
+const StripeErrorPage = () => {
   return (
     <InformationPage>
       <PageTitle>Checkout Error</PageTitle>
@@ -10,4 +10,4 @@ const PrivacyPolicy = () => {
   );
 };
 
-export default PrivacyPolicy;
+export default StripeErrorPage;
