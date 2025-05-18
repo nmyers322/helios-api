@@ -1,6 +1,8 @@
 import Order from '#models/order'
 import type { HttpContext } from '@adonisjs/core/http'
 import OrderService from '#services/OrderService';
+import EmailService from '#services/EmailService';
+import User from '#models/user';
 
 export default class OrdersController {
     async getAll({ auth, response }: HttpContext) {
@@ -36,6 +38,10 @@ export default class OrdersController {
             totalPrice
         } = await OrderService.getAndLogOrderInitializationParams(request);
         try {
+            let user = await User.query().where('id', auth.user!.id).first()
+            if (!user) {
+                return response.status(404).json({ error: 'User not found' })
+            }
             let order = await Order.create({
                 billingAddress: JSON.stringify(billingAddress),
                 pricedCart: JSON.stringify(pricedCart),
@@ -47,7 +53,9 @@ export default class OrdersController {
                 status: "CREATED",
                 userId: auth?.user?.id
             });
-
+            EmailService.sendEmail(user.email,
+                'Order Confirmation',
+                `<p>Your order has been created successfully. Order ID: ${order.id}</p>`);
             return response.status(201).json({ order });
         } catch (error) {
             console.error('Error creating order:', error);
