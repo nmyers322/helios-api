@@ -53,6 +53,7 @@ const Routes = ({
                 <Route path="/account/*" element={<AccountPage />} />
                 <Route path="/contact-us" element={<ContactUsPage />} />
                 <Route path="/checkout/order-received/*" element={<OrderReceivedPage />} />
+                <Route path="/checkout/stripe-error" element={<Navigate to="/checkout" replace />} />
                 <Route path="/checkout/*" element={<CheckoutPage />} />
                 <Route path="/login" element={<LoginPage />}>
                     <Route path="" element={<LoginCard />} />

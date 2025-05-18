@@ -74,4 +74,35 @@ export default class StripesController {
             return response.status(500).json({ error: 'Failed to create order' });
         }
     }
+
+    async success({ request, response }: HttpContext) {
+        const sessionId = request.input('session_id');
+        console.log('Stripe success called with sessionId:', sessionId);
+        
+        try {
+            const session = await stripe.checkout.sessions.retrieve(sessionId);
+            console.log('Stripe session retrieved:', session);
+
+            if (session.payment_status === 'paid') {
+                let order = await Order.findBy('externalOrderId', session.id);
+                if (order) {
+                    order.status = session.payment_status;
+                    order.externalOrder = JSON.stringify(session);
+                    await order.save();
+                    return response.redirect('/checkout/order-received/' + order.id);
+                } else {
+                    console.log('Order not found');
+                    // Handle the case where the order is not found
+                    // You might want to create a new order or return an error response
+                    return response.redirect('/checkout/stripe-error');
+                }
+            } else {
+                // Redirect to a custom stripe error page
+                return response.redirect('/checkout/stripe-error');
+            }
+        } catch (error) {
+            console.error('Error retrieving Stripe session:', error);
+            return response.redirect('/checkout/stripe-error');
+        }
+    }
 }

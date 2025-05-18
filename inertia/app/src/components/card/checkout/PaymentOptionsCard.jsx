@@ -15,6 +15,7 @@ import { updateOrder } from "../../../actions/ordersActions";
 import { heliosLogger } from "../../../modules/logging";
 import { CheckoutProvider, PaymentElement, useCheckout } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
+import StripeCheckoutButton from "../../form/checkout/StripeCheckoutButton";
 
 const stripePromise = loadStripe(import.meta.env.VITE_REACT_APP_STRIPE_API_KEY);
 
@@ -245,31 +246,12 @@ const PaymentOptionsCard = ({
             <PaymentOption>
               <PaymentElement 
                 onLoaderStart={() => setLoadingStripe(false)}/>
-              <Button
-                  buttonText="Submit Order"
-                  disabled={loadingStripe}
-                  onClick={async () => {
-                    setErrorText("");
-                    const stripeCheckout = useCheckout();
-                    const result = await stripeCheckout?.confirm();
-                    if (result?.type === "error") {
-                      heliosLogger("Error confirming Stripe payment:", result);
-                      setErrorText("There was an error confirming the Stripe payment. Please try again.");
-                    } else {
-                      heliosLogger("Stripe payment confirmed:", result);
-                      alert("success");
-                    }
-                    // let createOrderResult = await createOrder(await buildNewOrder());
-                    // let order = createOrderResult?.data?.order;
-                    // if (order) {
-                    //   dispatch(updateOrder(order));
-                    //   // Todo: need to clear the order form and shipping stuff here
-                    //   goTo(`/checkout/order-received/${order.id}`);
-                    // } else {
-                    //   heliosLogger("Error creating order:", createOrderResult);
-                    //   setErrorText("There was an error creating the order. Please try again.");
-                    // } 
-                  }} />
+              <StripeCheckoutButton 
+                isDisabled={loadingStripe} 
+                onClick={() => {
+                  setLoadingStripe(true);
+                }} 
+                setErrorText={setErrorText} />
             </PaymentOption>
           </CheckoutProvider>
         }

@@ -57,6 +57,8 @@ router.post('/api/stripe/order', [StripesController, 'initializeOrder'])
 
 router.get('/api/variations/:productId', [VariationsController, 'getByProductId'])
 
+router.get('/checkout/stripe-success', [StripesController, 'success'])
+
 router.get('/login/google', ({ ally }) => {
     return ally.use('google').redirect()
 })
