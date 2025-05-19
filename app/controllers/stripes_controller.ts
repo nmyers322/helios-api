@@ -2,6 +2,9 @@ import Order from '#models/order';
 import type { HttpContext } from '@adonisjs/core/http'
 import OrderService from '#services/OrderService';
 import Stripe from 'stripe';
+import EmailService from '#services/EmailService';
+import OrderCreated from '#services/emailbody/OrderCreated';
+import User from '#models/user';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
     apiVersion: '2025-03-31.basil' as any,
@@ -84,6 +87,14 @@ export default class StripesController {
                     order.status = session.payment_status;
                     order.externalOrder = JSON.stringify(session);
                     await order.save();
+                    let user = await User.query().where('id', order.userId).first()
+                    if (!user) {
+                        console.error('WARNING! Stripe payment completed but user not found!');
+                    } else {
+                        EmailService.sendEmail(user.email,
+                            'Order Confirmation' + order.id,
+                            await OrderCreated.getEmailBody(order));
+                    }
                     return response.redirect('/checkout/order-received/' + order.id);
                 } else {
                     console.log('Order not found');

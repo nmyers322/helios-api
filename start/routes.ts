@@ -19,6 +19,7 @@ import ShippingOptionsController from '#controllers/shipping_options_controller'
 import PaypalsController from '#controllers/paypals_controller'
 import OrdersController from '#controllers/orders_controller'
 import StripesController from '#controllers/stripes_controller'
+import Order from '#models/order'
 
 router.post('/api/session', [SessionsController, 'store'])
 router.delete('/api/session', [SessionsController, 'destroy'])
@@ -63,6 +64,16 @@ router.get('/login/google', ({ ally }) => {
     return ally.use('google').redirect()
 })
 router.get('/login-success-google', [OauthsController, 'googleLogin'])
+
+router.get('/emailtemplates/order-created/:orderId', async ({ request, response }) => {
+    const OrderCreated = (await import('#services/emailbody/OrderCreated')).default
+    const order = await Order.findOrFail(request.param('orderId'))
+    if (!order) {
+        return response.status(404).send('Order not found')
+    }
+    const emailBody = await OrderCreated.getEmailBody(order)
+    response.send(emailBody)
+})
 
 router.on('/*').renderInertia('home')
 

@@ -1,0 +1,277 @@
+[
+    {
+        "id": 286,
+        "name": "Order Type",
+        "quantity": 1,
+        "sku": "helios-order-type",
+        "variation": [
+            {
+                "attribute": "orderType",
+                "value": "12-inch"
+            }
+        ]
+    },
+    {
+        "heliosUserInput": "Mania",
+        "id": 282,
+        "name": "Band Name",
+        "quantity": 1,
+        "sku": "helios-band-name",
+        "variation": [
+            {
+                "attribute": "bandName",
+                "value": "Mania"
+            }
+        ]
+    },
+    {
+        "heliosUserInput": "Revel",
+        "id": 283,
+        "name": "Album Title",
+        "quantity": 1,
+        "sku": "helios-album-title",
+        "variation": [
+            {
+                "attribute": "albumTitle",
+                "value": "Revel"
+            }
+        ]
+    },
+    {
+        "heliosUserInput": "EWR-123",
+        "id": 284,
+        "name": "Catalog Number",
+        "quantity": 1,
+        "sku": "helios-catalog-number",
+        "variation": [
+            {
+                "attribute": "catalogNumber",
+                "value": "EWR-123"
+            }
+        ]
+    },
+    {
+        "id": 28,
+        "name": "12 Inch Base Fee",
+        "price": 708.75,
+        "quantity": 2,
+        "sku": "helios-12inch-base-fee",
+        "total": 1417.5
+    },
+    {
+        "id": 86,
+        "name": "12 Inch Weight",
+        "price": 0.79,
+        "quantity": 1500,
+        "sku": "helios-12inch-weight",
+        "total": 1185,
+        "variation": [
+            {
+                "attribute": "weight",
+                "value": "180g"
+            }
+        ]
+    },
+    {
+        "id": 285,
+        "name": "Total Quantity",
+        "quantity": 750,
+        "sku": "helios-total-quantity"
+    },
+    {
+        "id": 342,
+        "name": "12 Inch Test Press Setup Fee Double LP",
+        "price": 105,
+        "quantity": 1,
+        "sku": "helios-12inch-test-press-setup-fee-double-lp",
+        "total": 105
+    },
+    {
+        "id": 82,
+        "name": "12 Inch Test Press",
+        "price": 10.5,
+        "quantity": 30,
+        "sku": "helios-12inch-test-press",
+        "total": 315,
+        "variation": [
+            {
+                "attribute": "albumType",
+                "value": "double"
+            }
+        ]
+    },
+    {
+        "id": 83,
+        "name": "12 Inch Color",
+        "price": 2.1,
+        "quantity": 900,
+        "sku": "helios-12inch-color",
+        "total": 1890,
+        "variation": [
+            {
+                "attribute": "color",
+                "value": "Black"
+            },
+            {
+                "attribute": "baseFee",
+                "value": "black"
+            },
+            {
+                "attribute": "selectedQuantity",
+                "value": 450
+            }
+        ]
+    },
+    {
+        "id": 83,
+        "name": "12 Inch Color",
+        "price": 2.78,
+        "quantity": 200,
+        "sku": "helios-12inch-color",
+        "total": 556,
+        "variation": [
+            {
+                "attribute": "color",
+                "value": "Blood Orange"
+            },
+            {
+                "attribute": "baseFee",
+                "value": "color"
+            },
+            {
+                "attribute": "selectedQuantity",
+                "value": 100
+            }
+        ]
+    },
+    {
+        "id": 87,
+        "name": "12 Inch Color Setup Fee",
+        "price": 105,
+        "quantity": 4,
+        "sku": "helios-12inch-color-setup-fee",
+        "total": 420
+    },
+    {
+        "id": 83,
+        "name": "12 Inch Color",
+        "price": 2.78,
+        "quantity": 400,
+        "sku": "helios-12inch-color",
+        "total": 1112,
+        "variation": [
+            {
+                "attribute": "color",
+                "value": "Yellow Translucent"
+            },
+            {
+                "attribute": "baseFee",
+                "value": "color"
+            },
+            {
+                "attribute": "selectedQuantity",
+                "value": 200
+            }
+        ]
+    },
+    {
+        "id": 89,
+        "name": "12 Inch Center Labels",
+        "quantity": 2,
+        "sku": "helios-12inch-center-labels",
+        "variation": [
+            {
+                "attribute": "centerLabel",
+                "value": "customerSupplied"
+            }
+        ]
+    },
+    {
+        "id": 525,
+        "name": "12 Inch Innersleeve",
+        "price": 0.58,
+        "quantity": 1500,
+        "sku": "helios-12inch-innersleeve",
+        "total": 870,
+        "variation": [
+            {
+                "attribute": "innersleeve",
+                "value": "blackPolylinedSleeve"
+            }
+        ]
+    },
+    {
+        "id": 79,
+        "name": "12 Inch Outer Packaging",
+        "quantity": 1,
+        "sku": "helios-12inch-outer-packaging",
+        "variation": [
+            {
+                "attribute": "outerPackagingType",
+                "value": "customerSupplied"
+            },
+            {
+                "attribute": "outerPackagingPrint",
+                "value": "none"
+            },
+            {
+                "attribute": "outerPackagingFinish",
+                "value": "none"
+            },
+            {
+                "attribute": "outerPackagingAmount",
+                "value": "none"
+            }
+        ]
+    },
+    {
+        "id": 80,
+        "name": "12 Inch Insert",
+        "quantity": 1,
+        "sku": "helios-12inch-insert",
+        "variation": [
+            {
+                "attribute": "insertType",
+                "value": "customerSupplied"
+            },
+            {
+                "attribute": "insertPrint",
+                "value": "none"
+            },
+            {
+                "attribute": "insertFinish",
+                "value": "none"
+            },
+            {
+                "attribute": "quantity",
+                "value": "none"
+            }
+        ]
+    },
+    {
+        "id": 81,
+        "name": "Polybag",
+        "price": 0.16,
+        "quantity": 750,
+        "sku": "helios-12inch-polybag",
+        "total": 120,
+        "variation": [
+            {
+                "attribute": "polybag",
+                "value": "resealablePolybag"
+            }
+        ]
+    },
+    {
+        "id": 102,
+        "name": "12 Inch Assembly Option",
+        "quantity": 1,
+        "sku": "helios-12inch-assembly-option",
+        "variation": [
+            {
+                "attribute": "assemblyOption",
+                "value": "placeRecordBehindJacket"
+            }
+        ]
+    }
+]

@@ -3,6 +3,9 @@ import type { HttpContext } from '@adonisjs/core/http';
 import { CheckoutPaymentIntent, Client, Environment, LogLevel, OrdersController } from '@paypal/paypal-server-sdk';
 import OrderService from '#services/OrderService';
 import Address from '#models/address';
+import EmailService from '#services/EmailService';
+import User from '#models/user';
+import OrderCreated from '#services/emailbody/OrderCreated';
 
 const client = new Client({
     clientCredentialsAuthCredentials: {
@@ -86,6 +89,10 @@ export default class PaypalsController {
         const { orderId } = request.all();
         console.log('Paypal captureOrder called')
         console.log('orderId', orderId)
+        let user = await User.query().where('id', auth.user!.id).first()
+        if (!user) {
+            return response.status(404).json({ error: 'User not found' })
+        }
         const collect = {
             id: orderId,
             prefer: "return=minimal"
@@ -119,6 +126,9 @@ export default class PaypalsController {
                 }
                 order.shippingAddress = JSON.stringify(newShippingAddress);
                 await order.save();
+                EmailService.sendEmail(user.email,
+                                'Order Confirmation: #' + order.id,
+                                await OrderCreated.getEmailBody(order));
             } else {
                 console.log('Order not found');
                 // Handle the case where the order is not found

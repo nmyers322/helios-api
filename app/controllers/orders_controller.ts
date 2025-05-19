@@ -3,6 +3,7 @@ import type { HttpContext } from '@adonisjs/core/http'
 import OrderService from '#services/OrderService';
 import EmailService from '#services/EmailService';
 import User from '#models/user';
+import OrderCreated from '#services/emailbody/OrderCreated';
 
 export default class OrdersController {
     async getAll({ auth, response }: HttpContext) {
@@ -54,8 +55,8 @@ export default class OrdersController {
                 userId: auth?.user?.id
             });
             EmailService.sendEmail(user.email,
-                'Order Confirmation',
-                `<p>Your order has been created successfully. Order ID: ${order.id}</p>`);
+                'Order Confirmation' + order.id,
+                await OrderCreated.getEmailBody(order));
             return response.status(201).json({ order });
         } catch (error) {
             console.error('Error creating order:', error);
