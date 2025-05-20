@@ -272,3 +272,12 @@ export const validateCart = async (cart) => {
     // There's more validation but I'm out of time. To-do: Add more validation
     return ValidationResponse.invalid("Cart validation method is incomplete");
 }
+
+export const getAttributeValue = (pricedCart, attribute) => {
+    return pricedCart
+        ?.find((item) => item.variation
+            ?.some((v) => v.attribute === attribute))
+        ?.variation
+        ?.find((v) => v.attribute === attribute)
+        ?.value;
+}

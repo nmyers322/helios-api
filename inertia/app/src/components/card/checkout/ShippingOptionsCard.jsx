@@ -12,6 +12,8 @@ import { calculateShippingCost, CUSTOM_FREIGHT_QUOTE_OPTION, IN_STORE_PICKUP_OPT
 import { albumTypeName } from "../../form/orderform/AlbumType";
 import { outerPackagingTypeName } from "../../form/orderform/OuterPackagingType";
 import { totalQuantityName } from "../../form/orderform/TotalQuantity";
+import { validateCompleteOrderForm } from "../../../modules/orderFormValidation";
+import { validateAddress } from "../../../modules/accountValidation";
 
 const Title = styled.p`
   font-size: 1.2rem;
@@ -65,12 +67,12 @@ const ShippingOptionsCard = ({
       }
       dispatch(setFetchingShippingOptions(false));
     };
-    if (firstLoad) {
+    if (firstLoad && validateCompleteOrderForm(orderForm).isValid && validateAddress(shippingAddress, "shipping").isValid) {
       setFirstLoad(false);
       loadShippingOptions();
     }
   }
-  , [firstLoad, dispatch]);
+  , [firstLoad, dispatch, shippingAddress, orderForm]);
 
   return (
     <CheckoutCard

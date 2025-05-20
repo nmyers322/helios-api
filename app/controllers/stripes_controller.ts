@@ -58,7 +58,7 @@ export default class StripesController {
                     totalPrice: totalPrice.toFixed(2),
                     externalOrderId: stripeSession.id,
                     externalOrder: JSON.stringify(stripeSession),
-                    status: stripeSession.status,
+                    status: "CREATED",
                     userId: auth?.user?.id
                 });
             }
@@ -84,7 +84,7 @@ export default class StripesController {
             if (session.payment_status === 'paid') {
                 let order = await Order.findBy('externalOrderId', session.id);
                 if (order) {
-                    order.status = session.payment_status;
+                    order.status = "PAID";
                     order.externalOrder = JSON.stringify(session);
                     await order.save();
                     let user = await User.query().where('id', order.userId).first()
@@ -92,7 +92,7 @@ export default class StripesController {
                         console.error('WARNING! Stripe payment completed but user not found!');
                     } else {
                         EmailService.sendEmail(user.email,
-                            'Order Confirmation' + order.id,
+                            'Order Confirmation: #' + order.id,
                             await OrderCreated.getEmailBody(order));
                     }
                     return response.redirect('/checkout/order-received/' + order.id);

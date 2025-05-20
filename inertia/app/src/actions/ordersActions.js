@@ -15,6 +15,21 @@ export const updateOrder = (order) => {
   }
 };
 
+export const updateOrders = (orders) => {
+  let jsonStringKeys = ['billingAddress', 'externalOrder', 'pricedCart', 'shippingAddress', 'selectedShippingOption'];
+  orders.forEach(order => {
+    jsonStringKeys.forEach(name => {
+      if (typeof order[name] === "string") {
+        order[name] = JSON.parse(order[name]);
+      }
+    });
+  });
+  return {
+    type: "UPDATE_ORDERS",
+    payload: orders
+  }
+}
+
 export const setFetchingOrders = (fetching) => ({
   type: "SET_FETCHING_ORDERS",
   payload: fetching

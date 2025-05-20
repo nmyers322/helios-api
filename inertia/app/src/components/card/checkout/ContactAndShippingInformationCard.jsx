@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import CheckoutCard from "./CheckoutCard";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { getCountryFromCode, parseAddressIntoCityStateZip, parseAddressIntoFullName, parseAddressIntoStreetAddress } from "../../../modules/serialization";
 import { FormInputColumnSpacer } from "../../../styles/Form";
-import { updateOrderFormField } from "../../../actions/orderFormActions";
 import styled from "styled-components";
 import { valueIsEmpty } from "../../../modules/validation";
+import { heliosLogger } from "../../../modules/logging";
 
 const Title = styled.p`
   font-size: 1.2rem;
@@ -31,22 +31,19 @@ const OrderContactCard = ({
   isEditable = false,
   orderNumber = null
 }) => {
-  const customer = useSelector((state) => state.customer);
+  const orderForm = useSelector((state) => state.orderForm);
   const orders = useSelector((state) => state.orders);
-  const dispatch = useDispatch();
   let [billing, setBilling] = useState({});
   let [shipping, setShipping] = useState({});
 
   useEffect(() => {
     let order = orders?.orders[orderNumber];
     if (valueIsEmpty(order)) {
-      if (customer && !customer.fetching && customer.billing?.length > 0 && valueIsEmpty(order)) {
-        dispatch(updateOrderFormField("billing", customer.billing[0]));
-        setBilling(customer.billing[0]);
+      if (orderForm && orderForm.billing) {
+        setBilling(orderForm.billing);
       }
-      if (customer && !customer.fetching && customer.shipping?.length > 0 && valueIsEmpty(order)) {
-        dispatch(updateOrderFormField("shipping", customer.shipping[0]));
-        setShipping(customer.shipping[0]);
+      if (orderForm && orderForm.shipping) {
+        setShipping(orderForm.shipping);
       }
     } else {
       if (!valueIsEmpty(order.billingAddress)) {
@@ -56,7 +53,7 @@ const OrderContactCard = ({
         setShipping(order.shippingAddress);
       }
     }
-  }, [customer, dispatch, orders, orderNumber]);
+  }, [orderForm, orders, orderNumber]);
 
   return (
     <CheckoutCard

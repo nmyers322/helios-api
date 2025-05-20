@@ -36,7 +36,7 @@ export default class Order extends BaseModel {
   public externalOrder: string
 
   @column()
-  public status: string
+  public status: "CREATED" | "PAID" | "SHIPPED" | "CANCELLED" | "REFUNDED" | "COMPLETED"
 
   @column()
   public pricedCart: string

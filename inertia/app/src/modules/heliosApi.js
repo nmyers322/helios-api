@@ -1,11 +1,5 @@
 import axios from 'axios';
-import { userMe } from '../mocks/user-me';
-import { getUserDetails } from './authorization';
-import { isLocal } from './environment';
-import { products } from '../mocks/products';
-import { variation } from '../mocks/variation';
 import { heliosLogger } from './logging';
-import { cartMock } from '../mocks/cart';
 
 const domain = import.meta.env.VITE_REACT_APP_DOMAIN || 'localhost:3333';
 const api = axios.create({
@@ -14,7 +8,6 @@ const api = axios.create({
 
 let fetchingToken = false;
 let token = null;
-let wcStoreApiNonce = null;
 
 /****************************************************
  * API
@@ -188,3 +181,9 @@ export const getOrders = async () =>
 
 export const createOrder = async (data) =>
   await makePostCall("/api/orders", data);
+
+/************************************************
+ * Admin
+ *************************************************/
+export const getAllOrdersByStatus = async (status) =>
+  await makeGetCall(`/api/orders/status/${status}`);

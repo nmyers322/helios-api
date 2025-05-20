@@ -120,6 +120,10 @@ const DropdownMenu = () => {
 
   links.push({ text: "Home / About", href: "/" });
 
+  if (customer?.role === "admin") {
+    links.push({ text: "Admin", href: "/admin" });
+  }
+
   links.push({ text: "Contact Us", hardLink: "/contact-us" });
 
   links.push({ text: "Download Templates", href: "/templates" });

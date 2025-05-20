@@ -104,10 +104,14 @@ export default class PaypalsController {
                 throw new Error('Invalid response from PayPal');
             }
             const paypalOrder = JSON.parse(body);
+            if (paypalOrder.status !== 'COMPLETED') {
+                console.error('Error: Order not completed', paypalOrder);
+                throw new Error('Order not completed');
+            }
             console.log('paypalOrder', paypalOrder);
             let order = await Order.findBy('externalOrderId', orderId);
             if (order) {
-                order.status = paypalOrder.status;
+                order.status = "PAID";
                 order.externalOrder = JSON.stringify(paypalOrder);
                 let newShippingAddress = this.convertShippingAddress(paypalOrder.purchase_units[0].shipping);
                 let customerShippingAddress = await Address.query().where('userId', auth.user!.id).where('type', 'shipping').first();

@@ -113,7 +113,7 @@ const PaymentOptionsCard = ({
                 efficient transaction for you.
                 <Button
                   buttonText="Submit Order"
-                  disabled={false}
+                  disabled={disabled}
                   onClick={async () => {
                     setErrorText("");
                     let createOrderResult = await createOrder(await buildNewOrder());
@@ -146,7 +146,7 @@ const PaymentOptionsCard = ({
               
             </Icon>
         </PaymentOptionHeader>
-        { selectedPaymentOption === "paypal" &&
+        { selectedPaymentOption === "paypal" && !disabled &&
             <PaymentOption>
                 <PayPalButtons
                     createOrder={async () => {
@@ -224,14 +224,14 @@ const PaymentOptionsCard = ({
             </Icon>
         </PaymentOptionHeader>
         { loadingStripe && <LabeledSpinner text={"Loading..."} /> }
-        { selectedPaymentOption === "stripe" &&
+        { selectedPaymentOption === "stripe" && !disabled &&
           <CheckoutProvider stripe={stripePromise} options={{
             fetchClientSecret: async () => {
               setErrorText("");
               let newOrder = await initializeStripeOrder(await buildNewOrder());
               try {
                 const order = newOrder?.data?.order;
-                if (order.status === "open" && order.id) {
+                if (order.status === "CREATED" && order.id) {
                   dispatch(updateOrder(order));
                   return newOrder?.data?.checkoutSessionClientSecret;
                 } else {

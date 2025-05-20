@@ -29,6 +29,16 @@ const initialState = {
             [action.payload.id]: action.payload
           }
         };
+      case "UPDATE_ORDERS":
+        heliosLogger("Updating orders:", action.payload);
+        let orders = {...state.orders};
+        action.payload.forEach(order => {
+          orders[order.id] = order;
+        });
+        return {
+          ...state,
+          orders: orders
+        };
       default:
         return state;
     }

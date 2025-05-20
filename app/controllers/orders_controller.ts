@@ -55,7 +55,7 @@ export default class OrdersController {
                 userId: auth?.user?.id
             });
             EmailService.sendEmail(user.email,
-                'Order Confirmation' + order.id,
+                'Order Confirmation: #' + order.id,
                 await OrderCreated.getEmailBody(order));
             return response.status(201).json({ order });
         } catch (error) {

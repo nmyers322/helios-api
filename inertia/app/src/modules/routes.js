@@ -6,6 +6,14 @@ export const getOrderStep = () => {
     return parts[1];
 }
 
+export const getAdminSubPage = () => {
+    const parts = getPathParts();
+    if (parts.length === 1 && parts[0] === "admin") {
+        return "open-orders";
+    }
+    return parts[1];
+}
+
 export const getPathParts = (uri = window.location.pathname) => uri.split("/").filter(s => s !== '');
 
 export const onCheckoutPage = () => getPathParts().length === 1 && getPathParts()[0] === "checkout";
@@ -38,3 +46,6 @@ export const onOrderSummaryPage = () => getOrderStep() === "summary";
 export const onAnyOrderPage = () => getPathParts()[0] === "order";
 
 export const onWCPage = () => onCheckoutPage() || onOrderReceivedPage();
+
+export const onAdminRootPage = () => getPathParts().length === 1 && getPathParts()[0] === "admin";
+export const onAdminPage = () => getPathParts()[0] === "admin";

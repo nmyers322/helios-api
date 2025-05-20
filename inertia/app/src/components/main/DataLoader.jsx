@@ -2,18 +2,14 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { heliosLogger } from "../../modules/logging.js";
-import { setActiveTokenStatus, setFetchingCustomer, updateCustomerAddress, updateCustomerFromApiResponse } from "../../actions/customerActions.js";
-import { updateBillingAddressFormFromApiResponse } from "../../actions/billingAddressActions.js";
-import { updateShippingAddressFormFromApiResponse } from "../../actions/shippingAddressActions.js";
+import { setActiveTokenStatus, setFetchingCustomer, updateCustomerFromApiResponse } from "../../actions/customerActions.js";
 import { getCheckoutStatusFromLocalStorage, getIsBetaFromLocalStorage, getOrderFormFromLocalStorage, getThemeFromLocalStorage, getTokenFromLocalStorage } from "../../modules/dataPersistMiddleware.js";
 import { updateOrderForm } from "../../actions/orderFormActions.js";
 import { fetchAllProductsAndAllVariations, invalidateProductCache, setProducts, setVariations } from "../../actions/productsActions.js";
 import { setIsBeta, setLocalSettingsLoaded, setLocalToken, setReadyForCheckout, updateTheme } from "../../actions/metaActions.js";
 import { PRODUCTS_VARIATIONS_CACHE_KEY } from "./App.js";
 import { valueIsEmpty } from "../../modules/validation.js";
-import { getMyAccount, getMyAddresses, hasActiveApiToken, setApiToken } from "../../modules/heliosApi.js";
-import { useGoTo } from "../../modules/links.js";
-import { useNavigate } from "react-router-dom";
+import { getMyAccount, hasActiveApiToken, setApiToken } from "../../modules/heliosApi.js";
 
 
 const StyledDataLoader = styled.div`

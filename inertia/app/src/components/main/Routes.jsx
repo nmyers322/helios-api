@@ -3,6 +3,7 @@ import { Routes as LibRoutes, Navigate, Route } from "react-router-dom";
 import { styled } from "styled-components";
 import { onLandingPage } from "../../modules/routes";
 import AccountPage from "../page/AccountPage";
+import AdminPage from "../page/AdminPage";
 import CheckoutPage from "../page/CheckoutPage";
 import ContactUsPage from "../page/ContactUsPage";
 import LandingPage from "../page/LandingPage";
@@ -52,6 +53,7 @@ const Routes = ({
             <LibRoutes>
                 <Route path="/" element={<LandingPage routesWrapperRef={routesWrapperRef} titleRef={titleRef} />} />
                 <Route path="/account/*" element={<AccountPage />} />
+                <Route path="/admin/*" element={<AdminPage />} />
                 <Route path="/contact-us" element={<ContactUsPage />} />
                 <Route path="/checkout/order-received/*" element={<OrderReceivedPage />} />
                 <Route path="/checkout/stripe-error" element={<StripeErrorPage />} />

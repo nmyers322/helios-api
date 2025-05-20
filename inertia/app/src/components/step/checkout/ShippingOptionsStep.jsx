@@ -10,6 +10,7 @@ import TertiaryButton from "../../form/main/TertiaryButton";
 
 const ShippingOptionsStep = () => {
   const fetchingShippingOptions = useSelector((state) => state.shippingOptions.fetching);
+  const selectedShippingOption = useSelector((state) => state.shippingOptions.selectedOption);
   const goTo = useGoTo(useNavigate());
   return (<StepContainer>
     <ContactAndShippingInformationCard isEditable={true} />
@@ -18,13 +19,12 @@ const ShippingOptionsStep = () => {
       disabled={fetchingShippingOptions}>
         <Button
           buttonText="Continue to Payment Options"
-          disabled={fetchingShippingOptions}
+          disabled={fetchingShippingOptions || !selectedShippingOption}
           onClick={() => {
             goTo("/checkout/payment");          
           }} />
         <TertiaryButton
           buttonText="Back to Order Form"
-          disabled={fetchingShippingOptions}
           onClick={() => {
             goTo("/order");
           }} />
