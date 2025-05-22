@@ -2,7 +2,7 @@ import Address from "#models/address";
 import Order from "#models/order";
 import AddressService from "#services/AddressService";
 import CartService from "#services/CartService";
-import theme from "../../../inertia/app/src/modules/theme.js"; // Adjust the path if needed
+import theme from '#services/emailbody/theme';
 
 export default class OrderCreated {
     public static async getEmailBody(order: Order) {

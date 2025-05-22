@@ -1,4 +1,4 @@
-import theme from "../../../inertia/app/src/modules/theme.js"; // Adjust the path if needed
+import theme from '#services/emailbody/theme';
 
 export default class PasswordResetRequest {
     public static getEmailBody(token: string) {

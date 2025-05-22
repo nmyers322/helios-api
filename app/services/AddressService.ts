@@ -1,5 +1,5 @@
 import Address from "#models/address";
-import countryList from "../../inertia/app/src/modules/countryList.js";
+import countryList from '#constants/countryList';
 
 export default class AddressService {
     public static async displayBillingAddress(billingAddress: Address) {
