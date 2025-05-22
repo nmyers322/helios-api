@@ -4,18 +4,18 @@ import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import LabeledSpinner from "../../main/LabeledSpinner";
 import RadioSelector from "../../form/main/RadioSelector";
-import { capturePaypalOrder, createOrder, initializePaypalOrder, initializeStripeOrder } from "../../../modules/heliosApi";
+import { createOrder, initializeStripeOrder } from "../../../modules/heliosApi";
 import ErrorText from "../../form/main/ErrorText";
-import { PayPalButtons } from "@paypal/react-paypal-js";
 import { buildCartFromOrderForm } from "../../../modules/cart";
 import Button from "../../form/main/Button";
 import { useGoTo } from "../../../modules/links";
 import { useNavigate } from "react-router-dom";
 import { updateOrder } from "../../../actions/ordersActions";
 import { heliosLogger } from "../../../modules/logging";
-import { CheckoutProvider, PaymentElement, useCheckout } from '@stripe/react-stripe-js';
+import { CheckoutProvider, PaymentElement } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import StripeCheckoutButton from "../../form/checkout/StripeCheckoutButton";
+import Paypal from "./payment/Paypal";
 
 const stripePromise = loadStripe(import.meta.env.VITE_REACT_APP_STRIPE_API_KEY);
 
@@ -60,6 +60,7 @@ const PaymentOption = styled.div`
 const PaymentOptionsCard = ({
   disabled = false,
 }) => {
+  const paypalEnabled = import.meta.env.VITE_REACT_APP_PAYPAL_ENABLED === "true";
   const dispatch = useDispatch();
   const goTo = useGoTo(useNavigate());
   const orderForm = useSelector((state) => state.orderForm);
@@ -130,82 +131,29 @@ const PaymentOptionsCard = ({
             </PaymentOption>
         }
       </PaymentOptionContainer>
-      <PaymentOptionContainer 
-        $isSelected={selectedPaymentOption === "paypal"}
-        onClick={() => {
-          setSelectedPaymentOption("paypal");
-        }}>
-        <PaymentOptionHeader>
-            <RadioSelector 
-            checked={selectedPaymentOption === "paypal"}
-            name={"PayPal"} />
-            <Title>
-              PayPal
-            </Title>
-            <Icon>
-              
-            </Icon>
-        </PaymentOptionHeader>
-        { selectedPaymentOption === "paypal" && !disabled &&
-            <PaymentOption>
-                <PayPalButtons
-                    createOrder={async () => {
-                        setErrorText("");
-                        let newOrder = await initializePaypalOrder(await buildNewOrder());
-                        try {
-                          const orderData = newOrder?.data?.jsonResponse;
-                          if (orderData.status === "CREATED" && orderData.id) {
-                            dispatch(updateOrder(newOrder?.data?.order));
-                            return orderData.id;
-                          } else {
-                            const errorDetail = orderData?.details?.[0];
-                            const errorMessage = errorDetail
-                              ? `${errorDetail.issue} ${errorDetail.description} (${orderData.debug_id})`
-                              : JSON.stringify(orderData);
-                            throw new Error(errorMessage);
-                          }
-                        } catch (error) {
-                          heliosLogger("Error creating PayPal order:", error);
-                          setErrorText("There was an error creating the PayPal order. Please try again.");
-                        }
-                    }}
-                    onApprove={async (data, actions) => {
-                        let capturedOrder = await capturePaypalOrder({
-                          orderId: data?.orderID
-                        });
-                        try {
-                          const orderData = capturedOrder?.data?.jsonResponse;
-                          // Three cases to handle:
-                          const errorDetail = orderData?.details?.[0];
-                          if (errorDetail?.issue === "INSTRUMENT_DECLINED") {
-                            //   (1) Recoverable INSTRUMENT_DECLINED -> call actions.restart()
-                            return actions.restart();
-                          } else if (errorDetail) {
-                            //   (2) Other non-recoverable errors -> Show a failure message
-                            throw new Error(`${errorDetail?.description} (${orderData?.debug_id})`);
-                          } else {
-                            //   (3) Successful transaction -> Show confirmation or thank you message
-                            dispatch(updateOrder(capturedOrder?.data?.order));
-                            // Todo: need to clear the order form and shipping stuff here
-                            goTo(`/checkout/order-received/${capturedOrder?.data?.order?.id}`);
-                          }
-                        } catch (error) {
-                          heliosLogger("Error capturing PayPal order:", error);
-                          setErrorText("There was an error capturing the PayPal order. Please try again.");
-                        }
-                    }}
-                    onError={(error) => {
-                        heliosLogger("PayPal error:", error);
-                        setErrorText("There was an error processing your PayPal payment. Please try again.");
-                    }}
-                    style={{
-                      shape: "pill",
-                      color: "silver",
-                      label: "pay",
-                    }} />
-            </PaymentOption>
-        }
-      </PaymentOptionContainer>
+      { paypalEnabled && 
+        <PaymentOptionContainer 
+          $isSelected={selectedPaymentOption === "paypal"}
+          onClick={() => {
+            setSelectedPaymentOption("paypal");
+          }}>
+          <PaymentOptionHeader>
+              <RadioSelector 
+              checked={selectedPaymentOption === "paypal"}
+              name={"PayPal"} />
+              <Title>
+                PayPal
+              </Title>
+              <Icon>
+              </Icon>
+          </PaymentOptionHeader>
+          { selectedPaymentOption === "paypal" && !disabled &&
+              <PaymentOption>
+                  <Paypal />
+              </PaymentOption>
+          }
+        </PaymentOptionContainer> 
+      }
       <PaymentOptionContainer 
         $isSelected={selectedPaymentOption === "stripe"}
         onClick={() => {
