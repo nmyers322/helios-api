@@ -3,7 +3,7 @@ import { heliosLogger } from "../../../modules/logging";
 import Button from "../main/Button";
 import { useSelector } from "react-redux";
 
-const StripeCheckoutButton = ({isDisabled, onClick, setErrorText}) => {
+const StripeCheckoutButton = ({isDisabled, onClick, reset, setErrorText}) => {
     const checkout = useCheckout();
     const customer = useSelector((state) => state.customer);
 
@@ -25,6 +25,7 @@ const StripeCheckoutButton = ({isDisabled, onClick, setErrorText}) => {
             if (result.error) {
                 heliosLogger("Error confirming Stripe payment:", result);
                 setErrorText("There was an error confirming the Stripe payment. Please try again.");
+                reset && reset();
             } else {
                 heliosLogger("Stripe payment confirmed:", result);
                 alert("success");

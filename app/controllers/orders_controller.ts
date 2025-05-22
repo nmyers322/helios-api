@@ -16,6 +16,11 @@ export default class OrdersController {
         return response.status(200).json({orders})
     }
 
+    async getAllAdmin({ response }: HttpContext) {
+        const orders = await Order.all()
+        return response.status(200).json({orders})
+    }
+
     async getById({ auth, params, response }: HttpContext) {
         const user = auth?.user
         if (!user) {
@@ -62,5 +67,17 @@ export default class OrdersController {
             console.error('Error creating order:', error);
             return response.status(500).json({ error: 'Failed to create order' });
         }
+    }
+
+    async updateOrder({ params, request, response }: HttpContext) {
+        const orderId = params.id
+        const order = await Order.findOrFail(orderId)
+        if (!order) {
+            return response.status(404).json({ error: 'Order not found' })
+        }
+        const { status } = request.all()
+        order.status = status
+        await order.save()
+        return response.status(200).json({ order })
     }
 }

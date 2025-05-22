@@ -9,16 +9,16 @@ import App from './src/components/main/App.js';
 createInertiaApp({
   progress: { color: '#5468FF' },
 
-  title: (title) => `${title}`,
+  title: (title: string) => `${title}`,
 
-  resolve: (name) => {
+  resolve: (name: string) => {
     return resolvePageComponent(
       `../pages/${name}.tsx`,
       import.meta.glob('../pages/**/*.tsx'),
     )
   },
 
-  setup({ el, props }) {
+  setup({ el, props }: { el: Element; props: any }) {
     createRoot(el).render(<App {...props} />);
     
   },

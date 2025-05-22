@@ -63,6 +63,7 @@ const LandingPageHeader = ({
               <MiniDropDown closer={toggleAccountDropDown} open={isAccountDropDownOpen}>
                 <HeaderLink onClick={() => toggleThemeLocal()}>Toggle Theme</HeaderLink>
                 <BetaFeaturesLink LinkClass={HeaderLink} />
+                { customer.role === "admin" && <HeaderLink onClick={() => goTo('/admin')}>Admin</HeaderLink> }
                 <HeaderLink onClick={() => goTo('/logout')}>Logout</HeaderLink>
               </MiniDropDown>
             </HeaderLink>

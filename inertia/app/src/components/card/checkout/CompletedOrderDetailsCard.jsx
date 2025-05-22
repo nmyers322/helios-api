@@ -19,6 +19,7 @@ import { insertFinishName, insertFinishOptions } from "../../form/orderform/Inse
 import { polybagName, PolybagOptions } from "../../form/orderform/Polybag";
 import { albumTypeName } from "../../form/orderform/AlbumType";
 import { innersleeveName, innersleeveOptions } from "../../form/orderform/Innersleeve";
+import { useSelector } from "react-redux";
 
 const Container = styled.div`
     display: flex;
@@ -116,8 +117,14 @@ const Item = styled.div`
 
 const CompletedOrderDetailsCard = ({
   className = "",
-  order = {}
+  order = {},
+  orderId = null
 }) => {
+  
+    const orders = useSelector(state => state.orders.orders);
+    if (orderId) {
+        order = orders[orderId];
+    };
   const orderType = getCartItemMetaData(getCartItem("orderType", order), "orderType");
   const weight = getCartItemMetaData(getCartItem(weightName, order), weightName);
   const colors = getAllColors(order);

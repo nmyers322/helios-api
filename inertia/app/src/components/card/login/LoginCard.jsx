@@ -28,6 +28,7 @@ import Modal from '../../main/Modal'
 import { setLocalToken } from '../../../actions/metaActions'
 import { setActiveTokenStatus } from '../../../actions/customerActions'
 import { heliosLogger } from '../../../modules/logging'
+import TextButton from '../../form/main/TextButton'
 
 const LoginCard = () => {
     const dispatch = useDispatch();
@@ -71,6 +72,9 @@ const LoginCard = () => {
             type="password"
             value={password}
         />
+        <TextButton text={"Forgot Password?"} onClick={() => {
+            goTo("/forgot-password");
+        }} /> 
         { error && <ErrorText text={error} /> }
         <TertiaryButton
             buttonText={"Login"}

@@ -996,3 +996,5 @@ export const countryList = [
         "label": "Zimbabwe (ZW)"
     }
 ];
+
+export default countryList;

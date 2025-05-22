@@ -1,9 +1,13 @@
 import styled from "styled-components";
 import { PageContainer, PageLeftColumn, PageRightColumn } from "../../styles/Page"
-import ImmutableOrderSummaryCard from "../card/orderform/ImmutableOrderSummaryCard"
+import ImmutableOrderFormSummaryCard from "../card/orderform/ImmutableOrderFormSummaryCard"
 import OrderSummarySidePanel from "../sidebar/OrderSummarySidePanel"
 import { Item } from "../main/PrintModal";
 import heliosTxtLogo from '../../images/helios-text-yellow-1000.png';
+import CompletedOrderDetailsCard from "../card/checkout/CompletedOrderDetailsCard";
+import ContactAndShippingInformationCard from "../card/checkout/ContactAndShippingInformationCard";
+import OrderStatus from "../form/admin/OrderStatus";
+import { useSelector } from "react-redux";
 
 const StyledPageLeftColumn = styled(PageLeftColumn)`
     width: 100%;
@@ -47,16 +51,23 @@ const TopImage = styled.img`
     margin-top: 1rem;
 `;
 
-const PrintableOrderSummary = ({targetRef}) => {
+const PrintableOrderSummary = ({orderId, targetRef}) => {
+    const customer = useSelector((state) => state.customer);
+    const orders = useSelector((state) => state.orders.orders);
     return (
         <StyledPageContainer ref={targetRef}>
-            <Row><Item><TopImage src={heliosTxtLogo} /></Item></Row>
+            { !orderId && <Row><Item><TopImage src={heliosTxtLogo} /></Item></Row> }
+            <Row>
+                { orderId && customer?.role === "admin" && <OrderStatus orderId={orderId} /> }
+            </Row>
             <Row>
                 <StyledPageLeftColumn>
-                    <ImmutableOrderSummaryCard />
+                    { !orderId && <ImmutableOrderFormSummaryCard /> }
+                    { orderId && <CompletedOrderDetailsCard orderId={orderId} /> }
+                    { orderId && <ContactAndShippingInformationCard orderNumber={orderId} />}
                 </StyledPageLeftColumn>
                 <StyledPageRightColumn>
-                    <OrderSummarySidePanel />
+                    { !orderId && <OrderSummarySidePanel /> }
                 </StyledPageRightColumn>
             </Row>
         </StyledPageContainer>

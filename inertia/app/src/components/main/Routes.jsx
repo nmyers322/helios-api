@@ -1,7 +1,5 @@
-import React from "react";
 import { Routes as LibRoutes, Navigate, Route } from "react-router-dom";
 import { styled } from "styled-components";
-import { onLandingPage } from "../../modules/routes";
 import AccountPage from "../page/AccountPage";
 import AdminPage from "../page/AdminPage";
 import CheckoutPage from "../page/CheckoutPage";
@@ -21,6 +19,8 @@ import LoginPage from "../page/LoginPage";
 import RegisterCard from "../card/login/RegisterCard";
 import Logout from "../standalone/Logout";
 import LoginCard from "../card/login/LoginCard";
+import ForgotPasswordCard from "../card/login/ForgotPasswordCard";
+import ResetPasswordCard from "../card/login/ResetPasswordCard";
 
 const RoutesWrapper = styled.div`
   margin-top: var(--header-height);
@@ -58,6 +58,9 @@ const Routes = ({
                 <Route path="/checkout/order-received/*" element={<OrderReceivedPage />} />
                 <Route path="/checkout/stripe-error" element={<StripeErrorPage />} />
                 <Route path="/checkout/*" element={<CheckoutPage />} />
+                <Route path="/forgot-password" element={<LoginPage />}>
+                    <Route path="" element={<ForgotPasswordCard />} />
+                </Route>
                 <Route path="/login" element={<LoginPage />}>
                     <Route path="" element={<LoginCard />} />
                 </Route>
@@ -70,6 +73,9 @@ const Routes = ({
                 <Route path="/order/*" element={<OrderPage />} />
                 <Route path="/register" element={<LoginPage />}>
                     <Route path="" element={<RegisterCard />} />
+                </Route>
+                <Route path="/reset-password/*" element={<LoginPage />}>
+                    <Route path="" element={<ResetPasswordCard />} />
                 </Route>
                 <Route path="/templates" element={<TemplatesPage />} />
                 <Route path="/terms" element={<TermsOfService />} />

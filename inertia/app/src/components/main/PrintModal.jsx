@@ -30,10 +30,10 @@ const PrintBody = styled.div`
     justify-content: center;
     align-items: flex-start;
     width: calc(100%);
-    max-height: 20rem;
+    max-height: calc(100vh - 12rem);
     overflow-y: scroll;
     overflow-x: scroll;
-    width: 60rem;
+    
     max-width: calc(100vw - 6rem);
     padding: 0rem;
 `;
@@ -46,8 +46,7 @@ const PrintModal = ({
     const printContent = useSelector((state) => state.meta.printContent);
     const timestamp = Date.now();
     const targetRef = useRef(null);
-    //const { toPDF, targetRef } = usePDF({filename: `${printContent}-${timestamp}.pdf`});
-    
+
     const handleClose = () => {
         dispatch(setShowPrintModal(false));
         dispatch(setPrintContent(""));
@@ -58,17 +57,16 @@ const PrintModal = ({
     }
 
     return (
-        <ModalBackdrop onClick={handleClose}>
+        <ModalBackdrop>
             <ModalContent style={styles}>
                 <ModalBody>
                     <Row>
-                        <Item></Item>
                         <Item>
                             <Button 
                                 buttonText={"Print"}
                                 onClick={
                                     () => {
-                                        generatePDF(targetRef, {filename: `${printContent}-${timestamp}.pdf`});
+                                        generatePDF(targetRef, {filename: `${printContent?.orderId || printContent}-${timestamp}.pdf`});
                                         handleClose();
                                     }
                                 }
@@ -81,6 +79,8 @@ const PrintModal = ({
                         </Item>
                     </Row>
                     <PrintBody>
+                        { printContent?.orderId && <PrintableOrderSummary orderId={printContent.orderId} targetRef={targetRef} /> }
+
                         { printContent === "orderSummary" && <PrintableOrderSummary targetRef={targetRef} /> }
                     </PrintBody>
                     

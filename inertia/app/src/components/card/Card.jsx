@@ -4,7 +4,7 @@ const CardContainer = styled.div`
   background-color: ${(props) => props.theme.colors.cardBackground};
   padding: 1rem 5rem 1.5rem 5rem;
   border-radius: 1rem;
-  width: 35rem;
+  
   display: flex;
   flex-direction: column;
   justify-content: space-between;

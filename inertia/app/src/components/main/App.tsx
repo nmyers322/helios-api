@@ -1,4 +1,3 @@
-import React from "react";
 import { BrowserRouter } from "react-router-dom";
 import store from "../../reducers/store.js";
 import { Provider } from "react-redux";
@@ -10,9 +9,9 @@ import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 export const PRODUCTS_VARIATIONS_CACHE_KEY = "736f1222-e200-47ae-af09-66eb65d80308";
 
 const PAYPAL_OPTIONS = {
-  "client-id": import.meta.env.VITE_REACT_APP_PAYPAL_CLIENT_ID,
-  "components": "buttons",
-  "disable-funding": "card"
+  clientId: import.meta.env.VITE_REACT_APP_PAYPAL_CLIENT_ID,
+  components: "buttons",
+  disableFunding: "card"
 };
 
 const App = (props: any) => (

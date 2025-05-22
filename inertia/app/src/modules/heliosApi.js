@@ -130,6 +130,23 @@ export const updateMyUser = async (data) => {
     return result;
 }
 
+export const requestPasswordReset = async (email) => {
+    let data = {
+        email
+    };
+    let result = await makePostCall("/api/account/reset-password", data);
+    return result;
+}
+
+export const resetPassword = async (token, password) => {
+    let data = {
+        token,
+        password
+    };
+    let result = await makePutCall("/api/account/reset-password", data);
+    return result;
+}
+
 /****************************************************
  * Addresses
  ***************************************************/
@@ -185,5 +202,13 @@ export const createOrder = async (data) =>
 /************************************************
  * Admin
  *************************************************/
-export const getAllOrdersByStatus = async (status) =>
-  await makeGetCall(`/api/orders/status/${status}`);
+export const getAllOrdersAdmin = async () =>
+  await makeGetCall(`/api/admin/orders`);
+
+export const updateOrderStatus = async (orderId, status) => {
+  let data = {
+    status
+  };
+  let result = await makePutCall(`/api/admin/orders/${orderId}`, data);
+  return result;
+}

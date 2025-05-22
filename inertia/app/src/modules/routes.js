@@ -16,6 +16,11 @@ export const getAdminSubPage = () => {
 
 export const getPathParts = (uri = window.location.pathname) => uri.split("/").filter(s => s !== '');
 
+export const getLastPathPart = (uri = window.location.pathname) => {
+    const parts = getPathParts(uri);
+    return parts[parts.length - 1];
+}
+
 export const onCheckoutPage = () => getPathParts().length === 1 && getPathParts()[0] === "checkout";
 
 export const onContactPage = () => getPathParts().length === 1 && getPathParts()[0] === "contact-us";

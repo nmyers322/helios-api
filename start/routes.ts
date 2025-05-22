@@ -8,9 +8,9 @@
 */
 
 import router from '@adonisjs/core/services/router'
-import { middleware } from './kernel.ts'
-import ProductsController from '../app/controllers/products_controller.ts'
-import SessionsController from '../app/controllers/sessions_controller.ts'
+import { middleware } from '#start/kernel'
+import ProductsController from '#controllers/products_controller'
+import SessionsController from '#controllers/sessions_controller'
 import UsersController from '#controllers/users_controller'
 import VariationsController from '#controllers/variations_controller'
 import OauthsController from '#controllers/oauths_controller'
@@ -36,19 +36,22 @@ router.get('/api/account/addresses', [AddressesController, 'getAll'])
 router.put('/api/account/addresses', [AddressesController, 'createOrUpdate'])
     .use(middleware.auth({ guards: ['api'] }))
 
+router.post('/api/account/reset-password', [UsersController, 'requestResetPassword'])
+router.put('/api/account/reset-password', [UsersController, 'resetPassword'])
+
 router.get('/api/orders/:id', [OrdersController, 'getById'])
     .use(middleware.auth({ guards: ['api'] }))
 router.get('/api/orders', [OrdersController, 'getAll'])
     .use(middleware.auth({ guards: ['api'] }))
 router.post('/api/orders', [OrdersController, 'initializeOrder'])
     .use(middleware.auth({ guards: ['api'] }))
-router.get('/api/orders/status/:status', async ({ request, response }) => {
-    const status = request.param('status')
-    const orders = await Order.query().where('status', status)
-    return response.ok(orders)
-})
-.use(middleware.auth({ guards: ['api'] }))
-.use(middleware.admin())
+
+router.get('/api/admin/orders', [OrdersController, 'getAllAdmin'])
+    .use(middleware.auth({ guards: ['api'] }))
+    .use(middleware.admin())
+router.put('/api/admin/orders/:id', [OrdersController, 'updateOrder'])
+    .use(middleware.auth({ guards: ['api'] }))
+    .use(middleware.admin())
 
 
 router.post('/api/paypal/order', [PaypalsController, 'initializeOrder'])

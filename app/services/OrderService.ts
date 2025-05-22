@@ -1,4 +1,3 @@
-import Order from '#models/order'
 import CartService from '#services/CartService'
 import type { Request } from '@adonisjs/core/http'
 
@@ -24,7 +23,7 @@ export default class OrderService {
         }
     }
 
-    public static async sendCustomerOrderReceivedEmail(order: Order) {
+    public static async sendCustomerOrderReceivedEmail() {
         return;
     }
 }

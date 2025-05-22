@@ -240,6 +240,7 @@ const PaymentOptionsCard = ({
               } catch (error) {
                 heliosLogger("Error creating Stripe order:", error);
                 setErrorText("There was an error creating the Stripe order. Please try again.");
+                setLoadingStripe(false);
               }
             }
           }}>
@@ -251,6 +252,9 @@ const PaymentOptionsCard = ({
                 onClick={() => {
                   setLoadingStripe(true);
                 }} 
+                reset={() => {
+                  setLoadingStripe(false);
+                }}
                 setErrorText={setErrorText} />
             </PaymentOption>
           </CheckoutProvider>

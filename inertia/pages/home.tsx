@@ -5,7 +5,6 @@ export default function Home() {
     <>
       <Head title="Helios Press" />
       <div id="root"></div>
-
     </>
   )
 }

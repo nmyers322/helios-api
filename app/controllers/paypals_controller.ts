@@ -9,8 +9,8 @@ import OrderCreated from '#services/emailbody/OrderCreated';
 
 const client = new Client({
     clientCredentialsAuthCredentials: {
-        oAuthClientId: process.env.VITE_REACT_APP_PAYPAL_CLIENT_ID,
-        oAuthClientSecret: process.env.PAYPAL_CLIENT_SECRET
+        oAuthClientId: process.env.VITE_REACT_APP_PAYPAL_CLIENT_ID!,
+        oAuthClientSecret: process.env.PAYPAL_CLIENT_SECRET!
     },
     timeout: 5000,
     environment: Environment.Sandbox, // or Environment.Production

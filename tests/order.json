@@ -1,141 +1,9 @@
-import { useDispatch, useSelector } from "react-redux";
-import Card from "../Card"
-import { useEffect, useState } from "react";
-import { getAllOrdersAdmin } from "../../../modules/heliosApi";
-import { setFetchingOrders, updateOrders } from "../../../actions/ordersActions";
-import ErrorText from "../../form/main/ErrorText";
-import { heliosLogger } from "../../../modules/logging";
-import styled from "styled-components";
-import { getAttributeValue } from "../../../modules/cart";
-import { setPrintContent, setShowPrintModal } from "../../../actions/metaActions";
-
-const OrderTable = styled.table`
-    width: 100%;
-    border-collapse: collapse;
-    margin: 1rem 0;
-    font-size: 1rem;
-    color: ${props => props.theme.text};
-`;
-
-const OrderRow = styled.tr`
-
-    padding: 1rem;
-    border-bottom: 1px solid #ccc;
-    cursor: pointer;
-    &:last-child {
-        border-bottom: none;
-    }
-    &:hover {
-        background-color: ${props => props.theme.colors.sideBar.activeOption};
-    }
-`;
-
-const OrderDetail = styled.td`
-    font-size: 1rem;
-    color: ${props => props.theme.text};
-    padding: 1rem;
-    flex-grow: 1;
-    text-align: left;
-`;
-
-const condensedDatetime = (date) => {
-    const d = new Date(date);
-    const options = {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-    };
-    const formatter = new Intl.DateTimeFormat('en-US', options);
-    const parts = formatter.formatToParts(d);
-    const dateParts = parts.filter(part => part.type !== 'literal');
-    const dateString = dateParts.map(part => part.value).join('/');
-    return dateString.replace(/,/g, '');
-}
-
-const OrdersOverviewCard = ({statuses=null}) => {
-    const dispatch = useDispatch();
-    const orders = useSelector((state) => state.orders);
-    const openOrders = Object.keys(orders?.orders)
-        ?.filter(index => statuses ? statuses.includes(orders.orders[index]?.status) : true)
-        ?.map(index => orders.orders[index])
-        ?.sort((a, b) => a.updatedAt < b.updatedAt ? 1 : -1);
-    const [firstLoad, setFirstLoad] = useState(true);
-    const [errorText, setErrorText] = useState("");
-
-    useEffect(() => {
-        async function fetchOrders() {
-            dispatch(setFetchingOrders(true));
-            let allOrders = await getAllOrdersAdmin();
-            if (allOrders.status === 200) {
-                dispatch(updateOrders(allOrders.data?.orders));
-            } else {
-                setErrorText("Error fetching orders");
-            }
-            dispatch(setFetchingOrders(false));
-        }
-        if (firstLoad) {
-            fetchOrders();
-            setFirstLoad(false);
-        }
-    }, [dispatch]);
-
-    return (
-        <Card title="Orders Overview">
-            <OrderTable>
-                <OrderRow>
-                    <OrderDetail>
-                        Order ID
-                    </OrderDetail>
-                    <OrderDetail>
-                        Status
-                    </OrderDetail>
-                    <OrderDetail>
-                        Order Details
-                    </OrderDetail>
-                    <OrderDetail>
-                        Last Updated
-                    </OrderDetail>
-                </OrderRow>
-                { openOrders && Object.keys(openOrders).map((index) => (
-                    <OrderRow key={index} onClick={() => {
-                        dispatch(setPrintContent({
-                            orderId: openOrders[index].id
-                        }));
-                        dispatch(setShowPrintModal(true));
-                    }}>
-                        <OrderDetail>
-                            {openOrders[index].id}
-                        </OrderDetail>
-                        <OrderDetail>
-                            {openOrders[index].status}
-                        </OrderDetail>
-                        <OrderDetail>
-                            {getAttributeValue(openOrders[index].pricedCart, "catalogNumber")}
-                            {` - ${getAttributeValue(openOrders[index].pricedCart, "bandName")}`}
-                            {` - ${getAttributeValue(openOrders[index].pricedCart, "albumTitle")}`}
-                        </OrderDetail>
-                        <OrderDetail>
-                            {condensedDatetime(openOrders[index].updatedAt)}
-                        </OrderDetail>
-                    </OrderRow>
-                ))}
-            </OrderTable>
-            { openOrders && Object.keys(openOrders).length === 0 && (
-                <p>No orders with the specified parameters</p>
-            )}
-            { errorText && <ErrorText text={errorText} /> }
-        </Card>
-    );
-}
-export default OrdersOverviewCard;
-
-/*
 {
-    "id": 44,
+    "id": 5,
     "userId": 1,
     "externalOrderId": "bank_transfer",
     "externalOrder": null,
-    "status": "CREATED",
+    "status": "COMPLETED",
     "pricedCart": [
         {
             "id": 286,
@@ -204,11 +72,11 @@ export default OrdersOverviewCard;
             "variation": [
                 {
                     "attribute": "weight",
-                    "value": "160g"
+                    "value": "180g"
                 }
             ],
-            "total": 795,
-            "price": 0.53
+            "total": 1185,
+            "price": 0.79
         },
         {
             "id": 285,
@@ -320,15 +188,13 @@ export default OrdersOverviewCard;
             "variation": [
                 {
                     "attribute": "centerLabel",
-                    "value": "color"
+                    "value": "customerSupplied"
                 },
                 {
                     "attribute": "quantity",
-                    "value": "n1000"
+                    "value": "n0"
                 }
-            ],
-            "total": 336,
-            "price": 168
+            ]
         },
         {
             "id": 525,
@@ -352,23 +218,21 @@ export default OrdersOverviewCard;
             "variation": [
                 {
                     "attribute": "outerPackagingType",
-                    "value": "wideSpineJacket"
+                    "value": "customerSupplied"
                 },
                 {
                     "attribute": "outerPackagingPrint",
-                    "value": "color"
+                    "value": "none"
                 },
                 {
                     "attribute": "outerPackagingFinish",
-                    "value": "reversePrint"
+                    "value": "none"
                 },
                 {
                     "attribute": "outerPackagingAmount",
-                    "value": "n1000"
+                    "value": "none"
                 }
-            ],
-            "total": 955.5,
-            "price": 955.5
+            ]
         },
         {
             "id": 80,
@@ -378,23 +242,21 @@ export default OrdersOverviewCard;
             "variation": [
                 {
                     "attribute": "insertType",
-                    "value": "two"
+                    "value": "customerSupplied"
                 },
                 {
                     "attribute": "insertPrint",
-                    "value": "color"
+                    "value": "none"
                 },
                 {
                     "attribute": "insertFinish",
-                    "value": "uncoated"
+                    "value": "none"
                 },
                 {
                     "attribute": "quantity",
-                    "value": "n800"
+                    "value": "none"
                 }
-            ],
-            "total": 723.45,
-            "price": 723.45
+            ]
         },
         {
             "id": 81,
@@ -446,11 +308,13 @@ export default OrdersOverviewCard;
         "state": "OR"
     },
     "selectedShippingOption": {
-        "serviceName": "UPS Ground Saver",
-        "serviceCode": "ups_ground_saver",
-        "totalCost": 1370.88
+        "serviceCode": "custom_freight_quote",
+        "serviceName": "Custom Freight Quote",
+        "shipmentCost": 0,
+        "otherCost": 0,
+        "totalCost": 0
     },
-    "totalPrice": "10986.33",
-    "createdAt": "2025-05-20T02:37:12.685+00:00",
-    "updatedAt": "2025-05-20T02:37:12.685+00:00"
-}*/
+    "totalPrice": "7990.50",
+    "createdAt": "2025-05-16T23:35:09.438+00:00",
+    "updatedAt": "2025-05-16T23:35:09.438+00:00"
+}

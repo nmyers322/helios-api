@@ -1,15 +1,3 @@
-/*        const {billingAddress, cart, selectedShippingOption, shippingAddress} = request.all();
-        console.log('Paypal initializeOrder called')
-        console.log('billingAddress', billingAddress)
-        console.log('cart', JSON.stringify(cart))
-        const pricedCart = await CartService.getPricedCart(cart);
-        console.log('pricedCart', JSON.stringify(pricedCart));
-        const subTotalPrice = await CartService.getSubTotalPrice(pricedCart);
-        console.log('subTotalPrice', subTotalPrice);
-        console.log('selectedShippingOption', selectedShippingOption)
-        const totalPrice = subTotalPrice + selectedShippingOption.totalCost;
-        console.log('totalPrice', totalPrice);
-        console.log('shippingAddress', shippingAddress)*/
 import { DateTime } from 'luxon'
 import {
   BaseModel,
@@ -17,45 +5,55 @@ import {
   column
 } from '@adonisjs/lucid/orm'
 import type { BelongsTo } from '@adonisjs/lucid/types/relations'
-import User from './user.ts'
+import User from '#models/user'
+
+export type OrderStatus =
+  | "CART"
+  | "CREATED"
+  | "PAID"
+  | "SHIPPED"
+  | "CANCELLED"
+  | "REFUNDED"
+  | "COMPLETED"
+  | "DELETED";
 
 export default class Order extends BaseModel {
   @column({ isPrimary: true })
-  public id: number
+  public id!: number
 
   @belongsTo(() => User)
-  public user: BelongsTo<typeof User>
+  public user!: BelongsTo<typeof User>
   
   @column()
-  public userId: number
+  public userId!: number
 
   @column()
-  public externalOrderId: string
+  public externalOrderId!: string
 
   @column()
-  public externalOrder: string
+  public externalOrder!: string
 
   @column()
-  public status: "CREATED" | "PAID" | "SHIPPED" | "CANCELLED" | "REFUNDED" | "COMPLETED"
+  public status!: OrderStatus
 
   @column()
-  public pricedCart: string
+  public pricedCart!: string
 
   @column()
-  public shippingAddress: string
+  public shippingAddress!: string
 
   @column()
-  public billingAddress: string
+  public billingAddress!: string
 
   @column()
-  public selectedShippingOption: string
+  public selectedShippingOption!: string
 
   @column()
-  public totalPrice: string
+  public totalPrice!: string
 
   @column.dateTime({ autoCreate: true })
-  public createdAt: DateTime
+  public createdAt!: DateTime
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
-  public updatedAt: DateTime
+  public updatedAt!: DateTime
 }
