@@ -5,7 +5,7 @@ const allyConfig = defineConfig({
   google: services.google({
     clientId: env.get('GOOGLE_CLIENT_ID'),
     clientSecret: env.get('GOOGLE_CLIENT_SECRET'),
-    callbackUrl: 'http://localhost:3333/login-success-google',
+    callbackUrl: `${env.get('VITE_REACT_APP_DOMAIN')}/login-success-google`,
   }),
 })
 

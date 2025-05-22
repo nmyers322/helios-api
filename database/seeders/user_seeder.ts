@@ -7,7 +7,7 @@ function ensureRole(role: string) {
 }
 
 export default class extends BaseSeeder {
-  static environment: string[] = ['development']
+  static environment: string[] = ['development', 'production']
   
   async run() {
     legacyUsers.forEach(async (user) => {
