@@ -3,7 +3,7 @@
 set -e
 
 # Variables
-APP_DIR="/root/helios-api"
+APP_DIR="/home/ubuntu/helios-api"
 DEPLOY_DIR="/opt/apps/helios-api"
 ENV_FILE="$APP_DIR/.env"
 
