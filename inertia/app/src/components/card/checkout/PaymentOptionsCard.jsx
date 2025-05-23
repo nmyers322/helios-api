@@ -1,21 +1,33 @@
-import { useState } from "react";
-import CheckoutCard from "./CheckoutCard";
-import { useDispatch, useSelector } from "react-redux";
-import styled from "styled-components";
-import LabeledSpinner from "../../main/LabeledSpinner";
-import RadioSelector from "../../form/main/RadioSelector";
-import { createOrder, initializeStripeOrder } from "../../../modules/heliosApi";
-import ErrorText from "../../form/main/ErrorText";
-import { buildCartFromOrderForm } from "../../../modules/cart";
-import Button from "../../form/main/Button";
-import { useGoTo } from "../../../modules/links";
-import { useNavigate } from "react-router-dom";
-import { updateOrder } from "../../../actions/ordersActions";
-import { heliosLogger } from "../../../modules/logging";
-import { CheckoutProvider, PaymentElement } from '@stripe/react-stripe-js';
-import { loadStripe } from '@stripe/stripe-js';
-import StripeCheckoutButton from "../../form/checkout/StripeCheckoutButton";
-import Paypal from "./payment/Paypal";
+import { useState } from 'react'
+
+import {
+  useDispatch,
+  useSelector,
+} from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+import styled from 'styled-components'
+
+import {
+  CheckoutProvider,
+  PaymentElement,
+} from '@stripe/react-stripe-js'
+import { loadStripe } from '@stripe/stripe-js'
+
+import { updateOrder } from '../../../actions/ordersActions'
+import { buildCartFromOrderForm } from '../../../modules/cart'
+import {
+  createOrder,
+  initializeStripeOrder,
+} from '../../../modules/heliosApi'
+import { useGoTo } from '../../../modules/links'
+import { heliosLogger } from '../../../modules/logging'
+import StripeCheckoutButton from '../../form/checkout/StripeCheckoutButton'
+import Button from '../../form/main/Button'
+import ErrorText from '../../form/main/ErrorText'
+import RadioSelector from '../../form/main/RadioSelector'
+import LabeledSpinner from '../../main/LabeledSpinner'
+import CheckoutCard from './CheckoutCard'
+import Paypal from './payment/Paypal'
 
 const stripePromise = loadStripe(import.meta.env.VITE_REACT_APP_STRIPE_API_KEY);
 
@@ -149,7 +161,9 @@ const PaymentOptionsCard = ({
           </PaymentOptionHeader>
           { selectedPaymentOption === "paypal" && !disabled &&
               <PaymentOption>
-                  <Paypal />
+                  <Paypal 
+                    buildNewOrder={buildNewOrder}
+                    setErrorText={setErrorText} />
               </PaymentOption>
           }
         </PaymentOptionContainer> 
