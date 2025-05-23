@@ -1,11 +1,18 @@
-import Order from '#models/order';
-import type { HttpContext } from '@adonisjs/core/http';
-import { CheckoutPaymentIntent, Client, Environment, LogLevel, OrdersController } from '@paypal/paypal-server-sdk';
-import OrderService from '#services/OrderService';
-import Address from '#models/address';
-import EmailService from '#services/EmailService';
-import User from '#models/user';
-import OrderCreated from '#services/emailbody/OrderCreated';
+import Address from '#models/address'
+import Order from '#models/order'
+import User from '#models/user'
+import OrderCreated from '#services/emailbody/OrderCreated'
+import EmailService from '#services/EmailService'
+import OrderService from '#services/OrderService'
+
+import type { HttpContext } from '@adonisjs/core/http'
+import {
+  CheckoutPaymentIntent,
+  Client,
+  Environment,
+  LogLevel,
+  OrdersController,
+} from '@paypal/paypal-server-sdk'
 
 const client = new Client({
     clientCredentialsAuthCredentials: {
@@ -13,7 +20,7 @@ const client = new Client({
         oAuthClientSecret: process.env.PAYPAL_CLIENT_SECRET!
     },
     timeout: 5000,
-    environment: Environment.Sandbox, // or Environment.Production
+    environment: process.env.NODE_ENV === "production" ? Environment.Production : Environment.Sandbox, // or Environment.Production
     logging: {
         logLevel: LogLevel.Info,
         logRequest: {
