@@ -25,8 +25,6 @@ npm ci --omit=dev
 echo "Deploying to $DEPLOY_DIR..."
 rm -rf $DEPLOY_DIR
 mv $APP_DIR/build $DEPLOY_DIR
-chmod -R 755 $DEPLOY_DIR
-chown -R www-data:www-data $DEPLOY_DIR
 
 echo "Restarting PM2 app..."
 cd $DEPLOY_DIR
