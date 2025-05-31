@@ -212,3 +212,11 @@ export const updateOrderStatus = async (orderId, status) => {
   let result = await makePutCall(`/api/admin/orders/${orderId}`, data);
   return result;
 }
+
+/************************************************
+ * Contact
+ *************************************************/
+export const contactUs = async (data) => {
+  let result = await makePostCall("/api/contact", data);
+  return result;
+}

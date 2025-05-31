@@ -1,21 +1,23 @@
-import React, { useState } from "react";
-import styled from "styled-components";
-import Select from "react-select";
-import theme from "../../../modules/theme";
-import { useSelector } from "react-redux";
-import ErrorText from "./ErrorText";
-import { FormInputContainer } from "../../../styles/Form";
-import GooglePlacesAutocomplete from "react-google-places-autocomplete";
-import HelpText from "./HelpText";
-import { heliosLogger } from "../../../modules/logging";
+import { useState } from 'react'
+
+import GooglePlacesAutocomplete from 'react-google-places-autocomplete'
+import { useSelector } from 'react-redux'
+import Select from 'react-select'
+import styled from 'styled-components'
+
+import { heliosLogger } from '../../../modules/logging'
+import theme from '../../../modules/theme'
+import { FormInputContainer } from '../../../styles/Form'
+import ErrorText from './ErrorText'
+import HelpText from './HelpText'
 
 const StyledLabel = styled.label`
   background-color: rgba(255, 255, 255, 0);
-  margin-top: 1rem;
+  margin-top: 12px;
   position: absolute;
   top: 0;
-  padding-top: 0.2rem;
-  left: 0.5rem;
+  padding-top: calc(0.2 * 12px);
+  left: 6px;
   color: ${(props) => props.theme.colors.label.text};
   transition: all 0.2s;
   font-size: 0.8rem;
@@ -42,13 +44,52 @@ const StyledInput = styled.input`
   box-sizing: border-box;
 
   &:focus + ${StyledLabel} {
-    top: -1rem;
+    top: -12px;
     font-size: 0.8rem;
     color: ${(props) => props.theme.colors.primary};
   }
 
   &.label-up + ${StyledLabel} {
-    top: -1rem;
+    top: -12px;
+    font-size: 0.8rem;
+  }
+
+  &.invalid,
+  &:focus.invalid,
+  &.invalid:focus,
+  &:focus-visible.invalid,
+  &.invalid:focus-visible {
+    border: 2px solid ${(props) => props.theme.colors.input.invalid} !important;
+    outline: none;
+  }
+
+  &.invalid + ${StyledLabel} {
+    color: ${(props) => props.theme.colors.input.invalid};
+  }
+`;
+
+const StyledTextArea = styled.textarea`
+  background-color: ${(props) => props.theme.colors.input.background};
+  color: ${(props) => props.theme.colors.input.text};
+  flex: 1;
+  font-family: ${(props) => props.theme.fonts.base};
+  font-size: 16px;
+  font-weight: 800;
+  width: 100%;
+  text-align: left;
+  border: solid 1px ${(props) => props.theme.colors.input.border};
+  padding: 0.7rem 1.75rem 0.1rem 0.75rem;
+  line-height: 31px;
+  box-sizing: border-box;
+
+  &:focus + ${StyledLabel} {
+    top: -12px;
+    font-size: 0.8rem;
+    color: ${(props) => props.theme.colors.primary};
+  }
+
+  &.label-up + ${StyledLabel} {
+    top: -12px;
     font-size: 0.8rem;
   }
 
@@ -188,7 +229,7 @@ const LabeledInput = ({
   if (type === "Select" || type === "GooglePlacesAutocomplete") {
     labelStyles = {
       ...labelStyles,
-      top: "-1rem",
+      top: "-12px",
     };
   } else if (!!isDisabled) {
     inputStyles.color = theme[currentTheme].colors.input.disabledText;
@@ -212,6 +253,24 @@ const LabeledInput = ({
           style={inputStyles}
           title={name}
           type={type === "password" ? "password" : "text"}
+          value={value}
+        />
+      )}
+      {(type === "textarea") && (
+        <StyledTextArea
+          autoComplete="off"
+          className={inputClassNames}
+          cols="50"
+          disabled={!!isDisabled}
+          id={id}
+          name={name}
+          onBlur={() => setBeenBlurred(true)}
+          onChange={onChange}
+          readOnly={!!isDisabled}
+          rows="4"
+          style={inputStyles}
+          title={name}
+          type={ "textarea"}
           value={value}
         />
       )}
@@ -291,7 +350,4 @@ const LabeledInput = ({
 
 export default LabeledInput;
 
-export {
-  selectStyles,
-  StyledInput,
-};
+export { selectStyles, StyledInput }

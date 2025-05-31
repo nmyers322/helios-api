@@ -124,7 +124,7 @@ const DropdownMenu = () => {
     links.push({ text: "Admin", href: "/admin" });
   }
 
-  links.push({ text: "Contact Us", hardLink: "/contact-us" });
+  links.push({ text: "Contact Us", href: "/contact-us" });
 
   links.push({ text: "Download Templates", href: "/templates" });
 

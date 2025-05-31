@@ -1,35 +1,25 @@
-import React, { useEffect, useState } from "react";
-import styled from "styled-components";
-import InformationPage from "../../styles/InformationPage";
-import { PageTitle } from "../../styles/Page";
-import '../../styles/ContactUsPage.css';
+import '../../styles/ContactUsPage.css'
 
-const ContactFormContainer = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-`;
+import { useEffect, useState } from 'react'
 
-const ContactInformation = ({ContainerClass}) => {
-    return <ContainerClass>
+import styled from 'styled-components'
+import { load } from 'recaptcha-v3'
+import InformationPage from '../../styles/InformationPage'
+import { PageTitle } from '../../styles/Page'
+import Button from '../form/main/Button'
+import LabeledInput from '../form/main/LabeledInput'
+import { validateEmailInput } from '../../modules/validation'
+import { contactUs } from '../../modules/heliosApi'
+import ErrorText from '../form/main/ErrorText'
+import SuccessText from '../form/main/SuccessText'
 
-    </ContainerClass>;
-}
-
-const ContactInformationLarge = styled.div`
+const ContactForm = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-
-    @media (max-width: 50rem) {
-        display: none;
-    }
-`;
-
-const ContactInformationSmall = styled.div`
-    display: none;
+    flex-grow: 1;
+    box-sizing: border-box;
 
     @media (max-width: 50rem) {
         display: flex;
@@ -56,26 +46,82 @@ const Row = styled.div`
     width: 100%;
 `;
 
+
+
 const ContactUsPage = () => {
-    const [formHtml, setFormHtml] = useState("");
+    const [emailInput, setEmailInput] = useState("");
+    const [commentInput, setCommentInput] = useState("");
+    const [recaptchaToken, setRecaptchaToken] = useState("");
+    const [successMessage, setSuccessMessage] = useState("");
+    const [errorMessage, setErrorMessage] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
+
+    async function getRecaptchaToken() {
+        const recaptcha = await load(import.meta.env.VITE_REACT_APP_GOOGLE_RECAPTCHA_SITE_KEY);
+        const token = await recaptcha.execute('contact_form');
+        return token;
+    }
 
     useEffect(() => {
-        // Get the form HTML from the DOM
-        const formElement = document.querySelector(".wpcf7-form");
-        if (formElement) {
-            setFormHtml(formElement.outerHTML);
+        if (recaptchaToken === "") {
+            getRecaptchaToken().then((token) => {
+                setRecaptchaToken(token);
+            }).catch((error) => {
+                console.error("Error loading recaptcha:", error);
+                setRecaptchaToken("invalid");
+            });
         }
-    }, []);
+    }
+    , [recaptchaToken, setRecaptchaToken]);
 
     return (
         <InformationPage>
             <PageTitle>Contact Us</PageTitle>
             <Row>
                 <Column>
-                    <ContactInformation ContainerClass={ContactInformationSmall} />
-                    <ContactFormContainer dangerouslySetInnerHTML={{ __html: formHtml }} />
+                    { isLoading && <SuccessText text="Sending..." /> }
+                    { successMessage && <SuccessText text={successMessage} /> }
+                    { errorMessage && <ErrorText text={errorMessage} /> }
+                    <ContactForm>
+                        <LabeledInput
+                            name="email"
+                            onChange={(event) => {
+                                setEmailInput(event.target.value);
+                            }}
+                            text="Email"
+                            type="text"
+                            validationResponse={validateEmailInput(emailInput)}
+                            value={emailInput} />
+                        <LabeledInput
+                            name="comment"
+                            onChange={(event) => {
+                                setCommentInput(event.target.value);
+                            }}
+                            text="Comment"
+                            type="textarea"
+                            value={commentInput} />
+                        <Button
+                            buttonText="Submit"
+                            disabled={isLoading || recaptchaToken === "" || recaptchaToken === "invalid" || !validateEmailInput(emailInput).isValid || commentInput.length < 10}
+                            onClick={async () => {
+                                setIsLoading(true);
+                                let contactResult = await contactUs({
+                                    email: emailInput,
+                                    comment: commentInput,
+                                    recaptchaToken: recaptchaToken
+                                });
+                                if (contactResult.status === 200) {
+                                    setSuccessMessage("Thank you for your message! We will get back to you as soon as possible.");
+                                    setEmailInput("");
+                                    setCommentInput("");
+                                    setRecaptchaToken("");
+                                } else {
+                                    setErrorMessage("There was an error submitting your feedback. Please try again later.");
+                                }
+                                setIsLoading(false);
+                            }} />
+                    </ContactForm>
                 </Column>
-                <ContactInformation ContainerClass={ContactInformationLarge} />
             </Row>
             
         </InformationPage>

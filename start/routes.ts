@@ -20,6 +20,7 @@ import PaypalsController from '#controllers/paypals_controller'
 import OrdersController from '#controllers/orders_controller'
 import StripesController from '#controllers/stripes_controller'
 import Order from '#models/order'
+import ContactController from '#controllers/contact_controller'
 
 router.post('/api/session', [SessionsController, 'store'])
 router.delete('/api/session', [SessionsController, 'destroy'])
@@ -53,6 +54,7 @@ router.put('/api/admin/orders/:id', [OrdersController, 'updateOrder'])
     .use(middleware.auth({ guards: ['api'] }))
     .use(middleware.admin())
 
+router.post('/api/contact', [ContactController, 'sendMessage'])
 
 router.post('/api/paypal/order', [PaypalsController, 'initializeOrder'])
     .use(middleware.auth({ guards: ['api'] }))
