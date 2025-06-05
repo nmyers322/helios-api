@@ -11,7 +11,8 @@
     "test": "node ace test",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "deploy": ". ../helios-secrets/v2/env.sh && ./scripts/deploy.sh"
   },
   "imports": {
     "#constants/*": "./app/constants/*.js",

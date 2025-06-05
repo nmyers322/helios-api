@@ -83,3 +83,25 @@ CREATE DATABASE "helios-db" OWNER "helios-db";
 GRANT ALL PRIVILEGES ON DATABASE "helios-db" TO "helios-db";
 
 1. psql -U helios-db -h 127.0.0.1 helios-db < /home/ubuntu/db_backup.sql
+
+
+## Deploy
+npm run build
+cp .env build/
+cp ../helios-secrets/v2/react/.env build/inertia/app/
+cp ecosystem.config.cjs build/
+zip -r build.zip build
+scp -i ~/.ssh/helios.pem build.zip ubuntu@$SERVER_IP:/tmp/
+ssh -i ~/.ssh/helios.pem ubuntu@$SERVER_IP
+
+sudo mkdir -p /opt/apps
+TIMESTAMP=$(date +%Y%m%d%H%M%S)
+sudo unzip /tmp/build.zip -d /opt/apps
+sudo mv /opt/apps/build /opt/apps/$TIMESTAMP
+sudo chown -R ubuntu:ubuntu /opt/apps/$TIMESTAMP
+sudo chmod -R 755 /opt/apps/$TIMESTAMP
+cd /opt/apps/$TIMESTAMP
+npm ci --omit=dev
+sudo ln -sfn /opt/apps/$TIMESTAMP /opt/apps/helios-api
+pm2 restart helios-api
+rm /tmp/build.zip
