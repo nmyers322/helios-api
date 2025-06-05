@@ -1,16 +1,16 @@
 import { CUSTOM_FREIGHT_QUOTE_OPTION, IN_STORE_PICKUP_OPTION } from "../modules/shipping";
 
-const initialState = {
-    selectedOption: null,
-    shippingOptions: [],
-    fetching: false
-  };
-
 const localShippingOptions = [
   IN_STORE_PICKUP_OPTION,
   CUSTOM_FREIGHT_QUOTE_OPTION
 ];
   
+const initialState = {
+    selectedOption: null,
+    shippingOptions: localShippingOptions,
+    fetching: false
+  };
+
 const shippingOptionsReducer = (state = initialState, action) => {
   switch (action.type) {
     case "SELECT_SHIPPING_OPTION":
