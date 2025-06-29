@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { heliosLogger } from './logging';
 
-const domain = import.meta.env.VITE_REACT_APP_DOMAIN || 'localhost:3333';
+const domain = import.meta.env.VITE_REACT_APP_DOMAIN || 'http://localhost:3333';
 const api = axios.create({
   baseURL: domain
 });
