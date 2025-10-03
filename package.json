@@ -11,7 +11,8 @@
     "test": "node ace test",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "deploy": ". ../helios-secrets/v2/env.sh && ./scripts/deploy.sh"
   },
   "imports": {
     "#constants/*": "./app/constants/*.js",
@@ -58,6 +59,7 @@
     "@adonisjs/ally": "^5.1.0",
     "@adonisjs/auth": "^9.4.0",
     "@adonisjs/core": "^6.17.2",
+    "@adonisjs/cors": "^2.2.1",
     "@adonisjs/inertia": "^3.1.1",
     "@adonisjs/lucid": "^21.6.0",
     "@adonisjs/mail": "^9.2.2",

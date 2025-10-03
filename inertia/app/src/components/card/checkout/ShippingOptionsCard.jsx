@@ -63,7 +63,7 @@ const ShippingOptionsCard = ({
         dispatch(setShippingOptions(shippingOptions.data.shippingOptions));
         dispatch(selectShippingOption(shippingOptions.data.shippingOptions[0]));
       } else {
-        setErrorText("Error fetching shipping options. Please try again later or contact support at contact@heliospressing.com.");
+        setErrorText("There was an error while fetching your shipping rates. Please try again later or contact support at contact@heliospressing.com.");
       }
       dispatch(setFetchingShippingOptions(false));
     };
