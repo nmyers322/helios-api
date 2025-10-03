@@ -3,7 +3,6 @@ import '../../styles/ContactUsPage.css'
 import { useEffect, useState } from 'react'
 
 import styled from 'styled-components'
-import { load } from 'recaptcha-v3'
 import InformationPage from '../../styles/InformationPage'
 import { PageTitle } from '../../styles/Page'
 import Button from '../form/main/Button'
@@ -57,9 +56,16 @@ const ContactUsPage = () => {
     const [isLoading, setIsLoading] = useState(false);
 
     async function getRecaptchaToken() {
-        const recaptcha = await load(import.meta.env.VITE_REACT_APP_GOOGLE_RECAPTCHA_SITE_KEY);
-        const token = await recaptcha.execute('contact_form');
-        return token;
+        try {
+            // Dynamically import recaptcha-v3 to avoid build issues
+            const { load } = await import('recaptcha-v3');
+            const recaptcha = await load(import.meta.env.VITE_REACT_APP_GOOGLE_RECAPTCHA_SITE_KEY);
+            const token = await recaptcha.execute('contact_form');
+            return token;
+        } catch (error) {
+            console.error('Error loading recaptcha:', error);
+            return 'recaptcha-unavailable';
+        }
     }
 
     useEffect(() => {

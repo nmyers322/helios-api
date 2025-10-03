@@ -21,4 +21,15 @@ export default defineConfig({
     react(),
     adonisjs({ entrypoints: ['inertia/app/app.tsx'], reload: ['resources/views/**/*.edge'] })
   ],
+  build: {
+    rollupOptions: {
+      external: (id) => {
+        // Externalize recaptcha-v3 for runtime loading
+        return id === 'recaptcha-v3'
+      }
+    }
+  },
+  optimizeDeps: {
+    exclude: ['recaptcha-v3']
+  }
 })

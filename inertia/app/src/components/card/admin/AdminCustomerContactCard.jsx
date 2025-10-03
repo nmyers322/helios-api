@@ -19,11 +19,13 @@ const ContactLine = styled.div`
 const ContactLabel = styled.span`
   font-weight: bold;
   margin-right: 0.5rem;
-  min-width: 80px;
+  min-width: 100px;
+  font-size: 1rem;
 `;
 
 const ContactValue = styled.span`
   color: ${props => props.theme.colors.text};
+  font-size: 1rem;
   
   a {
     color: ${props => props.theme.colors.link};
@@ -31,6 +33,7 @@ const ContactValue = styled.span`
     
     &:hover {
       color: ${props => props.theme.colors.highlightedText};
+      text-decoration: underline;
     }
   }
 `;
@@ -38,11 +41,20 @@ const ContactValue = styled.span`
 const RoleBadge = styled.span`
   background-color: ${props => props.$isAdmin ? props.theme.colors.primary : props.theme.colors.disabledBackground};
   color: ${props => props.$isAdmin ? props.theme.colors.invertedText : props.theme.colors.text};
-  padding: 2px 8px;
-  border-radius: 4px;
-  font-size: 0.8rem;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 0.85rem;
   text-transform: uppercase;
   font-weight: bold;
+  letter-spacing: 0.5px;
+`;
+
+const ContactSection = styled.div`
+  margin-bottom: 1rem;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
 `;
 
 const AdminCustomerContactCard = ({ orderId }) => {
@@ -71,76 +83,82 @@ const AdminCustomerContactCard = ({ orderId }) => {
 
   return (
     <Card title="Customer Contact Information">
-      {customerInfo.email && (
+      <ContactSection>
         <ContactLine>
-          <ContactLabel>Email:</ContactLabel>
+          <ContactLabel>Name:</ContactLabel>
           <ContactValue>
-            <a href={`mailto:${customerInfo.email}`}>
-              {customerInfo.email}
-            </a>
+            {customerInfo.firstName && customerInfo.lastName 
+              ? `${customerInfo.firstName} ${customerInfo.lastName}`
+              : customerInfo.firstName || customerInfo.lastName || 'Not provided'
+            }
           </ContactValue>
         </ContactLine>
-      )}
-      
-      {customerInfo.phone && (
+        
         <ContactLine>
-          <ContactLabel>Phone:</ContactLabel>
+          <ContactLabel>Role:</ContactLabel>
           <ContactValue>
-            <a href={`tel:${customerInfo.phone}`}>
-              {customerInfo.phone}
-            </a>
+            <RoleBadge $isAdmin={customerInfo.role === 'admin'}>
+              {customerInfo.role}
+            </RoleBadge>
           </ContactValue>
         </ContactLine>
-      )}
-      
-      {customerInfo.company && (
+      </ContactSection>
+
+      <ContactSection>
+        {customerInfo.email && (
+          <ContactLine>
+            <ContactLabel>Email:</ContactLabel>
+            <ContactValue>
+              <a href={`mailto:${customerInfo.email}`}>
+                {customerInfo.email}
+              </a>
+            </ContactValue>
+          </ContactLine>
+        )}
+        
+        {customerInfo.phone && (
+          <ContactLine>
+            <ContactLabel>Phone:</ContactLabel>
+            <ContactValue>
+              <a href={`tel:${customerInfo.phone}`}>
+                {customerInfo.phone}
+              </a>
+            </ContactValue>
+          </ContactLine>
+        )}
+        
+        {customerInfo.company && (
+          <ContactLine>
+            <ContactLabel>Company:</ContactLabel>
+            <ContactValue>{customerInfo.company}</ContactValue>
+          </ContactLine>
+        )}
+      </ContactSection>
+
+      <ContactSection>
         <ContactLine>
-          <ContactLabel>Company:</ContactLabel>
-          <ContactValue>{customerInfo.company}</ContactValue>
+          <ContactLabel>User ID:</ContactLabel>
+          <ContactValue>{customerInfo.id}</ContactValue>
         </ContactLine>
-      )}
-      
-      <ContactLine>
-        <ContactLabel>Name:</ContactLabel>
-        <ContactValue>
-          {customerInfo.firstName && customerInfo.lastName 
-            ? `${customerInfo.firstName} ${customerInfo.lastName}`
-            : customerInfo.firstName || customerInfo.lastName || 'Not provided'
-          }
-        </ContactValue>
-      </ContactLine>
-      
-      <ContactLine>
-        <ContactLabel>User ID:</ContactLabel>
-        <ContactValue>{customerInfo.id}</ContactValue>
-      </ContactLine>
-      
-      <ContactLine>
-        <ContactLabel>Role:</ContactLabel>
-        <ContactValue>
-          <RoleBadge $isAdmin={customerInfo.role === 'admin'}>
-            {customerInfo.role}
-          </RoleBadge>
-        </ContactValue>
-      </ContactLine>
-      
-      {customerInfo.createdAt && (
-        <ContactLine>
-          <ContactLabel>Customer Since:</ContactLabel>
-          <ContactValue>
-            {new Date(customerInfo.createdAt).toLocaleDateString()}
-          </ContactValue>
-        </ContactLine>
-      )}
-      
-      {customerInfo.updatedAt && customerInfo.updatedAt !== customerInfo.createdAt && (
-        <ContactLine>
-          <ContactLabel>Last Updated:</ContactLabel>
-          <ContactValue>
-            {new Date(customerInfo.updatedAt).toLocaleDateString()}
-          </ContactValue>
-        </ContactLine>
-      )}
+        
+        {customerInfo.createdAt && (
+          <ContactLine>
+            <ContactLabel>Customer Since:</ContactLabel>
+            <ContactValue>
+              {new Date(customerInfo.createdAt).toLocaleDateString()}
+            </ContactValue>
+          </ContactLine>
+        )}
+        
+        {customerInfo.updatedAt && customerInfo.updatedAt !== customerInfo.createdAt && (
+          <ContactLine>
+            <ContactLabel>Last Updated:</ContactLabel>
+            <ContactValue>
+              {new Date(customerInfo.updatedAt).toLocaleDateString()}
+            </ContactValue>
+          </ContactLine>
+        )}
+      </ContactSection>
     </Card>
   );
 };
