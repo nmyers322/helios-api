@@ -6,6 +6,7 @@ import { Item } from "../main/PrintModal";
 import heliosTxtLogo from '../../images/helios-text-yellow-1000.png';
 import CompletedOrderDetailsCard from "../card/checkout/CompletedOrderDetailsCard";
 import ContactAndShippingInformationCard from "../card/checkout/ContactAndShippingInformationCard";
+import AdminCustomerContactCard from "../card/admin/AdminCustomerContactCard";
 import OrderStatus from "../form/admin/OrderStatus";
 import { useSelector } from "react-redux";
 
@@ -64,6 +65,7 @@ const PrintableOrderSummary = ({orderId, targetRef}) => {
                 <StyledPageLeftColumn>
                     { !orderId && <ImmutableOrderFormSummaryCard /> }
                     { orderId && <CompletedOrderDetailsCard orderId={orderId} /> }
+                    { orderId && customer?.role === "admin" && <AdminCustomerContactCard orderId={orderId} /> }
                     { orderId && <ContactAndShippingInformationCard orderNumber={orderId} />}
                 </StyledPageLeftColumn>
                 <StyledPageRightColumn>

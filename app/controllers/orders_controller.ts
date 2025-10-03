@@ -17,7 +17,9 @@ export default class OrdersController {
     }
 
     async getAllAdmin({ response }: HttpContext) {
-        const orders = await Order.all()
+        const orders = await Order.query()
+            .preload('user')
+            .orderBy('createdAt', 'desc')
         return response.status(200).json({orders})
     }
 
