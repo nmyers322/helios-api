@@ -78,13 +78,21 @@ ssh -i $SSH_KEY ubuntu@$SERVER_IP << 'EOF'
     echo "==> Restarting application..."
     pm2 reload helios-api || pm2 start ecosystem.config.cjs
 
-    echo "==> Cleaning up..."
+    echo "==> Cleaning up old releases..."
+    # Keep current release + 2 previous releases (3 total)
+    cd /opt/apps
+    ls -1t | tail -n +4 | xargs -r sudo rm -rf
+    echo "🧹 Cleaned up old releases (kept 3 most recent)"
+
+    echo "==> Final cleanup..."
     rm -f "$BUILD_ZIP"
 
     echo "✅ Deployment complete!"
     echo "📊 Current status:"
     pm2 status
     echo "📁 Current release: $RELEASE_DIR"
+    echo "📁 Available releases:"
+    ls -la /opt/apps/ | grep "^d" | tail -4
 EOF
 
 # Clean up local build files

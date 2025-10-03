@@ -48,6 +48,7 @@ If you're already in WSL:
 - Uploads to server
 - Deploys with zero-downtime
 - Restarts PM2
+- **Automatically cleans up old releases** (keeps only 3 most recent)
 
 ### `deploy-and-test.sh`
 - Runs quick deployment
@@ -66,6 +67,11 @@ If you're already in WSL:
 - Sets up Node.js/NVM
 - Makes scripts executable
 - Configures environment
+
+### `cleanup-releases.sh`
+- Manually clean up old releases
+- Specify how many releases to keep (default: 3)
+- Usage: `./scripts/cleanup-releases.sh [SERVER_IP] [KEEP_COUNT]`
 
 ## Server Information
 
@@ -113,4 +119,5 @@ The deployment automatically copies these files:
 4. **Deploy**: Extract to timestamped directory
 5. **Symlink**: Update `/opt/apps/helios-api` symlink
 6. **Restart**: PM2 reload
-7. **Cleanup**: Remove temporary files
+7. **Cleanup**: Remove old releases (keeps only 3 most recent)
+8. **Final Cleanup**: Remove temporary files
