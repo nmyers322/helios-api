@@ -32,7 +32,25 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 nvm use 20
 node --version
-npm run build -- --ignore-ts-errors
+
+# Check if build directory exists and is recent (within 5 minutes)
+if [ -d "build" ] && [ -f "build/.build-timestamp" ]; then
+    BUILD_TIME=$(cat build/.build-timestamp)
+    CURRENT_TIME=$(date +%s)
+    TIME_DIFF=$((CURRENT_TIME - BUILD_TIME))
+    
+    if [ $TIME_DIFF -lt 300 ]; then
+        echo "⚡ Using cached build (built $(($TIME_DIFF))s ago)"
+    else
+        echo "🔄 Building fresh (cache expired)"
+        npm run build -- --ignore-ts-errors
+        echo $(date +%s) > build/.build-timestamp
+    fi
+else
+    echo "🔄 Building fresh (no cache)"
+    npm run build -- --ignore-ts-errors
+    echo $(date +%s) > build/.build-timestamp
+fi
 
 echo "📋 Copying configuration files..."
 cp ../helios-secrets/v2/.env build/

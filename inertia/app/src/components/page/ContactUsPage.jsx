@@ -57,11 +57,18 @@ const ContactUsPage = () => {
 
     async function getRecaptchaToken() {
         try {
-            // Dynamically import recaptcha-v3 to avoid build issues
-            const { load } = await import('recaptcha-v3');
-            const recaptcha = await load(import.meta.env.VITE_REACT_APP_GOOGLE_RECAPTCHA_SITE_KEY);
-            const token = await recaptcha.execute('contact_form');
-            return token;
+            // Use the global grecaptcha object loaded from CDN
+            if (window.grecaptcha && window.grecaptcha.ready) {
+                return new Promise((resolve) => {
+                    window.grecaptcha.ready(() => {
+                        window.grecaptcha.execute(import.meta.env.VITE_REACT_APP_GOOGLE_RECAPTCHA_SITE_KEY, { action: 'contact_form' })
+                            .then((token) => resolve(token))
+                            .catch(() => resolve('recaptcha-unavailable'));
+                    });
+                });
+            } else {
+                return 'recaptcha-unavailable';
+            }
         } catch (error) {
             console.error('Error loading recaptcha:', error);
             return 'recaptcha-unavailable';

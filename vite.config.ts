@@ -23,13 +23,21 @@ export default defineConfig({
   ],
   build: {
     rollupOptions: {
-      external: (id) => {
-        // Externalize recaptcha-v3 for runtime loading
-        return id === 'recaptcha-v3'
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+          redux: ['@reduxjs/toolkit', 'react-redux'],
+          router: ['react-router-dom'],
+          styled: ['styled-components']
+        }
       }
-    }
+    },
+    // Increase chunk size warning limit
+    chunkSizeWarningLimit: 1000
   },
   optimizeDeps: {
-    exclude: ['recaptcha-v3']
-  }
+    include: ['react', 'react-dom', '@reduxjs/toolkit', 'react-redux']
+  },
+  // Cache optimization
+  cacheDir: 'node_modules/.vite'
 })

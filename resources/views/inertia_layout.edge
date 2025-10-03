@@ -17,6 +17,7 @@
   @stack('dumper')
   @viteReactRefresh()
   @inertiaHead()
+  <script src="https://www.google.com/recaptcha/api.js?render={{ env('VITE_REACT_APP_GOOGLE_RECAPTCHA_SITE_KEY') }}"></script>
   @vite(['inertia/app/app.tsx', `inertia/pages/${page.component}.tsx`])
 </head>
 
