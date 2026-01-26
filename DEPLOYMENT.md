@@ -1,37 +1,16 @@
 # Helios API Deployment Guide
 
-## Quick Start (Windows)
+## Quick Start (WSL Only)
 
-### Option 1: Interactive Menu
-```cmd
-deploy.bat
-```
-This will show you a menu with options.
-
-### Option 2: Direct Commands
-```cmd
-deploy.bat setup    # First time setup
-deploy.bat quick    # Quick deployment
-deploy.bat test     # Deploy with health checks
-deploy.bat check    # Check order 1033
-```
-
-## WSL Direct Commands
-
-If you're already in WSL:
+### Single deployment entry point
+Use this script for all deployments:
 
 ```bash
-# First time setup
-./scripts/setup-wsl-deploy.sh
+# Initial setup (run once)
+./scripts/setup-wsl-deploy.sh --i-understand
 
-# Quick deployment
-./scripts/quick-deploy.sh
-
-# Deploy with health checks
-./scripts/deploy-and-test.sh
-
-# Check specific order
-./scripts/check-order-1033.sh
+# Deploy (single entry point)
+./scripts/deploy.sh
 ```
 
 ## Prerequisites
@@ -42,7 +21,7 @@ If you're already in WSL:
 
 ## What Each Script Does
 
-### `quick-deploy.sh`
+### `deploy.sh`
 - Builds the application
 - Copies environment files
 - Uploads to server
@@ -51,22 +30,17 @@ If you're already in WSL:
 - **Automatically cleans up old releases** (keeps only 3 most recent)
 
 ### `deploy-and-test.sh`
-- Runs quick deployment
+- Runs `deploy.sh`
 - Tests API endpoints
 - Checks PM2 status
 - Verifies application health
 
-### `check-order-1033.sh`
-- Queries database for order 1033
-- Shows customer information
-- Checks recent logs
-- Tests admin API response
-
-### `setup-wsl-deploy.sh`
+### `setup-wsl-deploy.sh` (initial setup)
 - Installs required tools
 - Sets up Node.js/NVM
 - Makes scripts executable
 - Configures environment
+- Requires the `--i-understand` flag to run
 
 ### `cleanup-releases.sh`
 - Manually clean up old releases
@@ -82,6 +56,9 @@ If you're already in WSL:
 - **PM2 Process**: helios-api
 
 ## Troubleshooting
+
+### SSH Access (Security Group)
+If SSH times out, ensure the EC2 security group allows inbound TCP 22 from your current public IP.
 
 ### SSH Connection Issues
 ```bash

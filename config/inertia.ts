@@ -1,4 +1,5 @@
 import { defineConfig } from '@adonisjs/inertia'
+import env from '#start/env'
 import type { InferSharedProps } from '@adonisjs/inertia/types'
 
 const inertiaConfig = defineConfig({
@@ -12,6 +13,7 @@ const inertiaConfig = defineConfig({
    */
   sharedData: {
     user: (ctx) => ctx.inertia.always(() => ctx.auth.user),
+    recaptchaSiteKey: () => env.get('VITE_REACT_APP_GOOGLE_RECAPTCHA_SITE_KEY'),
   },
 
   /**

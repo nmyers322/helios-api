@@ -1,12 +1,30 @@
 #!/bin/bash
 
 # WSL Deployment Setup Script
-# Run this in WSL to set up your deployment environment
+# Initial setup only — requires explicit acknowledgement
 
-echo "🐧 Setting up WSL deployment environment for Helios API..."
+echo "🐧 Initial setup for WSL deployment environment..."
+
+# Require explicit acknowledgement to avoid accidental runs
+if [ "$1" != "--i-understand" ]; then
+    echo "❌ Refusing to run without acknowledgement."
+    echo "This script is for initial setup only and should be run once."
+    echo ""
+    echo "Run with:"
+    echo "  ./scripts/setup-wsl-deploy.sh --i-understand"
+    exit 1
+fi
+
+# Check if we're in the right directory
+if [ ! -f "package.json" ] || [ ! -f "adonisrc.ts" ]; then
+    echo "❌ Error: Not in helios-api root directory"
+    echo "Please run this script from the project root:"
+    echo "  ./scripts/setup-wsl-deploy.sh --i-understand"
+    exit 1
+fi
 
 # Check if we're in WSL
-if [ ! -f /proc/version ] || ! grep -q Microsoft /proc/version; then
+if [ ! -f /proc/version ] || ! grep -qiE 'microsoft|wsl' /proc/version /proc/sys/kernel/osrelease 2>/dev/null; then
     echo "❌ This script should be run in WSL"
     exit 1
 fi
@@ -48,16 +66,21 @@ fi
 
 # Set up environment variables
 echo "🔧 Setting up environment variables..."
-echo 'export SERVER_IP="3.21.33.187"' >> ~/.bashrc
-echo 'export HELIOS_API_DIR="/mnt/f/Workspace/helios/helios-api"' >> ~/.bashrc
+if ! grep -q 'export SERVER_IP=' ~/.bashrc; then
+    echo 'export SERVER_IP="3.21.33.187"' >> ~/.bashrc
+fi
 
-echo "✅ WSL setup completed!"
+HELIOS_API_DIR="$(pwd)"
+if ! grep -q 'export HELIOS_API_DIR=' ~/.bashrc; then
+    echo "export HELIOS_API_DIR=\"$HELIOS_API_DIR\"" >> ~/.bashrc
+fi
+
+echo "✅ Initial setup completed!"
 echo ""
 echo "🚀 You can now use these commands:"
-echo "  ./scripts/quick-deploy.sh                    # Quick deployment"
+echo "  ./scripts/deploy.sh                          # Deploy (single entry point)"
 echo "  ./scripts/deploy-and-test.sh                 # Deploy with health checks"
-echo "  ./scripts/check-order-1033.sh                # Check specific order"
 echo ""
 echo "💡 To start deploying:"
 echo "  1. Make sure you're in the helios-api directory"
-echo "  2. Run: ./scripts/quick-deploy.sh"
+echo "  2. Run: ./scripts/deploy.sh"

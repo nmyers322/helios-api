@@ -11,8 +11,8 @@ SSH_KEY="~/.ssh/helios.pem"
 
 echo "🚀 Starting deployment with health checks..."
 
-# Run the quick deploy
-./scripts/quick-deploy.sh $SERVER_IP
+# Run the deployment
+./scripts/deploy.sh $SERVER_IP
 
 echo "🔍 Running health checks..."
 
