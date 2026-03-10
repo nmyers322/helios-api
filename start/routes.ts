@@ -8,6 +8,9 @@
 */
 
 import router from '@adonisjs/core/services/router'
+import app from '@adonisjs/core/services/app'
+import { readFile } from 'node:fs/promises'
+import { basename } from 'node:path'
 import { middleware } from '#start/kernel'
 import ProductsController from '#controllers/products_controller'
 import SessionsController from '#controllers/sessions_controller'
@@ -86,6 +89,24 @@ router.get('/emailtemplates/order-created/:orderId', async ({ request, response 
     }
     const emailBody = await OrderCreated.getEmailBody(order)
     response.send(emailBody)
+})
+
+router.get('/template-files/:fileName', async ({ request, response }) => {
+    const fileName = String(request.param('fileName') || '')
+    const safeFileName = basename(fileName)
+    if (safeFileName !== fileName || !safeFileName.toLowerCase().endsWith('.zip')) {
+        return response.status(400).send('Invalid template filename')
+    }
+
+    const filePath = app.makePath('public', 'template-files', safeFileName)
+    try {
+        const fileContents = await readFile(filePath)
+        response.header('Content-Type', 'application/zip')
+        response.header('Content-Disposition', `attachment; filename="${safeFileName}"`)
+        return response.send(fileContents)
+    } catch {
+        return response.status(404).send(`Template file not found: ${safeFileName}`)
+    }
 })
 
 router.on('/*').renderInertia('home')

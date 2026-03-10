@@ -6,6 +6,7 @@
 - Server IP should come from `../helios-secrets/v2/.env` (`SERVER_IP`).
 - Before SSH/deploy, whitelist your current public IP for port 22 in AWS security groups (see `../helios-secrets/aws.txt`).
 - SSH key is expected at `~/.ssh/helios.pem` with `chmod 600` permissions.
+- Template ZIPs are uploaded separately to `/opt/apps/shared/template-files` and are not included in release bundles.
 
 ## Install local system dependencies
 1. curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash

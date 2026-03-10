@@ -20,6 +20,30 @@ Use this script for all deployments:
 3. **Server IP**: Ensure `SERVER_IP` is set in `../helios-secrets/v2/.env`
 4. **AWS Security Group**: Whitelist your current public IP for inbound TCP 22 before any SSH/deploy
    - See `../helios-secrets/aws.txt` for the exact AWS steps
+5. **Template ZIPs (separate upload)**: Upload template ZIP files to `/opt/apps/shared/template-files` on the server.
+
+### Template ZIP files (uploaded separately from app deploy)
+
+`deploy.sh` now links each release's `public/template-files` to a shared path:
+
+- Shared server path: `/opt/apps/shared/template-files`
+- Release path: `/opt/apps/<timestamp>/public/template-files` (symlink)
+
+This keeps template ZIP files out of the repo/build artifact so they are **not overwritten** on each deploy.
+
+Initial setup / updates:
+
+```bash
+# Create persistent folder on server (run once)
+SERVER_IP=$(grep -E '^SERVER_IP=' ../helios-secrets/v2/.env | cut -d '=' -f2)
+ssh -i ~/.ssh/helios.pem ubuntu@$SERVER_IP "sudo mkdir -p /opt/apps/shared/template-files && sudo chown -R ubuntu:ubuntu /opt/apps/shared && sudo chmod -R 755 /opt/apps/shared"
+
+# Upload one or more template ZIPs
+scp -i ~/.ssh/helios.pem ./Helios-Insert-INDESIGN.zip ubuntu@$SERVER_IP:/tmp/
+ssh -i ~/.ssh/helios.pem ubuntu@$SERVER_IP "mv /tmp/Helios-Insert-INDESIGN.zip /opt/apps/shared/template-files/"
+```
+
+If a template file is missing, the app intentionally returns `404` for that download.
 
 ### SSH key setup (new machine)
 

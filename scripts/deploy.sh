@@ -82,6 +82,8 @@ ssh $SSH_OPTS -i $SSH_KEY ubuntu@$SERVER_IP << 'EOF'
 
     # Variables
     APPS_DIR="/opt/apps"
+    SHARED_DIR="$APPS_DIR/shared"
+    SHARED_TEMPLATE_DIR="$SHARED_DIR/template-files"
     BUILD_ZIP="/tmp/build.zip"
     TIMESTAMP=$(date +%Y%m%d%H%M%S)
     RELEASE_DIR="$APPS_DIR/$TIMESTAMP"
@@ -96,6 +98,14 @@ ssh $SSH_OPTS -i $SSH_KEY ubuntu@$SERVER_IP << 'EOF'
     sudo chown -R ubuntu:ubuntu "$RELEASE_DIR"
     sudo chmod -R 755 "$RELEASE_DIR"
 
+    echo "==> Ensuring persistent template-files directory..."
+    sudo mkdir -p "$SHARED_TEMPLATE_DIR"
+    sudo chown -R ubuntu:ubuntu "$SHARED_DIR"
+    sudo chmod -R 755 "$SHARED_DIR"
+    # Keep template ZIPs outside the release bundle so deploys do not overwrite them.
+    sudo rm -rf "$RELEASE_DIR/public/template-files"
+    sudo ln -s "$SHARED_TEMPLATE_DIR" "$RELEASE_DIR/public/template-files"
+
     echo "==> Installing dependencies..."
     cd "$RELEASE_DIR"
     npm ci --omit=dev
@@ -109,7 +119,7 @@ ssh $SSH_OPTS -i $SSH_KEY ubuntu@$SERVER_IP << 'EOF'
     echo "==> Cleaning up old releases..."
     # Keep current release + 2 previous releases (3 total)
     cd /opt/apps
-    ls -1t | tail -n +4 | xargs -r sudo rm -rf
+    ls -1dt [0-9]* 2>/dev/null | tail -n +4 | xargs -r sudo rm -rf
     echo "🧹 Cleaned up old releases (kept 3 most recent)"
 
     echo "==> Final cleanup..."

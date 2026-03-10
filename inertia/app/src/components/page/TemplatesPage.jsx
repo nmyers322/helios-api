@@ -3,26 +3,28 @@ import InformationPage from '../../styles/InformationPage';
 import { PageTitle } from '../../styles/Page';
 import styled from 'styled-components';
 
-const INSERT_ILLUSTRATOR_URI = "/wp-content/uploads/2025/01/Helios-Insert-ILLUSTRATOR.zip";
-const GATEFOLD_ILLUSTRATOR_URI = "/wp-content/uploads/2025/01/Helios-Gatefold-ILLUSTRATOR.zip";
-const JACKET_ILLUSTRATOR_URI = "/wp-content/uploads/2025/01/Helios-Jacket-ILLUSTRATOR.zip";
-const LP_CENTER_LABELS_ILLUSTRATOR_URI = "/wp-content/uploads/2025/01/Helios-LP-Center-Labels-ILLUSTRATOR.zip";
-const TRIPLE_GATEFOLD_ILLUSTRATOR_URI = "/wp-content/uploads/2025/01/Helios-Triple-Gatefold-ILLUSTRATOR.zip";
-const WIDE_SPINE_JACKET_ILLUSTRATOR_URI = "/wp-content/uploads/2025/01/Helios-Wide-Spine-Jacket-ILLUSTRATOR.zip";
+const TEMPLATE_BASE_URI = "/template-files";
 
-const INSERT_INDESIGN_URI = "/wp-content/uploads/2025/01/Helios-Insert-INDESIGN.zip";
-const GATEFOLD_INDESIGN_URI = "/wp-content/uploads/2025/01/Helios-Gatefold-INDESIGN.zip";
-const JACKET_INDESIGN_URI = "/wp-content/uploads/2025/01/Helios-Jacket-INDESIGN.zip";
-const LP_CENTER_LABELS_INDESIGN_URI = "/wp-content/uploads/2025/01/Helios-LP-Center-Labels-INDESIGN.zip";
-const TRIPLE_GATEFOLD_INDESIGN_URI = "/wp-content/uploads/2025/01/Helios-Triple-Gatefold-INDESIGN.zip";
-const WIDE_SPINE_JACKET_INDESIGN_URI = "/wp-content/uploads/2025/01/Helios-Wide-Spine-Jacket-INDESIGN.zip";
+const INSERT_ILLUSTRATOR_URI = `${TEMPLATE_BASE_URI}/Helios-Insert-ILLUSTRATOR.zip`;
+const GATEFOLD_ILLUSTRATOR_URI = `${TEMPLATE_BASE_URI}/Helios-Gatefold-ILLUSTRATOR.zip`;
+const JACKET_ILLUSTRATOR_URI = `${TEMPLATE_BASE_URI}/Helios-Jacket-ILLUSTRATOR.zip`;
+const LP_CENTER_LABELS_ILLUSTRATOR_URI = `${TEMPLATE_BASE_URI}/Helios-LP-Center-Labels-ILLUSTRATOR.zip`;
+const TRIPLE_GATEFOLD_ILLUSTRATOR_URI = `${TEMPLATE_BASE_URI}/Helios-Triple-Gatefold-ILLUSTRATOR.zip`;
+const WIDE_SPINE_JACKET_ILLUSTRATOR_URI = `${TEMPLATE_BASE_URI}/Helios-Wide-Spine-Jacket-ILLUSTRATOR.zip`;
 
-const INSERT_PHOTOSHOP_URI = "/wp-content/uploads/2025/01/Helios-Insert-PHOTOSHOP.zip";
-const GATEFOLD_PHOTOSHOP_URI = "/wp-content/uploads/2025/01/Helios-Gatefold-PHOTOSHOP.zip";
-const JACKET_PHOTOSHOP_URI = "/wp-content/uploads/2025/01/Helios-Jacket-PHOTOSHOP.zip";
-const LP_CENTER_LABELS_PHOTOSHOP_URI = "/wp-content/uploads/2025/01/Helios-LP-Center-Labels-PHOTOSHOP.zip";
-const TRIPLE_GATEFOLD_PHOTOSHOP_URI = "/wp-content/uploads/2025/01/Helios-Triple-Gatefold-PHOTOSHOP.zip";
-const WIDE_SPINE_JACKET_PHOTOSHOP_URI = "/wp-content/uploads/2025/01/Helios-Wide-Spine-Jacket-PHOTOSHOP.zip";
+const INSERT_INDESIGN_URI = `${TEMPLATE_BASE_URI}/Helios-Insert-INDESIGN.zip`;
+const GATEFOLD_INDESIGN_URI = `${TEMPLATE_BASE_URI}/Helios-Gatefold-INDESIGN.zip`;
+const JACKET_INDESIGN_URI = `${TEMPLATE_BASE_URI}/Helios-Jacket-INDESIGN.zip`;
+const LP_CENTER_LABELS_INDESIGN_URI = `${TEMPLATE_BASE_URI}/Helios-LP-Center-Labels-INDESIGN.zip`;
+const TRIPLE_GATEFOLD_INDESIGN_URI = `${TEMPLATE_BASE_URI}/Helios-Triple-Gatefold-INDESIGN.zip`;
+const WIDE_SPINE_JACKET_INDESIGN_URI = `${TEMPLATE_BASE_URI}/Helios-Wide-Spine-Jacket-INDESIGN.zip`;
+
+const INSERT_PHOTOSHOP_URI = `${TEMPLATE_BASE_URI}/Helios-Insert-PHOTOSHOP.zip`;
+const GATEFOLD_PHOTOSHOP_URI = `${TEMPLATE_BASE_URI}/Helios-Gatefold-PHOTOSHOP.zip`;
+const JACKET_PHOTOSHOP_URI = `${TEMPLATE_BASE_URI}/Helios-Jacket-PHOTOSHOP.zip`;
+const LP_CENTER_LABELS_PHOTOSHOP_URI = `${TEMPLATE_BASE_URI}/Helios-LP-Center-Labels-PHOTOSHOP.zip`;
+const TRIPLE_GATEFOLD_PHOTOSHOP_URI = `${TEMPLATE_BASE_URI}/Helios-Triple-Gatefold-PHOTOSHOP.zip`;
+const WIDE_SPINE_JACKET_PHOTOSHOP_URI = `${TEMPLATE_BASE_URI}/Helios-Wide-Spine-Jacket-PHOTOSHOP.zip`;
 
 const ListTitle = styled.h4`
     padding-left: 2rem;
