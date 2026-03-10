@@ -21,6 +21,21 @@ Use this script for all deployments:
 4. **AWS Security Group**: Whitelist your current public IP for inbound TCP 22 before any SSH/deploy
    - See `../helios-secrets/aws.txt` for the exact AWS steps
 
+### SSH key setup (new machine)
+
+If the key is stored in `../helios-secrets/helios.pem`, copy it into your WSL user's SSH folder:
+
+```bash
+mkdir -p ~/.ssh
+cp ../helios-secrets/helios.pem ~/.ssh/helios.pem
+chmod 600 ~/.ssh/helios.pem
+```
+
+Notes:
+- Deploy scripts expect the key at `~/.ssh/helios.pem`.
+- `chmod 600` is required or SSH will reject the key as too open.
+- Use the matching public key at `../helios-secrets/helios.pem.pub` when needed.
+
 ## What Each Script Does
 
 ### `deploy.sh`
@@ -104,3 +119,18 @@ The deployment automatically copies these files:
 6. **Restart**: PM2 reload
 7. **Cleanup**: Remove old releases (keeps only 3 most recent)
 8. **Final Cleanup**: Remove temporary files
+
+## Test Instructions
+
+Run tests from `helios-api`:
+
+```bash
+# Run all functional tests
+npm test -- functional
+
+# Run all tests
+npm test
+```
+
+Current integration smoke test:
+- `tests/functional/root_domain.spec.ts` (included when running `npm test -- functional`)
