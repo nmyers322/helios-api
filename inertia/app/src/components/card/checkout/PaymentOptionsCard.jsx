@@ -14,6 +14,7 @@ import {
 import { loadStripe } from '@stripe/stripe-js'
 
 import { updateOrder } from '../../../actions/ordersActions'
+import { updateOrderFormField } from '../../../actions/orderFormActions'
 import { buildCartFromOrderForm } from '../../../modules/cart'
 import {
   createOrder,
@@ -69,6 +70,35 @@ const PaymentOption = styled.div`
     width: calc(100% - 4rem);
 `;
 
+const CommentContainer = styled.div`
+  padding: 0 1rem 1rem 1rem;
+  width: calc(100% - 2rem);
+`;
+
+const CommentLabel = styled.p`
+  font-size: 1rem;
+  font-weight: bold;
+  margin-bottom: 0.4rem;
+`;
+
+const CommentTextarea = styled.textarea`
+  width: 100%;
+  min-height: 6rem;
+  resize: vertical;
+  padding: 0.6rem;
+  border-radius: 0.4rem;
+  border: 1px solid #ccc;
+  font-family: inherit;
+  font-size: 1rem;
+`;
+
+const CommentCount = styled.div`
+  margin-top: 0.3rem;
+  font-size: 0.9rem;
+  opacity: 0.7;
+  text-align: right;
+`;
+
 const PaymentOptionsCard = ({
   disabled = false,
 }) => {
@@ -83,12 +113,15 @@ const PaymentOptionsCard = ({
   const [errorText, setErrorText] = useState("");
   const [selectedPaymentOption, setSelectedPaymentOption] = useState("bank_transfer");
   const [loadingStripe, setLoadingStripe] = useState(false);
+  const orderComment = useSelector((state) => state.orderForm.orderComment || "");
+  const maxCommentLength = 500;
 
   const buildNewOrder = async () => ({
     billingAddress: billingAddress,
     cart: await buildCartFromOrderForm(orderForm, products),
     selectedShippingOption: shippingOptions?.selectedOption,
-    shippingAddress: shippingAddress
+    shippingAddress: shippingAddress,
+    orderComment: orderComment?.trim() || undefined
   });
 
   return (
@@ -97,6 +130,18 @@ const PaymentOptionsCard = ({
       title={"Payment Options"}
       subtitle={`Please select a payment option for your order`}
     >
+      <CommentContainer>
+        <CommentLabel>Order comments (optional)</CommentLabel>
+        <CommentTextarea
+          maxLength={maxCommentLength}
+          value={orderComment}
+          placeholder="Add notes for your order (max 500 characters)"
+          onChange={(event) => {
+            dispatch(updateOrderFormField("orderComment", event.target.value));
+          }}
+        />
+        <CommentCount>{orderComment.length}/{maxCommentLength}</CommentCount>
+      </CommentContainer>
       
       <PaymentOptionContainer 
         $isSelected={selectedPaymentOption === "bank_transfer"}

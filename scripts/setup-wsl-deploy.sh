@@ -66,8 +66,14 @@ fi
 
 # Set up environment variables
 echo "🔧 Setting up environment variables..."
+SECRETS_ENV="../helios-secrets/v2/.env"
+SERVER_IP_FROM_SECRETS=$(grep -E '^SERVER_IP=' "$SECRETS_ENV" 2>/dev/null | cut -d '=' -f2)
 if ! grep -q 'export SERVER_IP=' ~/.bashrc; then
-    echo 'export SERVER_IP="3.21.33.187"' >> ~/.bashrc
+    if [ -n "$SERVER_IP_FROM_SECRETS" ]; then
+        echo "export SERVER_IP=\"$SERVER_IP_FROM_SECRETS\"" >> ~/.bashrc
+    else
+        echo "⚠️  SERVER_IP not found in $SECRETS_ENV"
+    fi
 fi
 
 HELIOS_API_DIR="$(pwd)"

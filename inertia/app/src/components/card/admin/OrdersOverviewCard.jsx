@@ -38,6 +38,9 @@ const OrderDetail = styled.td`
     text-align: left;
 `;
 
+const truncate = (value = "", length = 80) =>
+    value.length > length ? `${value.slice(0, length)}...` : value;
+
 const condensedDatetime = (date) => {
     const d = new Date(date);
     const options = {
@@ -93,6 +96,9 @@ const OrdersOverviewCard = ({statuses=null}) => {
                         Order Details
                     </OrderDetail>
                     <OrderDetail>
+                        Comment
+                    </OrderDetail>
+                    <OrderDetail>
                         Last Updated
                     </OrderDetail>
                 </OrderRow>
@@ -113,6 +119,9 @@ const OrdersOverviewCard = ({statuses=null}) => {
                             {getAttributeValue(openOrders[index].pricedCart, "catalogNumber")}
                             {` - ${getAttributeValue(openOrders[index].pricedCart, "bandName")}`}
                             {` - ${getAttributeValue(openOrders[index].pricedCart, "albumTitle")}`}
+                        </OrderDetail>
+                        <OrderDetail>
+                            {truncate(openOrders[index].orderComment || "")}
                         </OrderDetail>
                         <OrderDetail>
                             {condensedDatetime(openOrders[index].updatedAt)}

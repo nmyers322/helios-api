@@ -8,6 +8,13 @@ export default class OrderCreated {
     public static async getEmailBody(order: Order) {
         const { billingAddress, pricedCart, selectedShippingOption, shippingAddress } = order;
         const t = theme.light;
+        const escapeHtml = (value: string) =>
+            value
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
 
         const style = `
             <style>
@@ -72,6 +79,7 @@ export default class OrderCreated {
         const assemblyOption = CartService.getAssemblyOptionLabel(parsedCart);
         const insert = CartService.getInsertLabel(parsedCart);
         const polybag = CartService.getPolybagLabel(parsedCart);
+        const orderComment = order.orderComment ? escapeHtml(order.orderComment) : "";
 
         const shippingCost = JSON.parse(selectedShippingOption)?.totalCost || 0;
         const subTotal = await CartService.getSubTotalPrice(parsedCart);
@@ -121,6 +129,7 @@ export default class OrderCreated {
                         <tr><td><strong>Insert:</strong></td><td>${insert?.label || "N/A"}${insert?.total ? `: $${insert.total.toFixed(2)}` : ""}</td></tr>
                         <tr><td><strong>Polybag:</strong></td><td>${polybag?.label || "N/A"}${polybag?.total ? `: $${polybag.total.toFixed(2)}` : ""}</td></tr>
                         <tr><td><strong>Shipping Cost:</strong></td><td>$${shippingCost.toFixed(2)}</td></tr>
+                        ${orderComment ? `<tr><td><strong>Customer Comment:</strong></td><td>${orderComment}</td></tr>` : ""}
                         <tr><td><strong>Total Cost:</strong></td><td><strong>$${totalCost.toFixed(2)}</strong></td></tr>
                     </table>
                 </div>

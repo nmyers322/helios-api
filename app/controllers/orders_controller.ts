@@ -43,8 +43,12 @@ export default class OrdersController {
             selectedShippingOption,
             shippingAddress,
             pricedCart,
-            totalPrice
+            totalPrice,
+            orderComment
         } = await OrderService.getAndLogOrderInitializationParams(request);
+        if (orderComment && orderComment.length > 500) {
+            return response.status(422).json({ error: 'Order comment must be 500 characters or less' })
+        }
         try {
             let user = await User.query().where('id', auth.user!.id).first()
             if (!user) {
@@ -56,6 +60,7 @@ export default class OrdersController {
                 selectedShippingOption: JSON.stringify(selectedShippingOption),
                 shippingAddress: JSON.stringify(shippingAddress),
                 totalPrice: totalPrice.toFixed(2),
+                orderComment: orderComment,
                 externalOrderId: "bank_transfer",
                 externalOrder: undefined,
                 status: "CREATED",

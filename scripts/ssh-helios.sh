@@ -3,9 +3,9 @@
 set -e
 
 SECRETS_ENV="../helios-secrets/v2/.env"
-SERVER_IP="$(grep -E '^SERVER_IP=' .env 2>/dev/null | cut -d '=' -f2)"
-if [ -z "$SERVER_IP" ] && [ -f "$SECRETS_ENV" ]; then
-  SERVER_IP="$(grep -E '^SERVER_IP=' "$SECRETS_ENV" | cut -d '=' -f2)"
+SERVER_IP="$(grep -E '^SERVER_IP=' "$SECRETS_ENV" 2>/dev/null | cut -d '=' -f2)"
+if [ -z "$SERVER_IP" ]; then
+  SERVER_IP="$(grep -E '^SERVER_IP=' .env 2>/dev/null | cut -d '=' -f2)"
 fi
 
 HOST="${1:-${SERVER_IP:-heliospressing.com}}"

@@ -351,6 +351,18 @@ const CompletedOrderDetailsCard = ({
                     </Row>
                 </SectionContents>
             </Section>
+            { order?.orderComment && (
+                <Section>
+                    <SectionTitle>Customer Comment</SectionTitle>
+                    <SectionContents>
+                        <Row>
+                            <LeftColumn>
+                                <Item>{order.orderComment}</Item>
+                            </LeftColumn>
+                        </Row>
+                    </SectionContents>
+                </Section>
+            ) }
             <Section>
                 <SectionTitle>Total<div>${order?.totalPrice}</div></SectionTitle>
             </Section>

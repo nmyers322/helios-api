@@ -18,6 +18,7 @@ const initialState = {
   outerPackagingFinish: null,
   outerPackagingPrint: null,
   outerPackagingType: null,
+  orderComment: "",
   payment: null,
   polybag: null,
   shipping: null,

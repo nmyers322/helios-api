@@ -6,7 +6,11 @@
 set -e
 
 # Configuration
-SERVER_IP=${1:-$(grep SERVER_IP .env | cut -d '=' -f2)}  # Use SERVER_IP from .env or override
+SECRETS_ENV="../helios-secrets/v2/.env"
+SERVER_IP=${1:-$(grep -E '^SERVER_IP=' "$SECRETS_ENV" 2>/dev/null | cut -d '=' -f2)}
+if [ -z "$SERVER_IP" ]; then
+    SERVER_IP=$(grep -E '^SERVER_IP=' .env 2>/dev/null | cut -d '=' -f2)
+fi
 SSH_KEY="~/.ssh/helios.pem"
 KEEP_RELEASES=${2:-3}  # Default to keeping 3 releases (current + 2 previous)
 

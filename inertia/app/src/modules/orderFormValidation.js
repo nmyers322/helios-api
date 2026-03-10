@@ -36,6 +36,18 @@ export const validateOrderFormOption = (orderForm, field, options) => {
   return response.isValid ? validateOption(orderForm[field], options) : response;
 };
 
+export const validateOrderComment = (orderForm) => {
+  let response = validateOrderFormObject(orderForm);
+  if (!response.isValid) return response;
+  if (!orderForm.orderComment) {
+    return ValidationResponse.valid();
+  }
+  return ValidationResponse.testValidity(
+    orderForm.orderComment.length <= 500,
+    "Order comment must be 500 characters or less"
+  );
+};
+
 export const validateAlbumTitle = (orderForm) => {
   return validateOrderFormTextInput(orderForm, "albumTitle");
 }
@@ -352,6 +364,9 @@ export const validatePreviousStep = (orderForm, step) => {
 };
 
 export const validateCompleteOrderForm = (orderForm) => {
+  if (!validateOrderComment(orderForm).isValid) {
+    return ValidationResponse.invalid("Order comment must be 500 characters or less");
+  }
   return validatePreviousStep(orderForm, "summary");
 }
 

@@ -17,7 +17,9 @@ Use this script for all deployments:
 
 1. **SSH Key**: Ensure `~/.ssh/helios.pem` exists in WSL
 2. **Secrets**: Clone `helios-secrets` alongside `helios-api`
-3. **Server**: EC2 instance running at `3.21.33.187`
+3. **Server IP**: Ensure `SERVER_IP` is set in `../helios-secrets/v2/.env`
+4. **AWS Security Group**: Whitelist your current public IP for inbound TCP 22 before any SSH/deploy
+   - See `../helios-secrets/aws.txt` for the exact AWS steps
 
 ## What Each Script Does
 
@@ -49,7 +51,7 @@ Use this script for all deployments:
 
 ## Server Information
 
-- **IP**: 3.21.33.187
+- **IP Source**: `SERVER_IP` from `../helios-secrets/v2/.env`
 - **User**: ubuntu
 - **SSH Key**: ~/.ssh/helios.pem
 - **App Directory**: /opt/apps/helios-api
@@ -59,26 +61,30 @@ Use this script for all deployments:
 
 ### SSH Access (Security Group)
 If SSH times out, ensure the EC2 security group allows inbound TCP 22 from your current public IP.
+Follow the AWS notes in `../helios-secrets/aws.txt`.
 
 ### SSH Connection Issues
 ```bash
 # Test SSH connection
-ssh -i ~/.ssh/helios.pem ubuntu@3.21.33.187 "echo 'Connection successful'"
+SERVER_IP=$(grep -E '^SERVER_IP=' ../helios-secrets/v2/.env | cut -d '=' -f2)
+ssh -i ~/.ssh/helios.pem ubuntu@$SERVER_IP "echo 'Connection successful'"
 ```
 
 ### PM2 Issues
 ```bash
 # Check PM2 status
-ssh -i ~/.ssh/helios.pem ubuntu@3.21.33.187 "pm2 status"
+SERVER_IP=$(grep -E '^SERVER_IP=' ../helios-secrets/v2/.env | cut -d '=' -f2)
+ssh -i ~/.ssh/helios.pem ubuntu@$SERVER_IP "pm2 status"
 
 # View logs
-ssh -i ~/.ssh/helios.pem ubuntu@3.21.33.187 "pm2 logs helios-api"
+ssh -i ~/.ssh/helios.pem ubuntu@$SERVER_IP "pm2 logs helios-api"
 ```
 
 ### Database Issues
 ```bash
 # Check order 1033 directly
-ssh -i ~/.ssh/helios.pem ubuntu@3.21.33.187 "sudo -u postgres psql helios-db -c 'SELECT * FROM orders WHERE id = 1033;'"
+SERVER_IP=$(grep -E '^SERVER_IP=' ../helios-secrets/v2/.env | cut -d '=' -f2)
+ssh -i ~/.ssh/helios.pem ubuntu@$SERVER_IP "sudo -u postgres psql helios-db -c 'SELECT * FROM orders WHERE id = 1033;'"
 ```
 
 ## Environment Files

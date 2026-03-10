@@ -51,6 +51,9 @@ export default class Order extends BaseModel {
   @column()
   public totalPrice!: string
 
+  @column({ columnName: 'order_comment' })
+  public orderComment?: string | null
+
   @column.dateTime({ autoCreate: true })
   public createdAt!: DateTime
 

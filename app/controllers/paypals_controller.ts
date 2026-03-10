@@ -41,8 +41,12 @@ export default class PaypalsController {
             selectedShippingOption,
             shippingAddress,
             pricedCart,
-            totalPrice
+            totalPrice,
+            orderComment
         } = await OrderService.getAndLogOrderInitializationParams(request);
+        if (orderComment && orderComment.length > 500) {
+            return response.status(422).json({ error: 'Order comment must be 500 characters or less' })
+        }
 
         const collect = {
             body: {
@@ -75,6 +79,7 @@ export default class PaypalsController {
                     selectedShippingOption: JSON.stringify(selectedShippingOption),
                     shippingAddress: JSON.stringify(shippingAddress),
                     totalPrice: totalPrice.toFixed(2),
+                    orderComment: orderComment,
                     externalOrderId: paypalOrder.id,
                     externalOrder: JSON.stringify(paypalOrder),
                     status: paypalOrder.status,

@@ -17,8 +17,12 @@ export default class StripesController {
             selectedShippingOption,
             shippingAddress,
             pricedCart,
-            totalPrice
+            totalPrice,
+            orderComment
         } = await OrderService.getAndLogOrderInitializationParams(request);
+        if (orderComment && orderComment.length > 500) {
+            return response.status(422).json({ error: 'Order comment must be 500 characters or less' })
+        }
 
         const buildOrderName = (cart: any) => {
             const bandName = cart.find((i: any) => i.sku === 'helios-band-name')?.variation?.find((v: any) => v.attribute === 'bandName')?.value;
@@ -56,6 +60,7 @@ export default class StripesController {
                     selectedShippingOption: JSON.stringify(selectedShippingOption),
                     shippingAddress: JSON.stringify(shippingAddress),
                     totalPrice: totalPrice.toFixed(2),
+                    orderComment: orderComment,
                     externalOrderId: stripeSession.id,
                     externalOrder: JSON.stringify(stripeSession),
                     status: "CREATED",

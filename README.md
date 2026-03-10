@@ -1,5 +1,11 @@
 # Helios API
 
+## Deployment
+- Primary deployment flow is documented in `DEPLOYMENT.md`.
+- The single deploy entry point is `./scripts/deploy.sh`.
+- Server IP should come from `../helios-secrets/v2/.env` (`SERVER_IP`).
+- Before SSH/deploy, whitelist your current public IP for port 22 in AWS security groups (see `../helios-secrets/aws.txt`).
+
 ## Install local system dependencies
 1. curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
 1. \. "$HOME/.nvm/nvm.sh"
