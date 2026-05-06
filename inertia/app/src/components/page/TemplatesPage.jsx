@@ -5,26 +5,22 @@ import styled from 'styled-components';
 
 const TEMPLATE_BASE_URI = "/template-files";
 
-const INSERT_ILLUSTRATOR_URI = `${TEMPLATE_BASE_URI}/Helios-Insert-ILLUSTRATOR.zip`;
-const GATEFOLD_ILLUSTRATOR_URI = `${TEMPLATE_BASE_URI}/Helios-Gatefold-ILLUSTRATOR.zip`;
-const JACKET_ILLUSTRATOR_URI = `${TEMPLATE_BASE_URI}/Helios-Jacket-ILLUSTRATOR.zip`;
-const LP_CENTER_LABELS_ILLUSTRATOR_URI = `${TEMPLATE_BASE_URI}/Helios-LP-Center-Labels-ILLUSTRATOR.zip`;
-const TRIPLE_GATEFOLD_ILLUSTRATOR_URI = `${TEMPLATE_BASE_URI}/Helios-Triple-Gatefold-ILLUSTRATOR.zip`;
-const WIDE_SPINE_JACKET_ILLUSTRATOR_URI = `${TEMPLATE_BASE_URI}/Helios-Wide-Spine-Jacket-ILLUSTRATOR.zip`;
+const templateUri = (fileName) => `${TEMPLATE_BASE_URI}/${encodeURIComponent(fileName)}`;
 
-const INSERT_INDESIGN_URI = `${TEMPLATE_BASE_URI}/Helios-Insert-INDESIGN.zip`;
-const GATEFOLD_INDESIGN_URI = `${TEMPLATE_BASE_URI}/Helios-Gatefold-INDESIGN.zip`;
-const JACKET_INDESIGN_URI = `${TEMPLATE_BASE_URI}/Helios-Jacket-INDESIGN.zip`;
-const LP_CENTER_LABELS_INDESIGN_URI = `${TEMPLATE_BASE_URI}/Helios-LP-Center-Labels-INDESIGN.zip`;
-const TRIPLE_GATEFOLD_INDESIGN_URI = `${TEMPLATE_BASE_URI}/Helios-Triple-Gatefold-INDESIGN.zip`;
-const WIDE_SPINE_JACKET_INDESIGN_URI = `${TEMPLATE_BASE_URI}/Helios-Wide-Spine-Jacket-INDESIGN.zip`;
+const TEMPLATE_TYPES = [
+    { label: 'Center Labels', baseName: 'Helios LP Center Labels' },
+    { label: '12"x12" Insert', baseName: 'Helios Insert' },
+    { label: '3mm Spine Standard Jacket', baseName: 'Helios Jacket' },
+    { label: 'Gatefold Jacket', baseName: 'Helios Gatefold' },
+    { label: 'Triple Gatefold Jacket', baseName: 'Helios Triple Gatefold' },
+    { label: '5mm Wide Spine Jacket', baseName: 'Helios Wide Spine Jacket' },
+];
 
-const INSERT_PHOTOSHOP_URI = `${TEMPLATE_BASE_URI}/Helios-Insert-PHOTOSHOP.zip`;
-const GATEFOLD_PHOTOSHOP_URI = `${TEMPLATE_BASE_URI}/Helios-Gatefold-PHOTOSHOP.zip`;
-const JACKET_PHOTOSHOP_URI = `${TEMPLATE_BASE_URI}/Helios-Jacket-PHOTOSHOP.zip`;
-const LP_CENTER_LABELS_PHOTOSHOP_URI = `${TEMPLATE_BASE_URI}/Helios-LP-Center-Labels-PHOTOSHOP.zip`;
-const TRIPLE_GATEFOLD_PHOTOSHOP_URI = `${TEMPLATE_BASE_URI}/Helios-Triple-Gatefold-PHOTOSHOP.zip`;
-const WIDE_SPINE_JACKET_PHOTOSHOP_URI = `${TEMPLATE_BASE_URI}/Helios-Wide-Spine-Jacket-PHOTOSHOP.zip`;
+const TEMPLATE_FORMATS = [
+    { title: 'InDesign templates (most-preferred)', format: 'INDESIGN' },
+    { title: 'Illustrator templates', format: 'ILLUSTRATOR' },
+    { title: 'Photoshop templates (least-preferred)', format: 'PHOTOSHOP' },
+];
 
 const ListTitle = styled.h4`
     padding-left: 2rem;
@@ -34,33 +30,21 @@ const TemplatesPage = () => {
     return (
         <InformationPage>
             <PageTitle>Templates</PageTitle>
-            <ListTitle>InDesign templates (most-preferred)</ListTitle>
-            <ul>
-                <li><a href={LP_CENTER_LABELS_INDESIGN_URI} download>Center Labels</a></li>
-                <li><a href={INSERT_INDESIGN_URI} download>12"x12" Insert</a></li>
-                <li><a href={JACKET_INDESIGN_URI} download>3mm Spine Standard Jacket</a></li>
-                <li><a href={GATEFOLD_INDESIGN_URI} download>Gatefold Jacket</a></li>
-                <li><a href={TRIPLE_GATEFOLD_INDESIGN_URI} download>Triple Gatefold Jacket</a></li>
-                <li><a href={WIDE_SPINE_JACKET_INDESIGN_URI} download>5mm Wide Spine Jacket</a></li>
-            </ul>
-            <ListTitle>Illustrator templates</ListTitle>
-            <ul>
-                <li><a href={LP_CENTER_LABELS_ILLUSTRATOR_URI} download>Center Labels</a></li>
-                <li><a href={INSERT_ILLUSTRATOR_URI} download>12"x12" Insert</a></li>
-                <li><a href={JACKET_ILLUSTRATOR_URI} download>3mm Spine Standard Jacket</a></li>
-                <li><a href={GATEFOLD_ILLUSTRATOR_URI} download>Gatefold Jacket</a></li>
-                <li><a href={TRIPLE_GATEFOLD_ILLUSTRATOR_URI} download>Triple Gatefold Jacket</a></li>
-                <li><a href={WIDE_SPINE_JACKET_ILLUSTRATOR_URI} download>5mm Wide Spine Jacket</a></li>
-            </ul>
-            <ListTitle>Photoshop templates (least-preferred)</ListTitle>
-            <ul>
-                <li><a href={LP_CENTER_LABELS_PHOTOSHOP_URI} download>Center Labels</a></li>
-                <li><a href={INSERT_PHOTOSHOP_URI} download>12"x12" Insert</a></li>
-                <li><a href={JACKET_PHOTOSHOP_URI} download>3mm Spine Standard Jacket</a></li>
-                <li><a href={GATEFOLD_PHOTOSHOP_URI} download>Gatefold Jacket</a></li>
-                <li><a href={TRIPLE_GATEFOLD_PHOTOSHOP_URI} download>Triple Gatefold Jacket</a></li>
-                <li><a href={WIDE_SPINE_JACKET_PHOTOSHOP_URI} download>5mm Wide Spine Jacket</a></li>
-            </ul>
+            {TEMPLATE_FORMATS.map(({ title, format }) => (
+                <React.Fragment key={format}>
+                    <ListTitle>{title}</ListTitle>
+                    <ul>
+                        {TEMPLATE_TYPES.map(({ label, baseName }) => {
+                            const fileName = `${baseName} ${format}.zip`;
+                            return (
+                                <li key={fileName}>
+                                    <a href={templateUri(fileName)} download>{label}</a>
+                                </li>
+                            );
+                        })}
+                    </ul>
+                </React.Fragment>
+            ))}
         </InformationPage>
     );
 };

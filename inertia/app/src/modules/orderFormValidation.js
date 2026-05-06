@@ -10,7 +10,7 @@ import { insertPrintOptions } from "../components/form/orderform/InsertPrint";
 import { assemblyOptionOptions } from "../components/form/orderform/AssemblyOption";
 import { PolybagOptions } from "../components/form/orderform/Polybag";
 import { maximumQuantity, minimumQuantity, quantityFactor } from "../components/form/orderform/TotalQuantity";
-import { availableColors } from "./colors";
+import { getAvailableColors } from "./colors";
 import { maximumTestPresses, minimumTestPresses } from "../components/form/orderform/TestPresses";
 import { ALL_FIELDS_REQUIRED, ValidationResponse, validateNumberInput, validateOption, validateTextInput } from "./validation";
 import { isDoubleLP } from "../reducers/orderFormReducer";
@@ -99,7 +99,7 @@ export const validateColor = (color) => {
 }
 
 export const validateColorOption = (color) =>
-  validateOption(color.color, availableColors);
+  validateOption(color.color, getAvailableColors());
 
 
 export const validateColorQuantity = (color) => {

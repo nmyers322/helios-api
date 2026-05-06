@@ -9,7 +9,8 @@ import { fetchAllProductsAndAllVariations, invalidateProductCache, setProducts, 
 import { setIsBeta, setLocalSettingsLoaded, setLocalToken, setReadyForCheckout, updateTheme } from "../../actions/metaActions.js";
 import { PRODUCTS_VARIATIONS_CACHE_KEY } from "./App.js";
 import { valueIsEmpty } from "../../modules/validation.js";
-import { getMyAccount, hasActiveApiToken, setApiToken } from "../../modules/heliosApi.js";
+import { fetchAvailableColors, getMyAccount, hasActiveApiToken, setApiToken } from "../../modules/heliosApi.js";
+import { setAvailableColors } from "../../modules/colors.js";
 
 
 const StyledDataLoader = styled.div`
@@ -89,11 +90,19 @@ const DataLoader = (props) => {
         }
       }
 
+      async function loadColors() {
+        const result = await fetchAvailableColors();
+        if (result?.status === 200 && Array.isArray(result?.data)) {
+          setAvailableColors(result.data);
+        }
+      }
+
       if (isFirstLoad) {
         heliosLogger("DataLoader rendering");
         loadLocalToken();
         loadLocalSettings();
         loadProducts();
+        loadColors();
         setIsFirstLoad(false);
       }
     }, [dispatch, isFirstLoad, meta, orders, products]);

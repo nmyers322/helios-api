@@ -2,7 +2,7 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { removeColor, updateColor, updateOrderForm, updateOrderFormField } from "../../../actions/orderFormActions";
-import { availableColors } from "../../../modules/colors";
+import { getAvailableColors } from "../../../modules/colors";
 import { validateColorOption, validateColorQuantity } from "../../../modules/orderFormValidation";
 import LabeledInput from "../main/LabeledInput";
 import RedXButton from "../main/RedXButton";
@@ -48,7 +48,7 @@ const ColorAndQuantity = ({
   const orderForm = useSelector((state) => state.orderForm);
   const dispatch = useDispatch();
   const previouslySelectedColors = orderForm.colors.map((color) => color.color.value);
-  const filteredColorOptions = availableColors
+  const filteredColorOptions = getAvailableColors()
     .map((option) => ({ 
       ...option, 
       disabled: previouslySelectedColors.includes(option.value) && previouslySelectedColors.indexOf(option.value) !== index,
@@ -123,6 +123,6 @@ const ColorAndQuantity = ({
 export default ColorAndQuantity;
 
 export {
-  availableColors,
+  getAvailableColors,
   ColorAndQuantity as Colors
 };

@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { useGoTo } from "../../modules/links";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import OrdersOverviewCard from "../card/admin/OrdersOverviewCard";
+import ColorManagementCard from "../card/admin/ColorManagementCard";
 import AdminMenu from "../sidebar/AdminMenu";
 
 const AdminPage = () => {
@@ -36,6 +37,10 @@ const AdminPage = () => {
                     <Route
                         path="/all-orders"
                         element={<OrdersOverviewCard />}
+                    />
+                    <Route
+                        path="/colors"
+                        element={<ColorManagementCard />}
                     />
                 </Routes>
             </PageCardColumn>

@@ -178,6 +178,9 @@ export const fetchAllProducts = async () =>
 export const fetchProductVariations = async (productId) =>
   makeGetCall(`/api/variations/${productId}`);
 
+export const fetchAvailableColors = async () =>
+  makeGetCall('/api/colors');
+
 /****************************************************
  * Orders
  * ***************************************************/
@@ -212,6 +215,18 @@ export const updateOrderStatus = async (orderId, status) => {
   let result = await makePutCall(`/api/admin/orders/${orderId}`, data);
   return result;
 }
+
+export const getAllColorsAdmin = async () =>
+  await makeGetCall('/api/admin/colors');
+
+export const createColorAdmin = async (data) =>
+  await makePostCall('/api/admin/colors', data);
+
+export const updateColorAdmin = async (colorId, data) =>
+  await makePutCall(`/api/admin/colors/${colorId}`, data);
+
+export const deleteColorAdmin = async (colorId) =>
+  await makeDeleteCall(`/api/admin/colors/${colorId}`);
 
 /************************************************
  * Contact

@@ -1,4 +1,4 @@
-export const availableColors = [
+export const fallbackAvailableColors = [
     {
       "value": "Black",
       "label": "Black",
@@ -155,3 +155,15 @@ export const availableColors = [
       "color": "#DDD221"
     }
   ];
+
+let availableColors = fallbackAvailableColors;
+
+export const getAvailableColors = () => availableColors;
+
+export const setAvailableColors = (colors) => {
+  if (!Array.isArray(colors) || colors.length === 0) {
+    availableColors = fallbackAvailableColors;
+    return;
+  }
+  availableColors = colors;
+};

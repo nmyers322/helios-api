@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { updateOrderFormField } from "../../../actions/orderFormActions";
 import { minimumQuantity } from "../../form/orderform/TotalQuantity";
 import { minimumTestPresses } from "../../form/orderform/TestPresses";
-import { availableColors } from "../../../modules/colors";
+import { getAvailableColors } from "../../../modules/colors";
 
 const AlbumDetails = ({
   className = "",
@@ -23,7 +23,8 @@ const AlbumDetails = ({
       disabled={!validateAlbumDetailsCard(orderForm).isValid}
       onSubmit={() => {
         if (orderForm.colors.length === 0 && orderForm.totalQuantity === 0 && orderForm.testPresses === 0) {
-          dispatch(updateOrderFormField("colors", [{color: availableColors.find((color) => color.value === "Black"), quantity: minimumQuantity}]));
+          const firstColor = getAvailableColors().find((color) => color.value === "Black") || getAvailableColors()[0] || null;
+          dispatch(updateOrderFormField("colors", [{color: firstColor, quantity: minimumQuantity}]));
           dispatch(updateOrderFormField("totalQuantity", minimumQuantity));
           dispatch(updateOrderFormField("testPresses", minimumTestPresses));
         }

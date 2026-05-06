@@ -86,6 +86,15 @@ const AdminMenu = () => {
           <Chevron>&gt;</Chevron>
         )}
       </div>
+      <div
+        onClick={() => goTo("/admin/colors")}
+        style={determineLinkStyle("colors")}
+      >
+        <StepTitle>Colors</StepTitle>
+        {getAdminSubPage() === "colors" && (
+          <Chevron>&gt;</Chevron>
+        )}
+      </div>
     </AdminMenuContainer>
   );
 };
