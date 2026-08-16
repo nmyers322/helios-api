@@ -18,7 +18,7 @@ const AlbumDetails = ({
   const orderForm = useSelector((state) => state.orderForm);
   return (
     <OrderFormCard
-      continueLink="/order/record-details"
+      continueLink={orderForm.packageId ? "/order/summary" : "/order/record-details"}
       className={className}
       disabled={!validateAlbumDetailsCard(orderForm).isValid}
       onSubmit={() => {

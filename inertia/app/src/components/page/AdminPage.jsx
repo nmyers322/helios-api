@@ -6,6 +6,7 @@ import { useGoTo } from "../../modules/links";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import OrdersOverviewCard from "../card/admin/OrdersOverviewCard";
 import ColorManagementCard from "../card/admin/ColorManagementCard";
+import PackageManagementCard from "../card/admin/PackageManagementCard";
 import AdminMenu from "../sidebar/AdminMenu";
 
 const AdminPage = () => {
@@ -41,6 +42,10 @@ const AdminPage = () => {
                     <Route
                         path="/colors"
                         element={<ColorManagementCard />}
+                    />
+                    <Route
+                        path="/packages"
+                        element={<PackageManagementCard />}
                     />
                 </Routes>
             </PageCardColumn>

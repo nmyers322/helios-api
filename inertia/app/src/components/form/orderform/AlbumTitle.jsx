@@ -12,6 +12,7 @@ const AlbumTitle = () => {
   const dispatch = useDispatch();
   return (
     <LabeledInput
+      ignorePackageLock={true}
       validationResponse={validateAlbumTitle(orderForm)}
       name={albumTitleName}
       onChange={(e) =>

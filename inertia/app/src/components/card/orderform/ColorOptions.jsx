@@ -8,6 +8,7 @@ import Button from "../../form/main/Button";
 import TotalQuantity, { maxColorVariations, maximumQuantity, minimumQuantity } from "../../form/orderform/TotalQuantity";
 import theme from "../../../modules/theme";
 import { FIELD_REQUIRED } from "../../../modules/validation";
+import { isPackageLocked } from "../../../modules/packageDeals";
 
 const ColorOptions = ({className}) => {
   const dispatch = useDispatch();
@@ -31,7 +32,7 @@ const ColorOptions = ({className}) => {
       { orderForm.colors.map((color, index) => (
         <ColorAndQuantity index={index} key={"colorAndQuantity" + index} />
       ))}
-      { orderForm.colors.length < 5 &&
+      { orderForm.colors.length < 5 && !isPackageLocked(orderForm) &&
         <Button 
           buttonText={"Add another color"}
           disabled={orderForm.colors.length >= maxColorVariations}

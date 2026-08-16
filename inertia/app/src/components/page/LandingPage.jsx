@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import heliosTxtLogo from '../../images/helios-text-yellow-1000.png';
 import parallax1 from '../../images/parallax1.jpeg';
@@ -7,6 +7,9 @@ import parallax3 from '../../images/parallax3.jpeg';
 import standalone1 from '../../images/standalone1.jpeg';
 import { ContentBlock, FloatRightImage, Header1, HeroContainer, HeroImage, Highlight, PageContainer, PageSection, Paragraph, ParagraphMedWidth, ParallaxImage, ParallaxSpacing, StandaloneImageMedWidth } from '../../styles/LandingPage';
 import ButtonBigCTA from '../form/main/ButtonBigCTA';
+import { fetchAvailablePackages } from '../../modules/heliosApi';
+import { getPackageCtaLabel } from '../../modules/packageDeals';
+import { getAvailablePackages, setAvailablePackages } from '../../modules/packages';
 
 const LandingPage = ({
   titleRef
@@ -14,6 +17,7 @@ const LandingPage = ({
   const navigate = useNavigate();
   const parallaxRefs = useRef([]);
   const ticking = useRef(false);
+  const [packages, setPackages] = useState(getAvailablePackages());
 
   useEffect(() => {
     const handleScroll = () => {
@@ -39,6 +43,21 @@ const LandingPage = ({
       window.removeEventListener('scroll', handleScroll);
     };
   }, [parallaxRefs, ticking]);
+
+  useEffect(() => {
+    async function loadPackages() {
+      if (getAvailablePackages().length > 0) {
+        setPackages(getAvailablePackages());
+        return;
+      }
+      const result = await fetchAvailablePackages();
+      if (result?.status === 200 && Array.isArray(result.data)) {
+        setAvailablePackages(result.data);
+        setPackages(result.data);
+      }
+    }
+    loadPackages();
+  }, []);
 
   return (
     <PageContainer>
@@ -90,6 +109,14 @@ const LandingPage = ({
             buttonText={"BEGIN NEW ORDER"}
             onClick={() => navigate('/order')}
             styles={{fontSize: "2rem"}} />
+          {packages.map((pressingPackage) => (
+            <ButtonBigCTA
+              key={pressingPackage.slug}
+              buttonText={getPackageCtaLabel(pressingPackage)}
+              onClick={() => navigate(`/order?package=${pressingPackage.slug}`)}
+              styles={{fontSize: "1.35rem"}}
+            />
+          ))}
         </ContentBlock>
       </PageSection>
 

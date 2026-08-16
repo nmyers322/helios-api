@@ -121,7 +121,8 @@ const PaymentOptionsCard = ({
     cart: await buildCartFromOrderForm(orderForm, products),
     selectedShippingOption: shippingOptions?.selectedOption,
     shippingAddress: shippingAddress,
-    orderComment: orderComment?.trim() || undefined
+    orderComment: orderComment?.trim() || undefined,
+    packageId: orderForm.packageId || undefined,
   });
 
   return (

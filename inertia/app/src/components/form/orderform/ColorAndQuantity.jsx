@@ -7,6 +7,7 @@ import { validateColorOption, validateColorQuantity } from "../../../modules/ord
 import LabeledInput from "../main/LabeledInput";
 import RedXButton from "../main/RedXButton";
 import { maximumQuantity, minimumQuantity, quantityFactor } from "./TotalQuantity";
+import { isPackageLocked } from "../../../modules/packageDeals";
 
 const ColorContainer = styled.div`
   display: flex;
@@ -99,7 +100,7 @@ const ColorAndQuantity = ({
           type="number"
           value={quantity}
         />
-        { orderForm.colors.length > 1 &&
+        { orderForm.colors.length > 1 && !isPackageLocked(orderForm) &&
           <DeleteColorColumn>
             <RedXButton 
               onClick={() => {

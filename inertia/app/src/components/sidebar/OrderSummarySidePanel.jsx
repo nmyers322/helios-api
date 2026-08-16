@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { formatPrice, getColorOrBlackValue, getPrice } from '../../modules/products';
 import { getColorLabel, getQuoteDisplayLines, getSelectedOptionLabel } from '../../modules/quoteDisplay';
+import { getPackageDiscountDisplay, isPackageLocked, roundMoney } from '../../modules/packageDeals';
 import Spinner from '../main/Spinner';
 import { isLocal } from '../../modules/environment';
 import RedXButton from '../form/main/RedXButton';
@@ -253,11 +254,18 @@ const OrderSummarySidePanel = ({disabled}) => {
     shippingAmount: shippingPriceValue,
   });
 
+  const catalogSubtotal = roundMoney(quoteDisplay.grandTotal - quoteDisplay.shippingAmount)
+  const discountDisplay = getPackageDiscountDisplay({
+    catalogSubtotal,
+    advertisedPrice: orderForm.advertisedPrice,
+    shippingAmount: shippingPriceValue,
+  })
+
   const getFormattedTotalPrice = () => {
     if (isLocal()) {
       return "$100.00";
     }
-    const total = quoteDisplay.grandTotal;
+    const total = isPackageLocked(orderForm) ? discountDisplay.totalPrice : quoteDisplay.grandTotal;
     return total === 0 ? "$0.00" : formatPrice(total);
   }
 
@@ -354,6 +362,12 @@ const OrderSummarySidePanel = ({disabled}) => {
           <LineItemPart>{ selectedShippingOption?.serviceName || "Not Yet Calculated" }</LineItemPart>
           <LineItemPartRight>{ formatShippingPrice(selectedShippingOption) }</LineItemPartRight>
         </LineItem>
+        { discountDisplay.showDiscount && (
+          <LineItem className="visible">
+            <LineItemPart>{orderForm.packageName || "Package"} discount</LineItemPart>
+            <LineItemPart>-{formatPrice(discountDisplay.discountAmount)}</LineItemPart>
+          </LineItem>
+        )}
         <TotalPrice>
           <span>Total</span>
           <span>{getFormattedTotalPrice()}</span>

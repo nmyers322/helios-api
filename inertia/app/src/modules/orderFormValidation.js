@@ -15,6 +15,7 @@ import { maximumTestPresses, minimumTestPresses } from "../components/form/order
 import { ALL_FIELDS_REQUIRED, ValidationResponse, validateNumberInput, validateOption, validateTextInput } from "./validation";
 import { isDoubleLP } from "../reducers/orderFormReducer";
 import { innersleeveOptions } from "../components/form/orderform/Innersleeve";
+import { isPackageLocked } from "./packageDeals";
 
 
 export const validateOrderFormObject = (orderForm) => {
@@ -303,6 +304,9 @@ export const validateAssemblyOptionsCard = (orderForm) => {
 };
 
 export const validatePreviousStep = (orderForm, step) => {
+  if (isPackageLocked(orderForm) && validateAlbumDetailsCard(orderForm).isValid) {
+    return ValidationResponse.valid();
+  }
   if (step === "album-details") {
     return ValidationResponse.valid();
   } else if (step === "record-details") {

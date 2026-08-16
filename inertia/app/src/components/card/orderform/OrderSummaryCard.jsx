@@ -54,7 +54,7 @@ const OrderSummaryCard = () => {
   const goTo = useGoTo(navigate);
   const customer = useSelector((state) => state.customer);
   const orderForm = useSelector((state) => state.orderForm);
-  const backLink = "/order/assembly-options";
+  const backLink = orderForm.packageId ? "/order/album-details" : "/order/assembly-options";
   const [showModal, setShowModal] = useState(false);
 
   const generateOuterPackagingText = () => {

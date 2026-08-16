@@ -1,12 +1,17 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes, useNavigate, useSearchParams } from "react-router-dom";
 import styled from "styled-components";
 import {
-  resetOrderForm
+  resetOrderForm,
+  saveLocalOrderForm,
+  updateOrderForm,
 } from "../../actions/orderFormActions";
 import { getOrderFormFromLocalStorage } from "../../modules/dataPersistMiddleware";
+import { fetchAvailablePackages } from "../../modules/heliosApi";
 import { useGoTo } from "../../modules/links";
+import { applyPackageToOrderForm } from "../../modules/packageDeals";
+import { getPackageBySlug, setAvailablePackages } from "../../modules/packages";
 import { PageCardColumn, PageContainer, PageLeftColumn, PageRightColumn } from "../../styles/Page";
 import AlbumDetails from "../card/orderform/AlbumDetails";
 import AssemblyOptions from "../card/orderform/AssemblyOptions";
@@ -18,6 +23,7 @@ import OrderSummaryCard from "../card/orderform/OrderSummaryCard";
 import OuterPackagingOptions from "../card/orderform/OuterPackagingOptions";
 import RecordDetails from "../card/orderform/RecordDetails";
 import Modal from "../main/Modal";
+import { PackageLockProvider } from "../main/PackageLockContext";
 import OrderFormProgress from "../sidebar/OrderFormProgress";
 import OrderSummarySidePanel from "../sidebar/OrderSummarySidePanel";
 
@@ -46,21 +52,47 @@ const OrderPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const goTo = useGoTo(navigate);
+  const [searchParams] = useSearchParams();
   const showQuoteOnMobile = useSelector((state) => state.orderForm.showQuoteOnMobile);
   const [showModal, setShowModal] = useState(false);
   const isFirstLoad = useRef(true);
 
   useEffect(() => {
-    const orderForm = getOrderFormFromLocalStorage();
+    const applySelectedPackage = async () => {
+      const slug = searchParams.get("package");
+      if (!slug) {
+        const orderForm = getOrderFormFromLocalStorage();
+        if (orderForm) {
+          setShowModal(true);
+        }
+        return;
+      }
+      let pressingPackage = getPackageBySlug(slug);
+      if (!pressingPackage) {
+        const result = await fetchAvailablePackages();
+        if (result?.status === 200 && Array.isArray(result.data)) {
+          setAvailablePackages(result.data);
+          pressingPackage = getPackageBySlug(slug);
+        }
+      }
+      if (!pressingPackage) {
+        return;
+      }
+      dispatch(resetOrderForm());
+      const nextForm = applyPackageToOrderForm(pressingPackage);
+      dispatch(updateOrderForm(nextForm));
+      dispatch(saveLocalOrderForm(nextForm));
+      goTo("/order/album-details");
+    };
+
     if (isFirstLoad.current) {
       isFirstLoad.current = false;
-      if (orderForm) {
-        setShowModal(true);
-      }
+      applySelectedPackage();
     }
-  }, [dispatch, isFirstLoad]);
+  }, [dispatch, goTo, searchParams]);
 
   return (
+    <PackageLockProvider>
     <PageContainer>
       {showModal && (
         <Modal
@@ -132,6 +164,7 @@ const OrderPage = () => {
         <OrderSummarySidePanel />
       </MobileQuotePanel>
     </PageContainer>
+    </PackageLockProvider>
   );
 };
 

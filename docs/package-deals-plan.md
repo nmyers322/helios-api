@@ -1,6 +1,6 @@
 # Package deals, discounts, and DB backups
 
-Deferred plan. Do not implement until this work is picked up again.
+Implementation notes. Bank-transfer 5% (`HELIOS-358`) remains out of scope.
 
 ## Already done
 

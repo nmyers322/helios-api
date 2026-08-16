@@ -36,14 +36,21 @@ const ordersController = new OrdersController(client);
 
 export default class PaypalsController {
     async initializeOrder({ auth, request, response }: HttpContext) {
+        const initialized = await OrderService.getAndLogOrderInitializationParams(request);
+        if ('error' in initialized && initialized.error) {
+            return response.status(initialized.status || 422).json({ error: initialized.error })
+        }
         const {
             billingAddress,
             selectedShippingOption,
             shippingAddress,
             pricedCart,
             totalPrice,
-            orderComment
-        } = await OrderService.getAndLogOrderInitializationParams(request);
+            orderComment,
+            packageId,
+            discountAmount,
+            catalogSubtotal,
+        } = initialized;
         if (orderComment && orderComment.length > 500) {
             return response.status(422).json({ error: 'Order comment must be 500 characters or less' })
         }
@@ -83,7 +90,8 @@ export default class PaypalsController {
                     externalOrderId: paypalOrder.id,
                     externalOrder: JSON.stringify(paypalOrder),
                     status: paypalOrder.status,
-                    userId: auth?.user?.id
+                    userId: auth?.user?.id,
+                    ...OrderService.toPersistedPackageFields({ packageId, discountAmount, catalogSubtotal }),
                 });
             }
             return {

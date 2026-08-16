@@ -374,6 +374,11 @@ const CompletedOrderDetailsCard = ({
                     </SectionContents>
                 </Section>
             ) }
+            { Number(order?.discountAmount) > 0 && (
+                <Section>
+                    <SectionTitle>Package discount<div>-${Number(order.discountAmount).toFixed(2)}</div></SectionTitle>
+                </Section>
+            ) }
             <Section>
                 <SectionTitle>Total<div>${order?.totalPrice}</div></SectionTitle>
             </Section>

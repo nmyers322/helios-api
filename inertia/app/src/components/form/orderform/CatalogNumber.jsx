@@ -12,6 +12,7 @@ const CatalogNumber = () => {
   const dispatch = useDispatch();
   return (
     <LabeledInput
+      ignorePackageLock={true}
       validationResponse={validateCatalogNumber(orderForm)}
       name={catalogNumberName}
       onChange={(e) =>

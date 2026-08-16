@@ -83,7 +83,8 @@ export default class OrderCreated {
 
         const shippingCost = JSON.parse(selectedShippingOption)?.totalCost || 0;
         const subTotal = await CartService.getSubTotalPrice(parsedCart);
-        const totalCost = await CartService.getTotalPrice(subTotal, JSON.parse(selectedShippingOption));
+        const discountAmount = Number(order.discountAmount) || 0
+        const totalCost = Number(order.totalPrice) || await CartService.getTotalPrice(subTotal, JSON.parse(selectedShippingOption));
 
         const emailBody = `
             <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -129,8 +130,9 @@ export default class OrderCreated {
                         <tr><td><strong>Insert:</strong></td><td>${insert?.label || "N/A"}${insert?.total ? `: $${insert.total.toFixed(2)}` : ""}</td></tr>
                         <tr><td><strong>Polybag:</strong></td><td>${polybag?.label || "N/A"}${polybag?.total ? `: $${polybag.total.toFixed(2)}` : ""}</td></tr>
                         <tr><td><strong>Shipping Cost:</strong></td><td>$${shippingCost.toFixed(2)}</td></tr>
+                        ${discountAmount > 0 ? `<tr><td><strong>Package discount:</strong></td><td>-$${discountAmount.toFixed(2)}</td></tr>` : ""}
                         ${orderComment ? `<tr><td><strong>Customer Comment:</strong></td><td>${orderComment}</td></tr>` : ""}
-                        <tr><td><strong>Total Cost:</strong></td><td><strong>$${totalCost.toFixed(2)}</strong></td></tr>
+                        <tr><td><strong>Total Cost:</strong></td><td><strong>$${Number(totalCost).toFixed(2)}</strong></td></tr>
                     </table>
                 </div>
             </body>

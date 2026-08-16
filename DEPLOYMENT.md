@@ -163,4 +163,15 @@ npm test
 
 Current tests:
 - `tests/unit/quote_display.spec.ts` (pricing display / weight fold / admin list state)
+- `tests/unit/package_deals.spec.ts` (advertised-price discount, package matching, CTA/display helpers)
 - `tests/functional/root_domain.spec.ts` (included when running `npm test -- functional`)
+
+## Postgres backups
+
+The app server did not have a nightly `helios-db` dump. Install one (keeps ~7 days under `/opt/apps/shared/db-backups`):
+
+```bash
+./scripts/install-postgres-backup.sh
+```
+
+This writes a dump immediately so you can confirm a `.sql.gz` file exists, then schedules ubuntu cron at 02:30.

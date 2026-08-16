@@ -25,6 +25,7 @@ import StripesController from '#controllers/stripes_controller'
 import Order from '#models/order'
 import ContactController from '#controllers/contact_controller'
 import RecordColorsController from '#controllers/record_colors_controller'
+import PackagesController from '#controllers/packages_controller'
 
 router.post('/api/session', [SessionsController, 'store'])
 router.delete('/api/session', [SessionsController, 'destroy'])
@@ -67,6 +68,7 @@ router.post('/api/paypal/capture', [PaypalsController, 'captureOrder'])
 
 router.get('/api/products', [ProductsController, 'getAll'])
 router.get('/api/colors', [RecordColorsController, 'getAll'])
+router.get('/api/packages', [PackagesController, 'getAll'])
 
 router.get('/api/admin/colors', [RecordColorsController, 'getAllAdmin'])
     .use(middleware.auth({ guards: ['api'] }))
@@ -78,6 +80,19 @@ router.put('/api/admin/colors/:id', [RecordColorsController, 'update'])
     .use(middleware.auth({ guards: ['api'] }))
     .use(middleware.admin())
 router.delete('/api/admin/colors/:id', [RecordColorsController, 'destroy'])
+    .use(middleware.auth({ guards: ['api'] }))
+    .use(middleware.admin())
+
+router.get('/api/admin/packages', [PackagesController, 'getAllAdmin'])
+    .use(middleware.auth({ guards: ['api'] }))
+    .use(middleware.admin())
+router.post('/api/admin/packages', [PackagesController, 'create'])
+    .use(middleware.auth({ guards: ['api'] }))
+    .use(middleware.admin())
+router.put('/api/admin/packages/:id', [PackagesController, 'update'])
+    .use(middleware.auth({ guards: ['api'] }))
+    .use(middleware.admin())
+router.delete('/api/admin/packages/:id', [PackagesController, 'destroy'])
     .use(middleware.auth({ guards: ['api'] }))
     .use(middleware.admin())
 

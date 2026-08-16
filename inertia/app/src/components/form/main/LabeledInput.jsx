@@ -8,6 +8,7 @@ import styled from 'styled-components'
 import { heliosLogger } from '../../../modules/logging'
 import theme from '../../../modules/theme'
 import { FormInputContainer } from '../../../styles/Form'
+import { usePackageLock } from '../../main/PackageLockContext'
 import ErrorText from './ErrorText'
 import HelpText from './HelpText'
 
@@ -193,6 +194,7 @@ const selectStyles = (currentTheme, showRecordColor) => ({
 const LabeledInput = ({
   helpText,
   id,
+  ignorePackageLock = false,
   isDisabled,
   isSearchable,
   min, 
@@ -211,6 +213,8 @@ const LabeledInput = ({
   let [beenBlurred, setBeenBlurred] = useState(false);
   let [inputValue, setInputValue] = useState(value);
   const currentTheme = useSelector((state) => state.meta.currentTheme);
+  const packageLocked = usePackageLock();
+  isDisabled = !!isDisabled || (!ignorePackageLock && packageLocked);
   const isEmpty = !value || value.length === 0;
   let inputClassNames = "";
   let labelStyles = {};

@@ -6,6 +6,7 @@ import {
 } from '@adonisjs/lucid/orm'
 import type { BelongsTo } from '@adonisjs/lucid/types/relations'
 import User from '#models/user'
+import PressingPackage from '#models/pressing_package'
 
 export type OrderStatus =
   | "CART"
@@ -23,9 +24,21 @@ export default class Order extends BaseModel {
 
   @belongsTo(() => User)
   public user!: BelongsTo<typeof User>
+
+  @belongsTo(() => PressingPackage, { foreignKey: 'packageId' })
+  public pressingPackage!: BelongsTo<typeof PressingPackage>
   
   @column()
   public userId!: number
+
+  @column({ columnName: 'package_id' })
+  public packageId?: number | null
+
+  @column({ columnName: 'discount_amount' })
+  public discountAmount?: string | null
+
+  @column({ columnName: 'catalog_subtotal' })
+  public catalogSubtotal?: string | null
 
   @column()
   public externalOrderId!: string

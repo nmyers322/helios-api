@@ -12,6 +12,7 @@ const BandName = () =>{
   const dispatch = useDispatch();
   return (
     <LabeledInput
+      ignorePackageLock={true}
       validationResponse={validateBandName(orderForm)}
       name={bandNameName}
       onChange={(e) => dispatch(updateOrderFormField(bandNameName, e.target.value))}
