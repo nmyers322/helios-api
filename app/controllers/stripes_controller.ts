@@ -49,7 +49,7 @@ export default class StripesController {
                         product_data: {
                             name: buildOrderName(pricedCart)
                         },
-                        unit_amount: Math.round(totalPrice * 100), // Amount in cents
+                        unit_amount: Math.round(Number(totalPrice) * 100), // Amount in cents
                     },
                     quantity: 1,
                 }],
@@ -66,7 +66,7 @@ export default class StripesController {
                     pricedCart: JSON.stringify(pricedCart),
                     selectedShippingOption: JSON.stringify(selectedShippingOption),
                     shippingAddress: JSON.stringify(shippingAddress),
-                    totalPrice: totalPrice.toFixed(2),
+                    totalPrice: Number(totalPrice).toFixed(2),
                     orderComment: orderComment,
                     externalOrderId: stripeSession.id,
                     externalOrder: JSON.stringify(stripeSession),

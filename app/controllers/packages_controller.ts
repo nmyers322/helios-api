@@ -1,11 +1,7 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import PressingPackage from '#models/pressing_package'
 import DiscountService from '#services/DiscountService'
-import {
-  extractFormConfig,
-  PACKAGE_FORM_FIELDS,
-  validatePackageSlug,
-} from '../../inertia/app/src/modules/packageDeals.js'
+import PackageService, { PACKAGE_FORM_FIELDS } from '#services/PackageService'
 
 const toPublicPackage = (pressingPackage: PressingPackage) => ({
   id: pressingPackage.id,
@@ -54,7 +50,7 @@ const parsePayload = (request: HttpContext['request']) => {
   if (!validateName(name)) {
     return { error: 'Invalid package name' }
   }
-  if (!validatePackageSlug(slug)) {
+  if (!PackageService.validatePackageSlug(slug)) {
     return { error: 'Invalid slug. Use lowercase letters, numbers, and hyphens' }
   }
   if (!validateOptionalText(description, 2000)) {
@@ -86,7 +82,7 @@ const parsePayload = (request: HttpContext['request']) => {
       advertisedPrice: advertisedPrice.toFixed(2),
       isActive,
       sortOrder,
-      formConfig: extractFormConfig(formConfig),
+      formConfig: PackageService.extractFormConfig(formConfig),
     },
   }
 }

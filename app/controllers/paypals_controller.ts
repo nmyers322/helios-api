@@ -62,7 +62,7 @@ export default class PaypalsController {
                     {
                         amount: {
                             currencyCode: 'USD',
-                            value: totalPrice.toFixed(2),
+                            value: Number(totalPrice).toFixed(2),
                         }
                     }
                 ]
@@ -85,7 +85,7 @@ export default class PaypalsController {
                     pricedCart: JSON.stringify(pricedCart),
                     selectedShippingOption: JSON.stringify(selectedShippingOption),
                     shippingAddress: JSON.stringify(shippingAddress),
-                    totalPrice: totalPrice.toFixed(2),
+                    totalPrice: Number(totalPrice).toFixed(2),
                     orderComment: orderComment,
                     externalOrderId: paypalOrder.id,
                     externalOrder: JSON.stringify(paypalOrder),

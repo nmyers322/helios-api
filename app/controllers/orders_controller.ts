@@ -68,7 +68,7 @@ export default class OrdersController {
                 pricedCart: JSON.stringify(pricedCart),
                 selectedShippingOption: JSON.stringify(selectedShippingOption),
                 shippingAddress: JSON.stringify(shippingAddress),
-                totalPrice: totalPrice.toFixed(2),
+                totalPrice: Number(totalPrice).toFixed(2),
                 orderComment: orderComment,
                 externalOrderId: "bank_transfer",
                 externalOrder: undefined,

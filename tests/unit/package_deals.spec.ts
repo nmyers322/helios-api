@@ -1,5 +1,6 @@
 import { test } from '@japa/runner'
 import DiscountService from '#services/DiscountService'
+import PackageService from '#services/PackageService'
 import {
   advertisedPriceDiscount,
   applyAdvertisedPriceDiscount,
@@ -135,6 +136,10 @@ test.group('advertised price discount', () => {
 test.group('package form config matching', () => {
   test('matches a cart that has the locked package specs', ({ assert }) => {
     assert.isTrue(cartMatchesPackageFormConfig(matchingCart, formConfig))
+    assert.equal(
+      PackageService.cartMatchesPackageFormConfig(matchingCart, formConfig),
+      cartMatchesPackageFormConfig(matchingCart, formConfig)
+    )
   })
 
   test('rejects a cart with a different color quantity', ({ assert }) => {
@@ -224,6 +229,7 @@ test.group('package display helpers', () => {
     assert.isTrue(validatePackageSlug('500-black'))
     assert.isFalse(validatePackageSlug('500 Black'))
     assert.isFalse(validatePackageSlug('-black'))
+    assert.equal(PackageService.validatePackageSlug('500-black'), validatePackageSlug('500-black'))
   })
 
   test('sums catalog prices from a price function', ({ assert }) => {
