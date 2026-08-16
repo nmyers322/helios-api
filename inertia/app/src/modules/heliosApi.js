@@ -216,6 +216,11 @@ export const updateOrderStatus = async (orderId, status) => {
   return result;
 }
 
+export const updateOrderAdminNotes = async (orderId, adminNotes) => {
+  let result = await makePutCall(`/api/admin/orders/${orderId}`, { adminNotes });
+  return result;
+}
+
 export const getAllColorsAdmin = async () =>
   await makeGetCall('/api/admin/colors');
 

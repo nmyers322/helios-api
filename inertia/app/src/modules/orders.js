@@ -1,19 +1,8 @@
-import { albumTitleName } from "../components/form/orderform/AlbumTitle";
 import { albumTypeName } from "../components/form/orderform/AlbumType";
-import { bandNameName } from "../components/form/orderform/BandName";
-import { catalogNumberName } from "../components/form/orderform/CatalogNumber";
-import { heliosLogger } from "./logging";
 import { getSkuFromName } from "./products";
+import { getAllColors } from "./weighedColors.js";
 
-export const getAllColors = order =>
-    order?.pricedCart?.filter(item =>
-        item.sku === getSkuFromName("color"))
-        .map(item => ({
-            baseFeeType: getCartItemMetaData(item, "baseFee"),
-            name: getCartItemMetaData(item, "color"),
-            quantity: item.quantity,
-            total: item.total,
-        }));
+export { getAllColors };
 
 export const getCartItem = (name, order) => {
     return order?.pricedCart

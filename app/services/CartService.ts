@@ -108,11 +108,12 @@ export default class CartService {
     public static getWeighedColorItems(pricedCart: any) {
         const weight = pricedCart.find((item: any) => item.sku === "helios-12inch-weight");
         const colorItems = pricedCart.filter((item: any) => item.sku === "helios-12inch-color");
+        const weightUnitPrice = Math.round((weight?.price || 0) * 100) / 100
         return colorItems.map((item: any) => {
             return {
                 ...item,
-                price: item.price + Math.round((weight?.price || 0) * 100) / 100,
-                total: item.total + (Math.round((weight?.price || 0) * item.quantity * 100) / 100)
+                price: (item.price || 0) + weightUnitPrice,
+                total: (item.total || 0) + Math.round(weightUnitPrice * (item.quantity || 0) * 100) / 100,
             }
         });
     }

@@ -20,6 +20,7 @@ import { polybagName, PolybagOptions } from "../../form/orderform/Polybag";
 import { albumTypeName } from "../../form/orderform/AlbumType";
 import { innersleeveName, innersleeveOptions } from "../../form/orderform/Innersleeve";
 import { useSelector } from "react-redux";
+import AdminOrderNotes from "../../form/admin/AdminOrderNotes";
 
 const Container = styled.div`
     display: flex;
@@ -122,6 +123,8 @@ const CompletedOrderDetailsCard = ({
 }) => {
   
     const orders = useSelector(state => state.orders.orders);
+    const customer = useSelector(state => state.customer);
+    const isAdmin = customer?.role === "admin";
     if (orderId) {
         order = orders[orderId];
     };
@@ -216,7 +219,7 @@ const CompletedOrderDetailsCard = ({
                             <Item>{weight}</Item>
                         </LeftColumn>
                         <RightColumn>
-                            <Item>${getCartItem(weightName, order)?.total?.toFixed(2)}</Item>
+                            <Item></Item>
                         </RightColumn>
                     </Row>
                 </SectionContents>
@@ -351,15 +354,23 @@ const CompletedOrderDetailsCard = ({
                     </Row>
                 </SectionContents>
             </Section>
-            { order?.orderComment && (
+            { (order?.orderComment || isAdmin) && (
                 <Section>
                     <SectionTitle>Customer Comment</SectionTitle>
                     <SectionContents>
                         <Row>
                             <LeftColumn>
-                                <Item>{order.orderComment}</Item>
+                                <Item>{order.orderComment || "None"}</Item>
                             </LeftColumn>
                         </Row>
+                    </SectionContents>
+                </Section>
+            ) }
+            { isAdmin && order?.id && (
+                <Section>
+                    <SectionTitle>Notes</SectionTitle>
+                    <SectionContents>
+                        <AdminOrderNotes orderId={order.id} />
                     </SectionContents>
                 </Section>
             ) }

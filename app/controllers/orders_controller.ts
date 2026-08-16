@@ -20,7 +20,9 @@ export default class OrdersController {
         const orders = await Order.query()
             .preload('user')
             .orderBy('createdAt', 'desc')
-        return response.status(200).json({orders})
+        return response.status(200).json({
+            orders: orders.map((order) => order.serializeForAdmin())
+        })
     }
 
     async getById({ auth, params, response }: HttpContext) {
@@ -78,13 +80,24 @@ export default class OrdersController {
 
     async updateOrder({ params, request, response }: HttpContext) {
         const orderId = params.id
-        const order = await Order.findOrFail(orderId)
+        const order = await Order.find(orderId)
         if (!order) {
             return response.status(404).json({ error: 'Order not found' })
         }
-        const { status } = request.all()
-        order.status = status
+        const { status, adminNotes } = request.all()
+        if (status !== undefined) {
+            order.status = status
+        }
+        if (adminNotes !== undefined) {
+            if (typeof adminNotes !== 'string') {
+                return response.status(422).json({ error: 'Notes must be a string' })
+            }
+            if (adminNotes.length > 10000) {
+                return response.status(422).json({ error: 'Notes must be 10000 characters or less' })
+            }
+            order.adminNotes = adminNotes.trim() || null
+        }
         await order.save()
-        return response.status(200).json({ order })
+        return response.status(200).json({ order: order.serializeForAdmin() })
     }
 }

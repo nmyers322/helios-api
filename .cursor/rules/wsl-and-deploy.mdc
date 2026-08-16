@@ -1,0 +1,41 @@
+---
+description: Run all commands in WSL and deploy completed app changes to heliospressing.com
+alwaysApply: true
+---
+
+# Helios WSL and deploy
+
+This repo is operated from **WSL**, not native Windows PowerShell or cmd.
+
+## Commands
+
+- Run shell work with `wsl -e bash -lc '...'` from the Windows agent, or by opening a WSL shell first.
+- From WSL, work in `/mnt/d/Workspace/helios/helios-api`.
+- Load Node 20 via nvm (`export NVM_DIR="$HOME/.nvm"; . "$NVM_DIR/nvm.sh"; nvm use 20`).
+- Avoid PowerShell interpolating `$()` / `$VAR` inside WSL commands. Prefer a WSL script file or a PowerShell single-quoted here-string (`@' ... '@`).
+- Do not run `node`, `npm`, `ace`, `ssh`, or `git` on native Windows for this project.
+
+## Deploy
+
+Follow `helios-api/DEPLOYMENT.md`. The only app deploy entry point is:
+
+```bash
+cd /mnt/d/Workspace/helios/helios-api
+./scripts/deploy.sh
+```
+
+Never deploy app changes unless unit tests have been run in WSL and passed. `deploy.sh` must run `node ace test unit` and abort on failure.
+
+When application or database work is complete, deploy it to **heliospressing.com**. Do not wait to be asked. Skip deploy for Cursor-rule, docs-only, or local-only changes.
+
+After a schema change, also migrate production (nvm + `--force`):
+
+```bash
+cd /opt/apps/helios-api && node ace migration:run --force
+```
+
+If SSH times out, whitelist the current public IP for inbound TCP 22 on the EC2 security group (`../helios-secrets/aws.txt`).
+
+## Pricing display
+
+Keep pricing and quote-display logic in exported modules so it can be unit tested. Do not bury it in private component closures. When changing displayed prices, add or update unit tests for both the method and the display helper.

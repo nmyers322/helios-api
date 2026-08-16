@@ -4,10 +4,11 @@ import { useEffect, useState } from "react";
 import { getAllOrdersAdmin } from "../../../modules/heliosApi";
 import { setFetchingOrders, updateOrders } from "../../../actions/ordersActions";
 import ErrorText from "../../form/main/ErrorText";
-import { heliosLogger } from "../../../modules/logging";
 import styled from "styled-components";
 import { getAttributeValue } from "../../../modules/cart";
+import { getOrdersOverviewViewState } from "../../../modules/ordersOverview";
 import { setPrintContent, setShowPrintModal } from "../../../actions/metaActions";
+import LabeledSpinner from "../../main/LabeledSpinner";
 
 const OrderTable = styled.table`
     width: 100%;
@@ -82,8 +83,17 @@ const OrdersOverviewCard = ({statuses=null}) => {
         }
     }, [dispatch]);
 
+    const viewState = getOrdersOverviewViewState({
+        fetching: orders?.fetching || firstLoad,
+        orders: orders?.orders,
+        statuses,
+        errorText,
+    });
+
     return (
         <Card title="Orders Overview">
+            { viewState === "loading" && <LabeledSpinner text="Loading orders..." /> }
+            { viewState !== "loading" && (
             <OrderTable>
                 <OrderRow>
                     <OrderDetail>
@@ -129,7 +139,8 @@ const OrdersOverviewCard = ({statuses=null}) => {
                     </OrderRow>
                 ))}
             </OrderTable>
-            { openOrders && Object.keys(openOrders).length === 0 && (
+            ) }
+            { viewState === "empty" && (
                 <p>No orders with the specified parameters</p>
             )}
             { errorText && <ErrorText text={errorText} /> }

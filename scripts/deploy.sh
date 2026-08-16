@@ -55,6 +55,9 @@ export NVM_DIR="$HOME/.nvm"
 nvm use 20
 node --version
 
+echo "🧪 Running unit tests..."
+node ace test unit
+
 echo "🔄 Building fresh"
 npm run build -- --ignore-ts-errors
 echo $(date +%s) > build/.build-timestamp

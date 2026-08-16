@@ -322,15 +322,7 @@ export const getTestPresses = (pricedCart) => {
     };
 };
 
-export const getWeighedColorItems = (pricedCart) => {
-    const weight = pricedCart.find(item => item.sku === "helios-12inch-weight");
-    const colorItems = pricedCart.filter(item => item.sku === "helios-12inch-color");
-    return colorItems.map(item => ({
-        ...item,
-        price: (item.price || 0) + Math.round((weight?.price || 0) * 100) / 100,
-        total: (item.total || 0) + (Math.round((weight?.price || 0) * item.quantity * 100) / 100)
-    }));
-};
+export { getWeighedColorItems } from './weighedColors.js';
 
 export const getCenterLabelLabel = (pricedCart) => {
     const centerLabelOptions = [

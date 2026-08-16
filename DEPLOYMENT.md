@@ -149,6 +149,9 @@ The deployment automatically copies these files:
 Run tests from `helios-api`:
 
 ```bash
+# Required before every deploy
+node ace test unit
+
 # Run all functional tests
 npm test -- functional
 
@@ -156,5 +159,8 @@ npm test -- functional
 npm test
 ```
 
-Current integration smoke test:
+`./scripts/deploy.sh` runs `node ace test unit` and aborts if it fails.
+
+Current tests:
+- `tests/unit/quote_display.spec.ts` (pricing display / weight fold / admin list state)
 - `tests/functional/root_domain.spec.ts` (included when running `npm test -- functional`)

@@ -54,9 +54,19 @@ export default class Order extends BaseModel {
   @column({ columnName: 'order_comment' })
   public orderComment?: string | null
 
+  @column({ columnName: 'admin_notes', serializeAs: null })
+  public adminNotes?: string | null
+
   @column.dateTime({ autoCreate: true })
   public createdAt!: DateTime
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt!: DateTime
+
+  public serializeForAdmin() {
+    return {
+      ...this.serialize(),
+      adminNotes: this.adminNotes ?? null,
+    }
+  }
 }
